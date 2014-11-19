@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.vanstone.jupin.framework.productdef.persistence.PDTAttributeEnumValueDOMapper">
+	<resultMap id="BaseResultMap"
+		type="com.vanstone.jupin.framework.productdef.persistence.object.PDTAttributeEnumValueDO">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="ATTRIBUTE_DEF_ID" property="attributeDefId"
+			jdbcType="INTEGER" />
+		<result column="SORT" property="sort" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.vanstone.jupin.framework.productdef.persistence.object.PDTAttributeEnumValueDO"
+		extends="BaseResultMap">
+		<result column="OBJECTVALUE" property="objectvalue" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, ATTRIBUTE_DEF_ID, SORT
+	</sql>
+	<sql id="Blob_Column_List">
+		OBJECTVALUE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from pdt_attribute_enumvalue
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		pdt_attribute_enumvalue
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.vanstone.jupin.framework.productdef.persistence.object.PDTAttributeEnumValueDO"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+		insert into pdt_attribute_enumvalue (ID, ATTRIBUTE_DEF_ID, SORT,
+		OBJECTVALUE)
+		values (#{id,jdbcType=INTEGER},
+		#{attributeDefId,jdbcType=INTEGER},
+		#{sort,jdbcType=INTEGER},
+		#{objectvalue,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.vanstone.jupin.framework.productdef.persistence.object.PDTAttributeEnumValueDO"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+		insert into pdt_attribute_enumvalue
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="attributeDefId != null">
+				ATTRIBUTE_DEF_ID,
+			</if>
+			<if test="sort != null">
+				SORT,
+			</if>
+			<if test="objectvalue != null">
+				OBJECTVALUE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="attributeDefId != null">
+				#{attributeDefId,jdbcType=INTEGER},
+			</if>
+			<if test="sort != null">
+				#{sort,jdbcType=INTEGER},
+			</if>
+			<if test="objectvalue != null">
+				#{objectvalue,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.vanstone.jupin.framework.productdef.persistence.object.PDTAttributeEnumValueDO">
+		update pdt_attribute_enumvalue
+		<set>
+			<if test="attributeDefId != null">
+				ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER},
+			</if>
+			<if test="sort != null">
+				SORT = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="objectvalue != null">
+				OBJECTVALUE = #{objectvalue,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="com.vanstone.jupin.framework.productdef.persistence.object.PDTAttributeEnumValueDO">
+		update pdt_attribute_enumvalue
+		set ATTRIBUTE_DEF_ID =
+		#{attributeDefId,jdbcType=INTEGER},
+		SORT = #{sort,jdbcType=INTEGER},
+		OBJECTVALUE = #{objectvalue,jdbcType=LONGVARCHAR}
+		where ID =
+		#{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.vanstone.jupin.framework.productdef.persistence.object.PDTAttributeEnumValueDO">
+		update pdt_attribute_enumvalue
+		set ATTRIBUTE_DEF_ID =
+		#{attributeDefId,jdbcType=INTEGER},
+		SORT = #{sort,jdbcType=INTEGER}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectByAttributeDefId" parameterType="integer" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/> FROM 
+		pdt_attribute_enumvalue 
+		WHERE 
+		ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByAttributeId" parameterType="integer" >
+		DELETE FROM pdt_attribute_enumvalue 
+		WHERE 
+		ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER}
+	</delete>
+	<select id="selectByAttributeId_ObjectValue"  parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>, <include refid="Blob_Column_List"/> FROM 
+		pdt_attribute_enumvalue 
+		WHERE 
+		ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER} AND OBJECTVALUE = #{objectvalue,jdbcType=LONGVARCHAR}
+	</select>
+</mapper>

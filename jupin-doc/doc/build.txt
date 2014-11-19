@@ -1,0 +1,41 @@
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-sms-ensms1069009130 -Dversion=1.2
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-mongo -Dversion=1.2
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-quartz -Dversion=1.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-gm -Dversion=1.0
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-emoji -Dversion=1.0
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-notification -Dversion=1.0
+
+mvn archetype:create -DgroupId=org.apache.tomcat -DartifactId=tomcat7-redis-session-manager -Dversion=1.0
+
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-development-example -DarchetypeArtifactId=maven-archetype-webapp
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-weixintest-webapp -DarchetypeArtifactId=maven-archetype-webapp
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-mook-webapp -DarchetypeArtifactId=maven-archetype-webapp
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-calengine-webapp -DarchetypeArtifactId=maven-archetype-webapp
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-calengine-webapp -DarchetypeArtifactId=maven-archetype-webapp
+
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-img-server -DarchetypeArtifactId=maven-archetype-webapp -Dversion=1.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-img-server-sdk -Dversion=1.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-img-server-common -Dversion=1.0
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-zk -Dversion=1.0
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-centralserver-admisnervice-sdk -Dversion=1.0
+
+
+
+==========================jupin============================
+
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-common -Dversion=1.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-framework -Dversion=1.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-business-sdk -Dversion=1.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-productdefine-api -Dversion=1.0
