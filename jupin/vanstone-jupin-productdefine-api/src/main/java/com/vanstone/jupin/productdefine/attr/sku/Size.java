@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.vanstone.jupin.productdefine.sku;
+package com.vanstone.jupin.productdefine.attr.sku;
 
 /**
  * @author shipeng

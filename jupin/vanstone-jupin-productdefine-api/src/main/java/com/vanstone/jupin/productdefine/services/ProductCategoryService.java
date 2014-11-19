@@ -9,4 +9,7 @@ package com.vanstone.jupin.productdefine.services;
  */
 public interface ProductCategoryService {
 	
+	/**SERVICE*/
+	public static final String SERVICE = "productCategoryService";
+	
 }
