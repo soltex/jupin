@@ -17,6 +17,9 @@ import com.vanstone.jupin.productdefine.ProductCategory;
  */
 public interface BrandService {
 	
+	/**SERVICE*/
+	public static final String SERVICE = "brandService";
+	
 	/**
 	 * 品牌名称
 	 * @param brand
@@ -28,32 +31,30 @@ public interface BrandService {
 	/**
 	 * 添加品牌信息
 	 * @param brand
-	 * @param productCategory
+	 * @param productCategories
 	 * @return
-	 * @throws ObjectDuplicateException
 	 */
-	Brand addBrand(Brand brand, ProductCategory productCategory) throws ObjectDuplicateException;
+	Brand addBrand(Brand brand, Collection<ProductCategory> productCategories) throws MustLeafNodeofProductCategoryException, ObjectDuplicateException;
 	
 	/**
-	 * 通过ID获取品牌信息
+	 * 通过ID获取品牌信息（放入到缓冲中）
 	 * @param id
 	 * @return
 	 */
 	Brand getBrand(int id);
 	
 	/**
-	 * 获取品牌列表
-	 * @param brandId
-	 * @return
+	 * 删除品牌Logo信息
+	 * @param id
 	 */
-	Collection<Brand> getBrandsByLeafBrand(int brandId);
+	void deleteBrandLogoImage(int id);
 	
 	/**
-	 * 获取品牌列表
+	 * 获取品牌列表(通过品类id)
 	 * @param brandId
 	 * @return
 	 */
-	Collection<Brand> getBrandsByBrand(int brandId);
+	Collection<Brand> getBrandsByProductCategory(int productCategoryId);
 	
 	/**
 	 * 更新品牌基本信息
@@ -86,5 +87,23 @@ public interface BrandService {
 	 * @param brandId
 	 */
 	void forceDeleteBrand(int brandId);
+	
+	/**
+	 * 获取品牌列表（包含统计信息，用作后台统计使用，不进入缓冲）
+	 * @param productCategory
+	 * @param key
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	Collection<Brand> getBrandsWithStat(ProductCategory productCategory, String key, int offset ,int limit);
+	
+	/**
+	 * 获取品牌数量
+	 * @param productCategory
+	 * @param key
+	 * @return
+	 */
+	int getTotalBrands(ProductCategory productCategory, String key);
 	
 }

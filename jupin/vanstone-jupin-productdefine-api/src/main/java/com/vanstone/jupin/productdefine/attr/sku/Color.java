@@ -11,7 +11,7 @@ import com.vanstone.jupin.common.Constants;
  * 
  * @author shipeng
  */
-public class SkuColor extends AbstractBusinessObject {
+public class Color extends AbstractBusinessObject {
 
 	/***/
 	private static final long serialVersionUID = 8186076824578174154L;
