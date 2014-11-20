@@ -39,6 +39,8 @@ public class ProductCategory extends AbstractBusinessObject {
 	private boolean leafable = false;
 	/** 栏目状态*/
 	private CategoryState categoryState = CategoryState.Active;
+	/**是否存在商品*/
+	private boolean existProduct = false;
 	/** 品类下的叶子节点 */
 	private Collection<ProductCategory> leafProductCategories = new ArrayList<ProductCategory>();
 	/** 品类下的一级孩子节点 */
@@ -63,8 +65,8 @@ public class ProductCategory extends AbstractBusinessObject {
 	private Collection<Attr4Enum> currentSkuAttributes = new ArrayList<Attr4Enum>();
 	
 	@Override
-	public String getId() {
-		return null;
+	public Integer getId() {
+		return this.id;
 	}
 	
 }

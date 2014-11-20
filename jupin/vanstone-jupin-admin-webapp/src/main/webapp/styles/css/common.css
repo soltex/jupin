@@ -1,0 +1,29 @@
+#loading {
+    background: none repeat scroll 0 0 #FFFFFF;
+    display: none;
+    height: 100%;
+    left: 0;
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+    position: fixed;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 10000;
+}
+
+#loading .loadingImg {
+    background: url("../images/loading.gif") no-repeat scroll 10px 50% #FFFFFF;
+    border: 1px solid #0B333C;
+    color: #0B333C;
+    font-weight: bold;
+    height: 30px;
+    left: 50%;
+    margin-left: -90px;
+    padding: 10px 10px 10px 60px;
+    position: absolute;
+    text-align: left;
+    top: 0;
+    width: 180px;
+    z-index: 10001;
+}

@@ -1,0 +1,45 @@
+* {
+	font-size: 12px;
+}
+body {
+	background-color: #ffffff;
+	color: #000;
+}
+
+.navbar-inverse {
+    background-color: #222;
+    border-color: #080808;
+}
+
+
+
+#data_loading {
+    color: #fff;
+    font-size: 12px;
+    left: 50%;
+    margin-left: -45%;
+    position: absolute;
+    text-align: center;
+    top: 57px;
+    width: 90%;
+    z-index: 10;
+}
+
+#data_loading .inner {
+    /*background: none repeat scroll 0 0 rgba(0, 0, 0, 0.6);*/
+    border-radius: 2px;
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    /*padding: 10px 10px 10px 10px;*/
+}
+
+
+/* ProgressBar */
+#progressBar { border:solid 1px #86a5ad; background:#FFF url(../images/progressBar/progressBar_m.gif) no-repeat 10px 10px;}
+#progressBar { display:block; width:220px; position:fixed; top:50%; left:50%; margin-left:-110px; margin-top:-14px; padding:10px 10px 10px 50px; text-align:left; line-height:27px; font-weight:bold; position:absolute; z-index:2001;}
+#background { display:block; width:100%; height:100%; opacity:0.3; filter:alpha(opacity=30); background:#FFF; position:absolute; top:0; left:0; z-index:2000;}
+
+form.required-validate {margin-top: 10px}
+form span.error {color:red}
+table.table > tbody > tr.selected >td {background-color:#7cc5e5;}

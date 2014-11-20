@@ -17,6 +17,8 @@ public class Attr4Enum extends AbstractAttribute {
 	
 	/**非多选*/
 	private boolean multiselectable = false;
+	/**是否用于搜索*/
+	private boolean searchable = false;
 	/**枚举值*/
 	private Map<Integer, String> values = new LinkedHashMap<Integer, String>();
 	
@@ -27,7 +29,14 @@ public class Attr4Enum extends AbstractAttribute {
 	protected Attr4Enum(boolean usable) {
 		super(AttributeType.Enum_Attribute, usable);
 	}
+	
+	public boolean isSearchable() {
+		return searchable;
+	}
 
+	public void setSearchable(boolean searchable) {
+		this.searchable = searchable;
+	}
 	public boolean isMultiselectable() {
 		return multiselectable;
 	}

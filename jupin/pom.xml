@@ -15,6 +15,8 @@
     <module>vanstone-jupin-framework</module>
     <module>vanstone-jupin-business-sdk</module>
     <module>vanstone-jupin-productdefine-api</module>
+    <module>vanstone-jupin-admin-webapp</module>
+    <module>vanstone-jupin-product-api</module>
   </modules>
 	<distributionManagement>
 		<repository>

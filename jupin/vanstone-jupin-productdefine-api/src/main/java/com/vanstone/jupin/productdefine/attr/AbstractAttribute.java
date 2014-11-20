@@ -22,12 +22,12 @@ public abstract class AbstractAttribute extends AbstractBusinessObject {
 	private String attributeDescription;
 	/**属性类型*/
 	private AttributeType attributeType = AttributeType.Common_Attribute;
-	/**是否可被搜索*/
-	private boolean searchable = false;
 	/**是否显示在列表页上*/
 	private boolean listshowable = false;
 	/**是否已使用*/
 	private boolean usable = false;
+	/**是否为必填项*/
+	private boolean requiredable=false;
 	
 	protected AbstractAttribute(AttributeType attributeType) {
 		this.attributeType = attributeType;
@@ -67,12 +67,12 @@ public abstract class AbstractAttribute extends AbstractBusinessObject {
 		this.attributeType = attributeType;
 	}
 
-	public boolean isSearchable() {
-		return searchable;
+	public boolean isRequiredable() {
+		return requiredable;
 	}
 
-	public void setSearchable(boolean searchable) {
-		this.searchable = searchable;
+	public void setRequiredable(boolean requiredable) {
+		this.requiredable = requiredable;
 	}
 
 	public boolean isListshowable() {
