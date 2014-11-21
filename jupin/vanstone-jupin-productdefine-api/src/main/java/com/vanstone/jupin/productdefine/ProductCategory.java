@@ -55,14 +55,10 @@ public class ProductCategory extends AbstractBusinessObject {
 	private Collection<AbstractAttribute> allAttributes = new ArrayList<AbstractAttribute>();
 	/** 全部商品属性 */
 	private Collection<AbstractAttribute> allProductAttributes = new ArrayList<AbstractAttribute>();
-	/** 全部商品实例属性 */
-	private Collection<Attr4Enum> allSkuAttributes = new ArrayList<Attr4Enum>();
 	/** 旗下全部属性 */
 	private Collection<AbstractAttribute> allCurrentAttributes = new ArrayList<AbstractAttribute>();
 	/** 旗下商品属性 */
 	private Collection<AbstractAttribute> currentProductAttributes = new ArrayList<AbstractAttribute>();
-	/** 旗下商品实例属性 */
-	private Collection<Attr4Enum> currentSkuAttributes = new ArrayList<Attr4Enum>();
 	
 	@Override
 	public Integer getId() {

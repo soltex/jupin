@@ -16,12 +16,40 @@ public class Brand extends AbstractBusinessObject {
 	private static final long serialVersionUID = -772887321258748622L;
 	
 	private Integer id;
+	/**品牌名称*/
 	private String brandName;
+	/**品牌英文名称*/
 	private String brandNameEN;
+	/**品牌首字母*/
 	private String brandNamefirstLetter;
+	/**品牌介绍*/
 	private String content;
+	/**是否系统内置品牌*/
 	private boolean systemable = false;
+	/**Logo图片*/
 	private ImageBean logoImage;
+	
+	/**旗下叶子节点品类数量*/
+	private Integer productCategoryCount;
+	/**旗下产品数量*/
+	private Integer productCount;
+	
+	/**
+	 * 默认使用在缓冲中
+	 */
+	public Brand() {
+		
+	}
+	
+	/**
+	 * 后台统计分析使用
+	 * @param productCategoryCount
+	 * @param productCount
+	 */
+	public Brand(Integer productCategoryCount, Integer productCount) {
+		this.productCategoryCount = productCategoryCount;
+		this.productCount = productCount;
+	}
 	
 	@Override
 	public Integer getId() {
@@ -78,6 +106,14 @@ public class Brand extends AbstractBusinessObject {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getProductCategoryCount() {
+		return productCategoryCount;
+	}
+
+	public Integer getProductCount() {
+		return productCount;
 	}
 	
 }

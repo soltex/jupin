@@ -7,12 +7,11 @@ import com.vanstone.business.lang.BaseEnum;
 
 /**
  * @author shipeng
- *
  */
 public enum CategoryState implements BaseEnum<Integer> {
 	
-	Active("启用",1), Forbit("禁用",10);
-
+	Waiting("待上线",0),Active("启用",1), Forbit("禁用",10);
+	
 	private String desc;
 	private Integer code;
 	

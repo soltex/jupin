@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.business.ObjectHasSubObjectException;
-import com.vanstone.jupin.productdefine.attr.sku.SkuColor;
+import com.vanstone.jupin.productdefine.attr.sku.Color;
 
 /**
  * 颜色表业务API
@@ -24,7 +24,7 @@ public interface ColorTableService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	SkuColor addSkuColor(SkuColor color) throws ObjectDuplicateException;
+	Color addSkuColor(Color color) throws ObjectDuplicateException;
 	
 	/**
 	 * 更新颜色代码
@@ -32,14 +32,14 @@ public interface ColorTableService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	SkuColor updateSkuColor(SkuColor skuColor) throws ObjectDuplicateException;
+	Color updateSkuColor(Color skuColor) throws ObjectDuplicateException;
 	
 	/**
 	 * 获取颜色代码值
 	 * @param id
 	 * @return
 	 */
-	SkuColor getSkuColor(int id);
+	Color getSkuColor(int id);
 	
 	/**
 	 * 删除颜色代码
@@ -55,9 +55,9 @@ public interface ColorTableService {
 	void forceDeleteSkuColor(int id);
 	
 	/**
-	 * 获取颜色列表，排序通过排序字段以及自然ID进行排序
+	 * 获取颜色列表，排序通过排序字段以及自然ID进行排序(将整个列表放入到缓冲中)
 	 * @return
 	 */
-	Collection<SkuColor> getSkuColors();
+	Collection<Color> getSkuColors();
 	
 }
