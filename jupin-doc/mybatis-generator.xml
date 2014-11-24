@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/argylesoftware-codebuilder-config_1_0.dtd" >
+<generatorConfiguration>
+
+	<context id="jupin-doc">
+		
+		<!-- 去除自动生成的注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://127.0.0.1:3306/jupin" userId="root"
+			password="root" />
+		
+		<javaModelGenerator targetPackage="com.vanstone.jupin.productdefine.persistence.object" targetProject="jupin-doc" />
+		<sqlMapGenerator targetPackage="com.vanstone.jupin.productdefine.persistence" targetProject="jupin-doc" />
+		<javaClientGenerator targetPackage="com.vanstone.jupin.productdefine.persistence" targetProject="jupin-doc" type="XMLMAPPER" />
+		
+		<table 
+			schema="jupin" 
+			tableName="PDT_SKU_SIZE_TEMPLATE" 
+			domainObjectName="PDTSkuSizeTemplateDO"
+			enableInsert="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" enableSelectByExample="false"
+			enableDeleteByExample="false" enableUpdateByExample="false"
+			selectByExampleQueryId="false" enableCountByExample="false" />
+		
+		<table 
+			schema="jupin" 
+			tableName="PDT_SKU_SIZE_TABLE" 
+			domainObjectName="PDTSkuSizeTableDO"
+			enableInsert="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" enableSelectByExample="false"
+			enableDeleteByExample="false" enableUpdateByExample="false"
+			selectByExampleQueryId="false" enableCountByExample="false" />
+			
+	</context>
+	
+</generatorConfiguration>

@@ -1,0 +1,1 @@
+Collection<Color> colors = gson.fromJson(value, (new TypeToken<Collection<Color>>() {private static final long serialVersionUID = 5730568114382559257L;}).getType());

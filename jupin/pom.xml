@@ -17,6 +17,7 @@
     <module>vanstone-jupin-productdefine-api</module>
     <module>vanstone-jupin-admin-webapp</module>
     <module>vanstone-jupin-product-api</module>
+    <module>vanstone-jupin-productdefine</module>
   </modules>
 	<distributionManagement>
 		<repository>

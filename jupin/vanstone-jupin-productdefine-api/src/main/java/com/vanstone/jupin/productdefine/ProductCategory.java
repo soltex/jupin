@@ -11,6 +11,7 @@ import com.vanstone.jupin.common.Constants;
 import com.vanstone.jupin.common.entity.ImageBean;
 import com.vanstone.jupin.productdefine.attr.AbstractAttribute;
 import com.vanstone.jupin.productdefine.attr.Attr4Enum;
+import com.vanstone.jupin.productdefine.attr.sku.SizeTemplate;
 
 /**
  * 商品品类
@@ -41,6 +42,12 @@ public class ProductCategory extends AbstractBusinessObject {
 	private CategoryState categoryState = CategoryState.Active;
 	/**是否存在商品*/
 	private boolean existProduct = false;
+	/**是否存在颜色*/
+	private boolean existColor=false;
+	/**是否存在尺码*/
+	private boolean existSize = false;
+	/**选用的尺码模板*/
+	private SizeTemplate sizeTemplate;
 	/** 品类下的叶子节点 */
 	private Collection<ProductCategory> leafProductCategories = new ArrayList<ProductCategory>();
 	/** 品类下的一级孩子节点 */

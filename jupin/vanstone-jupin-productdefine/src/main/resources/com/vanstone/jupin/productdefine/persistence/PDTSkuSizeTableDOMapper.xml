@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vanstone.jupin.productdefine.persistence.PDTSkuSizeTableDOMapper" >
+  <resultMap id="BaseResultMap" type="com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="SIZE_NAME" property="sizeName" jdbcType="VARCHAR" />
+    <result column="WAISTLINEABLE" property="waistlineable" jdbcType="INTEGER" />
+    <result column="WAISTLINE_START" property="waistlineStart" jdbcType="INTEGER" />
+    <result column="WAISTLINE_END" property="waistlineEnd" jdbcType="INTEGER" />
+    <result column="WEIGHTABLE" property="weightable" jdbcType="INTEGER" />
+    <result column="WEIGHT_START" property="weightStart" jdbcType="INTEGER" />
+    <result column="WEIGHT_END" property="weightEnd" jdbcType="INTEGER" />
+    <result column="HIPABLE" property="hipable" jdbcType="INTEGER" />
+    <result column="HIP_START" property="hipStart" jdbcType="INTEGER" />
+    <result column="HIP_END" property="hipEnd" jdbcType="INTEGER" />
+    <result column="CHESTABLE" property="chestable" jdbcType="INTEGER" />
+    <result column="CHEST_START" property="chestStart" jdbcType="INTEGER" />
+    <result column="CHEST_END" property="chestEnd" jdbcType="INTEGER" />
+    <result column="HEIGHTABLE" property="heightable" jdbcType="INTEGER" />
+    <result column="HEIGHT_START" property="heightStart" jdbcType="INTEGER" />
+    <result column="HEIGHT_END" property="heightEnd" jdbcType="INTEGER" />
+    <result column="SHOULDERABLE" property="shoulderable" jdbcType="INTEGER" />
+    <result column="SHOULDER_START" property="shoulderStart" jdbcType="INTEGER" />
+    <result column="SHOULDER_END" property="shoulderEnd" jdbcType="INTEGER" />
+    <result column="SIZE_TEMPLATE_ID" property="sizeTemplateId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, SIZE_NAME, WAISTLINEABLE, WAISTLINE_START, WAISTLINE_END, WEIGHTABLE, WEIGHT_START, 
+    WEIGHT_END, HIPABLE, HIP_START, HIP_END, CHESTABLE, CHEST_START, CHEST_END, HEIGHTABLE, 
+    HEIGHT_START, HEIGHT_END, SHOULDERABLE, SHOULDER_START, SHOULDER_END, SIZE_TEMPLATE_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from pdt_sku_size_table
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from pdt_sku_size_table
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO" 
+ 	 useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+    insert into pdt_sku_size_table (ID, SIZE_NAME, WAISTLINEABLE, 
+      WAISTLINE_START, WAISTLINE_END, WEIGHTABLE, 
+      WEIGHT_START, WEIGHT_END, HIPABLE, 
+      HIP_START, HIP_END, CHESTABLE, 
+      CHEST_START, CHEST_END, HEIGHTABLE, 
+      HEIGHT_START, HEIGHT_END, SHOULDERABLE, 
+      SHOULDER_START, SHOULDER_END, SIZE_TEMPLATE_ID
+      )
+    values (#{id,jdbcType=INTEGER}, #{sizeName,jdbcType=VARCHAR}, #{waistlineable,jdbcType=INTEGER}, 
+      #{waistlineStart,jdbcType=INTEGER}, #{waistlineEnd,jdbcType=INTEGER}, #{weightable,jdbcType=INTEGER}, 
+      #{weightStart,jdbcType=INTEGER}, #{weightEnd,jdbcType=INTEGER}, #{hipable,jdbcType=INTEGER}, 
+      #{hipStart,jdbcType=INTEGER}, #{hipEnd,jdbcType=INTEGER}, #{chestable,jdbcType=INTEGER}, 
+      #{chestStart,jdbcType=INTEGER}, #{chestEnd,jdbcType=INTEGER}, #{heightable,jdbcType=INTEGER}, 
+      #{heightStart,jdbcType=INTEGER}, #{heightEnd,jdbcType=INTEGER}, #{shoulderable,jdbcType=INTEGER}, 
+      #{shoulderStart,jdbcType=INTEGER}, #{shoulderEnd,jdbcType=INTEGER}, #{sizeTemplateId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO" 
+  	useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+    insert into pdt_sku_size_table
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="sizeName != null" >
+        SIZE_NAME,
+      </if>
+      <if test="waistlineable != null" >
+        WAISTLINEABLE,
+      </if>
+      <if test="waistlineStart != null" >
+        WAISTLINE_START,
+      </if>
+      <if test="waistlineEnd != null" >
+        WAISTLINE_END,
+      </if>
+      <if test="weightable != null" >
+        WEIGHTABLE,
+      </if>
+      <if test="weightStart != null" >
+        WEIGHT_START,
+      </if>
+      <if test="weightEnd != null" >
+        WEIGHT_END,
+      </if>
+      <if test="hipable != null" >
+        HIPABLE,
+      </if>
+      <if test="hipStart != null" >
+        HIP_START,
+      </if>
+      <if test="hipEnd != null" >
+        HIP_END,
+      </if>
+      <if test="chestable != null" >
+        CHESTABLE,
+      </if>
+      <if test="chestStart != null" >
+        CHEST_START,
+      </if>
+      <if test="chestEnd != null" >
+        CHEST_END,
+      </if>
+      <if test="heightable != null" >
+        HEIGHTABLE,
+      </if>
+      <if test="heightStart != null" >
+        HEIGHT_START,
+      </if>
+      <if test="heightEnd != null" >
+        HEIGHT_END,
+      </if>
+      <if test="shoulderable != null" >
+        SHOULDERABLE,
+      </if>
+      <if test="shoulderStart != null" >
+        SHOULDER_START,
+      </if>
+      <if test="shoulderEnd != null" >
+        SHOULDER_END,
+      </if>
+      <if test="sizeTemplateId != null" >
+        SIZE_TEMPLATE_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sizeName != null" >
+        #{sizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="waistlineable != null" >
+        #{waistlineable,jdbcType=INTEGER},
+      </if>
+      <if test="waistlineStart != null" >
+        #{waistlineStart,jdbcType=INTEGER},
+      </if>
+      <if test="waistlineEnd != null" >
+        #{waistlineEnd,jdbcType=INTEGER},
+      </if>
+      <if test="weightable != null" >
+        #{weightable,jdbcType=INTEGER},
+      </if>
+      <if test="weightStart != null" >
+        #{weightStart,jdbcType=INTEGER},
+      </if>
+      <if test="weightEnd != null" >
+        #{weightEnd,jdbcType=INTEGER},
+      </if>
+      <if test="hipable != null" >
+        #{hipable,jdbcType=INTEGER},
+      </if>
+      <if test="hipStart != null" >
+        #{hipStart,jdbcType=INTEGER},
+      </if>
+      <if test="hipEnd != null" >
+        #{hipEnd,jdbcType=INTEGER},
+      </if>
+      <if test="chestable != null" >
+        #{chestable,jdbcType=INTEGER},
+      </if>
+      <if test="chestStart != null" >
+        #{chestStart,jdbcType=INTEGER},
+      </if>
+      <if test="chestEnd != null" >
+        #{chestEnd,jdbcType=INTEGER},
+      </if>
+      <if test="heightable != null" >
+        #{heightable,jdbcType=INTEGER},
+      </if>
+      <if test="heightStart != null" >
+        #{heightStart,jdbcType=INTEGER},
+      </if>
+      <if test="heightEnd != null" >
+        #{heightEnd,jdbcType=INTEGER},
+      </if>
+      <if test="shoulderable != null" >
+        #{shoulderable,jdbcType=INTEGER},
+      </if>
+      <if test="shoulderStart != null" >
+        #{shoulderStart,jdbcType=INTEGER},
+      </if>
+      <if test="shoulderEnd != null" >
+        #{shoulderEnd,jdbcType=INTEGER},
+      </if>
+      <if test="sizeTemplateId != null" >
+        #{sizeTemplateId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO" >
+    update pdt_sku_size_table
+    <set >
+      <if test="sizeName != null" >
+        SIZE_NAME = #{sizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="waistlineable != null" >
+        WAISTLINEABLE = #{waistlineable,jdbcType=INTEGER},
+      </if>
+      <if test="waistlineStart != null" >
+        WAISTLINE_START = #{waistlineStart,jdbcType=INTEGER},
+      </if>
+      <if test="waistlineEnd != null" >
+        WAISTLINE_END = #{waistlineEnd,jdbcType=INTEGER},
+      </if>
+      <if test="weightable != null" >
+        WEIGHTABLE = #{weightable,jdbcType=INTEGER},
+      </if>
+      <if test="weightStart != null" >
+        WEIGHT_START = #{weightStart,jdbcType=INTEGER},
+      </if>
+      <if test="weightEnd != null" >
+        WEIGHT_END = #{weightEnd,jdbcType=INTEGER},
+      </if>
+      <if test="hipable != null" >
+        HIPABLE = #{hipable,jdbcType=INTEGER},
+      </if>
+      <if test="hipStart != null" >
+        HIP_START = #{hipStart,jdbcType=INTEGER},
+      </if>
+      <if test="hipEnd != null" >
+        HIP_END = #{hipEnd,jdbcType=INTEGER},
+      </if>
+      <if test="chestable != null" >
+        CHESTABLE = #{chestable,jdbcType=INTEGER},
+      </if>
+      <if test="chestStart != null" >
+        CHEST_START = #{chestStart,jdbcType=INTEGER},
+      </if>
+      <if test="chestEnd != null" >
+        CHEST_END = #{chestEnd,jdbcType=INTEGER},
+      </if>
+      <if test="heightable != null" >
+        HEIGHTABLE = #{heightable,jdbcType=INTEGER},
+      </if>
+      <if test="heightStart != null" >
+        HEIGHT_START = #{heightStart,jdbcType=INTEGER},
+      </if>
+      <if test="heightEnd != null" >
+        HEIGHT_END = #{heightEnd,jdbcType=INTEGER},
+      </if>
+      <if test="shoulderable != null" >
+        SHOULDERABLE = #{shoulderable,jdbcType=INTEGER},
+      </if>
+      <if test="shoulderStart != null" >
+        SHOULDER_START = #{shoulderStart,jdbcType=INTEGER},
+      </if>
+      <if test="shoulderEnd != null" >
+        SHOULDER_END = #{shoulderEnd,jdbcType=INTEGER},
+      </if>
+      <if test="sizeTemplateId != null" >
+        SIZE_TEMPLATE_ID = #{sizeTemplateId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO" >
+    update pdt_sku_size_table
+    set SIZE_NAME = #{sizeName,jdbcType=VARCHAR},
+      WAISTLINEABLE = #{waistlineable,jdbcType=INTEGER},
+      WAISTLINE_START = #{waistlineStart,jdbcType=INTEGER},
+      WAISTLINE_END = #{waistlineEnd,jdbcType=INTEGER},
+      WEIGHTABLE = #{weightable,jdbcType=INTEGER},
+      WEIGHT_START = #{weightStart,jdbcType=INTEGER},
+      WEIGHT_END = #{weightEnd,jdbcType=INTEGER},
+      HIPABLE = #{hipable,jdbcType=INTEGER},
+      HIP_START = #{hipStart,jdbcType=INTEGER},
+      HIP_END = #{hipEnd,jdbcType=INTEGER},
+      CHESTABLE = #{chestable,jdbcType=INTEGER},
+      CHEST_START = #{chestStart,jdbcType=INTEGER},
+      CHEST_END = #{chestEnd,jdbcType=INTEGER},
+      HEIGHTABLE = #{heightable,jdbcType=INTEGER},
+      HEIGHT_START = #{heightStart,jdbcType=INTEGER},
+      HEIGHT_END = #{heightEnd,jdbcType=INTEGER},
+      SHOULDERABLE = #{shoulderable,jdbcType=INTEGER},
+      SHOULDER_START = #{shoulderStart,jdbcType=INTEGER},
+      SHOULDER_END = #{shoulderEnd,jdbcType=INTEGER},
+      SIZE_TEMPLATE_ID = #{sizeTemplateId,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

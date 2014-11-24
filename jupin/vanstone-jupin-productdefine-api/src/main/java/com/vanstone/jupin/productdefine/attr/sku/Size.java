@@ -16,6 +16,8 @@ public class Size extends AbstractBusinessObject {
 
 	/***/
 	private Integer id;
+	/**尺码名称*/
+	private String sizeName;
 	/**腰围*/
 	private boolean waistlineable = false;
 	private Integer waislineStart;
@@ -44,6 +46,10 @@ public class Size extends AbstractBusinessObject {
 	/**尺寸模板*/
 	private SizeTemplate sizeTemplate;
 
+	public Size() {
+		//必须初始化SizeTemplate
+	}
+	
 	public Size(SizeTemplate sizeTemplate) {
 		MyAssert.notNull(sizeTemplate);
 		this.sizeTemplate = sizeTemplate;
@@ -208,6 +214,14 @@ public class Size extends AbstractBusinessObject {
 
 	public void setSizeTemplate(SizeTemplate sizeTemplate) {
 		this.sizeTemplate = sizeTemplate;
+	}
+
+	public String getSizeName() {
+		return sizeName;
+	}
+
+	public void setSizeName(String sizeName) {
+		this.sizeName = sizeName;
 	}
 	
 }

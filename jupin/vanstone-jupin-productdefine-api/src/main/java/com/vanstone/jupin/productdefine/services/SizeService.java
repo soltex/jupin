@@ -5,6 +5,10 @@ package com.vanstone.jupin.productdefine.services;
 
 import java.util.Collection;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.jupin.productdefine.attr.sku.Size;
 import com.vanstone.jupin.productdefine.attr.sku.SizeTemplate;
@@ -23,11 +27,27 @@ public interface SizeService {
 	 * 添加尺寸模板
 	 * @param templateName
 	 * @param content
-	 * @param sizes
+	 * @param waistlineable 腰围
+	 * @param weightable	体重
+	 * @param hipable	臀围
+	 * @param chestable	胸围
+	 * @param heightable	身高
+	 * @param shoulderable	肩宽
+	 * @param sizes 尺寸集合
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	SizeTemplate addSizeTemplate(String templateName, String content, Collection<Size> sizes) throws ObjectDuplicateException;
+	SizeTemplate addSizeTemplate(@NotNull String templateName, String content, boolean waistlineable,boolean weightable,boolean hipable,boolean chestable, boolean heightable,boolean shoulderable,@NotEmpty Collection<Size> sizes) throws ObjectDuplicateException;
+	
+	/**
+	 * 更新SizeTemplate基本信息
+	 * @param id
+	 * @param templateName
+	 * @param content
+	 * @return
+	 * @throws CategoryHasProductsException
+	 */
+	SizeTemplate updateBaseSizeTemplateInfo(int id, String templateName, String content) throws CategoryHasProductsException;
 	
 	/**
 	 * 更新尺码模板信息
@@ -36,7 +56,7 @@ public interface SizeService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	SizeTemplate updateSizeTemplate(SizeTemplate sizeTemplate, Collection<Size> sizes) throws ObjectDuplicateException;
+	SizeTemplate updateSizeTemplate(SizeTemplate sizeTemplate, Collection<Size> sizes) throws ObjectDuplicateException,CategoryHasProductsException;
 	
 	/**
 	 * 删除尺码模板
@@ -86,5 +106,23 @@ public interface SizeService {
 	 * @return
 	 */
 	SizeTemplate getSizeTemplate(int id);
+	
+	/**
+	 * 获取并验证
+	 * @param id
+	 * @return
+	 */
+	SizeTemplate getSizeTemplateAndValidate(int id);
+	
+	/**
+	 * 刷新尺码表
+	 */
+	void refreshSizeTables();
+	
+	/**
+	 * 通过模板id刷新sizetable
+	 * @param tempateId
+	 */
+	SizeTemplate refreshSizeTemplate(int tempateId);
 	
 }

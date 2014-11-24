@@ -21,6 +21,21 @@
 			<version>4.6</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.vanstone</groupId>
+			<artifactId>vanstone-framework</artifactId>
+			<version>${vanstone.commons.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vanstone</groupId>
+			<artifactId>vanstone-zk</artifactId>
+			<version>${vanstone.commons.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vanstone</groupId>
+			<artifactId>vanstone-jupin-common</artifactId>
+			<version>${jupin.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>
