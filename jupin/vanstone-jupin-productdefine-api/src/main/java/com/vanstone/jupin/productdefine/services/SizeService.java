@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.vanstone.business.ObjectDuplicateException;
+import com.vanstone.business.ObjectHasSubObjectException;
 import com.vanstone.jupin.productdefine.attr.sku.Size;
 import com.vanstone.jupin.productdefine.attr.sku.SizeTemplate;
 import com.vanstone.jupin.productdefine.attr.sku.SizeTemplateWrapBean;
@@ -47,16 +48,7 @@ public interface SizeService {
 	 * @return
 	 * @throws CategoryHasProductsException
 	 */
-	SizeTemplate updateBaseSizeTemplateInfo(int id, String templateName, String content) throws CategoryHasProductsException;
-	
-	/**
-	 * 更新尺码模板信息
-	 * @param sizeTemplate
-	 * @param sizes
-	 * @return
-	 * @throws ObjectDuplicateException
-	 */
-	SizeTemplate updateSizeTemplate(SizeTemplate sizeTemplate, Collection<Size> sizes) throws ObjectDuplicateException,CategoryHasProductsException;
+	SizeTemplate updateBaseSizeTemplateInfo(int id, String templateName, String content) throws ObjectHasSubObjectException, CategoryHasProductsException;
 	
 	/**
 	 * 删除尺码模板
@@ -64,7 +56,7 @@ public interface SizeService {
 	 * @return
 	 * @throws CategoryHasProductsException
 	 */
-	SizeTemplate deleteSizeTemplate(int sizeTemplateId) throws CategoryHasProductsException;
+	void deleteSizeTemplate(int sizeTemplateId) throws CategoryHasProductsException;
 	
 	/**
 	 * 获取尺码模板列表
@@ -78,7 +70,7 @@ public interface SizeService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	Size addSize(Size size) throws ObjectDuplicateException;
+	Size addSize(Size size) throws ObjectDuplicateException,CategoryHasProductsException;
 	
 	/**
 	 * 更新尺码信息

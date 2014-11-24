@@ -5,8 +5,10 @@ package com.vanstone.jupin.productdefine.services.impl;
 
 import com.vanstone.jupin.common.util.BoolUtil;
 import com.vanstone.jupin.productdefine.attr.sku.Color;
+import com.vanstone.jupin.productdefine.attr.sku.Size;
 import com.vanstone.jupin.productdefine.attr.sku.SizeTemplate;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuColorTableDO;
+import com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTemplateDO;
 
 /**
@@ -78,4 +80,13 @@ public class BeanUtil {
 		pdtSkuSizeTemplateDO.setShoulderable(BoolUtil.parseBoolean(sizeTemplate.isShoulderable()));
 		return pdtSkuSizeTemplateDO;
 	}
+	
+	public static PDTSkuSizeTableDO toPdtSkuSizeTableDO(Size size) {
+		return null;
+	}
+	
+	public static Size toSize(PDTSkuSizeTableDO pdtSkuSizeTableDO) {
+		return null;
+	}
+	
 }

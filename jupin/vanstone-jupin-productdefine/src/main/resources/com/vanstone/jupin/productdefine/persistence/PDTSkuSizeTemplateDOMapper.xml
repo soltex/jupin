@@ -19,6 +19,9 @@
     ID, TEMPLATE_NAME, SYSTEMABLE, WAISTLINEABLE, WEIGHTABLE, HIPABLE, CHESTABLE, HEIGHTABLE, 
     SHOULDERABLE
   </sql>
+  <sql id="Template_Column_List">
+  	TEMPLATE_NAME
+  </sql>
   <sql id="Blob_Column_List" >
     TEMPLATE_CONTENT
   </sql>
@@ -192,5 +195,10 @@
   	TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR} 
   	AND 
   	ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="ResultMapWithBLOBs">
+  	SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/> 
+  	FROM 
+  	pdt_sku_size_template 
   </select>
 </mapper>

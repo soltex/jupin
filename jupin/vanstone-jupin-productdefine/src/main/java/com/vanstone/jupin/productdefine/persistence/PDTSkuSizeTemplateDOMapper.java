@@ -1,5 +1,7 @@
 package com.vanstone.jupin.productdefine.persistence;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.vanstone.dal.mybatis.MyBatisRepository;
@@ -24,5 +26,7 @@ public interface PDTSkuSizeTemplateDOMapper {
     PDTSkuSizeTemplateDO selectByTemplateName(@Param("templateName")String templateName);
     
     PDTSkuSizeTemplateDO selectByTemplateName_NotSelf(@Param("id") Integer id, @Param("templateName")String templateName);
+    
+    List<PDTSkuSizeTemplateDO> selectAll();
     
 }

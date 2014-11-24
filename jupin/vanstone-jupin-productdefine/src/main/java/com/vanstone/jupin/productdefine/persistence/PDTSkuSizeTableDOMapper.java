@@ -1,7 +1,12 @@
 package com.vanstone.jupin.productdefine.persistence;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.vanstone.dal.mybatis.MyBatisRepository;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO;
+import com.vanstone.jupin.productdefine.persistence.object.QuerySizeTemplateDOWithSizeTableResultMap;
 
 @MyBatisRepository
 public interface PDTSkuSizeTableDOMapper {
@@ -16,4 +21,13 @@ public interface PDTSkuSizeTableDOMapper {
     int updateByPrimaryKeySelective(PDTSkuSizeTableDO record);
 
     int updateByPrimaryKey(PDTSkuSizeTableDO record);
+    
+    int deleteBySizeTemplateId(@Param("sizeTemplateId")Integer sizeTemplateId);
+    
+    PDTSkuSizeTableDO selectBySizeTemplateId_SizeName(@Param("sizeTemplateId")Integer sizeTemplateId, @Param("sizeName")String sizeName);
+    
+    PDTSkuSizeTableDO selectBySizeTemplateId_SizeName_NotSelf(@Param("sizeTemplateId")Integer sizeTemplateId, @Param("sizeName")String sizeName,@Param("id")Integer id);
+    
+    List<QuerySizeTemplateDOWithSizeTableResultMap> selectSizeTemplate_SizeTable_ResultMap();
+    
 }
