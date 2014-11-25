@@ -4,6 +4,9 @@
 package com.vanstone.jupin.productdefine.services;
 
 import java.util.Collection;
+import java.util.Map;
+
+import javax.validation.constraints.NotNull;
 
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.business.ObjectHasSubObjectException;
@@ -26,7 +29,7 @@ public interface BrandService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	Brand addBrand(Brand brand) throws ObjectDuplicateException;
+	Brand addBrand(@NotNull Brand brand) throws ObjectDuplicateException;
 	
 	/**
 	 * 添加品牌信息
@@ -34,7 +37,7 @@ public interface BrandService {
 	 * @param productCategories
 	 * @return
 	 */
-	Brand addBrand(Brand brand, Collection<ProductCategory> productCategories) throws MustLeafNodeofProductCategoryException, ObjectDuplicateException;
+	Brand addBrand(@NotNull Brand brand, Collection<ProductCategory> productCategories) throws MustLeafNodeofProductCategoryException, ObjectDuplicateException;
 	
 	/**
 	 * 通过ID获取品牌信息（放入到缓冲中）
@@ -44,17 +47,17 @@ public interface BrandService {
 	Brand getBrand(int id);
 	
 	/**
+	 * 获取Brand Map
+	 * @param ids
+	 * @return
+	 */
+	Map<Integer, Brand> getBrandsMap(@NotNull Collection<Integer> ids);
+	
+	/**
 	 * 删除品牌Logo信息
 	 * @param id
 	 */
 	void deleteBrandLogoImage(int id);
-	
-	/**
-	 * 获取品牌列表(通过品类id)
-	 * @param brandId
-	 * @return
-	 */
-	Collection<Brand> getBrandsByProductCategory(int productCategoryId);
 	
 	/**
 	 * 更新品牌基本信息
@@ -65,7 +68,7 @@ public interface BrandService {
 	 * @param systemable
 	 * @return
 	 */
-	Brand updateBrandBaseInfo(int brandId, String brandName, String brandNameEN, String content, boolean systemable);
+	Brand updateBrandBaseInfo(int brandId, String brandName, String brandNameEN, String content, boolean systemable) throws ObjectDuplicateException;
 	
 	/**
 	 * 更新品牌基本信息
@@ -80,7 +83,7 @@ public interface BrandService {
 	 * @param brandId
 	 * @throws ObjectHasSubObjectException
 	 */
-	void deleteBrand(int brandId) throws ObjectHasSubObjectException;
+	void deleteBrand(int brandId) throws CategoryHasProductsException;
 	
 	/**
 	 * 强制删除品牌信息

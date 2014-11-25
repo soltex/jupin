@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper
-	namespace="com.vanstone.jupin.productdefine.persistence.PDTSkuSizeTableDOMapper">
-	<resultMap id="BaseResultMap"
-		type="com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO">
+<mapper namespace="com.vanstone.jupin.productdefine.persistence.PDTSkuSizeTableDOMapper">
+	<resultMap id="BaseResultMap" type="com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO">
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="SIZE_NAME" property="sizeName" jdbcType="VARCHAR" />
-		<result column="WAISTLINEABLE" property="waistlineable"
-			jdbcType="INTEGER" />
-		<result column="WAISTLINE_START" property="waistlineStart"
-			jdbcType="INTEGER" />
-		<result column="WAISTLINE_END" property="waistlineEnd"
-			jdbcType="INTEGER" />
+		<result column="WAISTLINEABLE" property="waistlineable" jdbcType="INTEGER" />
+		<result column="WAISTLINE_START" property="waistlineStart" jdbcType="INTEGER" />
+		<result column="WAISTLINE_END" property="waistlineEnd" jdbcType="INTEGER" />
 		<result column="WEIGHTABLE" property="weightable" jdbcType="INTEGER" />
 		<result column="WEIGHT_START" property="weightStart" jdbcType="INTEGER" />
 		<result column="WEIGHT_END" property="weightEnd" jdbcType="INTEGER" />
@@ -29,9 +24,11 @@
 		<result column="SHOULDER_END" property="shoulderEnd" jdbcType="INTEGER" />
 		<result column="SIZE_TEMPLATE_ID" property="sizeTemplateId" jdbcType="INTEGER" />
 	</resultMap>
-	<resultMap type="com.vanstone.jupin.productdefine.persistence.QuerySizeTemplateDOWithSizeTableResultMap" id="QuerySizeTemplateDOWithSizeTableResultMap" extends="BaseResultMap">
+	
+	<resultMap type="com.vanstone.jupin.productdefine.persistence.object.QuerySizeTemplateDOWithSizeTableResultMap" id="QuerySizeTemplateDOWithSizeTableResultMap" extends="BaseResultMap">
 		<result column="TEMPLATE_NAME" property="templateName" jdbcType="VARCHAR" />
 		<result column="TEMPLATE_CONTENT" property="templateContent" jdbcType="LONGVARCHAR" />
+		<result column="SYSTEMABLE" property="systemable" jdbcType="INTEGER" ></result>
 	</resultMap>
 	
 	<sql id="Base_Column_List">
@@ -318,23 +315,25 @@
 	<select id="selectBySizeTemplateId_SizeName" parameterType="map" resultMap="BaseResultMap">
 		SELECT <include refid="Base_Column_List"/> FROM 
 		pdt_sku_size_table 
+		WHERE 
 		SIZE_TEMPLATE_ID = #{sizeTemplateId,jdbcType=INTEGER} 
 		AND 
 		SIZE_NAME = #{sizeName,jdbcType=VARCHAR}
 	</select>
 	<select id="selectBySizeTemplateId_SizeName_NotSelf" parameterType="map" resultMap="BaseResultMap">
 		SELECT <include refid="Base_Column_List"/> FROM 
-		pdt_sku_size_table 
+		pdt_sku_size_table  
+		WHERE 
 		SIZE_TEMPLATE_ID = #{sizeTemplateId,jdbcType=INTEGER} 
 		AND 
 		SIZE_NAME = #{sizeName,jdbcType=VARCHAR} 
 		AND 
 		ID &lt;&gt; #{id,jdbcType=INTEGER}
 	</select>
-	 <select id="selectSizeTemplate_SizeTable_ResultMap" resultMap=QuerySizeTemplateDOWithSizeTableResultMap">
+	 <select id="selectSizeTemplate_SizeTable_ResultMap" resultMap="QuerySizeTemplateDOWithSizeTableResultMap">
 	 	SELECT pdt_sku_size_table.*,pdt_sku_size_template.TEMPLATE_CONTENT, pdt_sku_size_template.TEMPLATE_NAME
 		FROM 
-		pdt_sku_size_template INNER JOIN pdt_sku_size_table ON pdt_sku_size_template.ID = pdt_sku_size_table.SIZE_TEMPLATE_ID
+		pdt_sku_size_template LEFT JOIN pdt_sku_size_table ON pdt_sku_size_template.ID = pdt_sku_size_table.SIZE_TEMPLATE_ID
 		ORDER BY 
 		pdt_sku_size_template.ID DESC, 
 		pdt_sku_size_table.SIZE_NAME DESC 

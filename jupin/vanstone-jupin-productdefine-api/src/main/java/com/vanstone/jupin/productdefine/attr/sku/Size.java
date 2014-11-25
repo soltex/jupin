@@ -20,8 +20,8 @@ public class Size extends AbstractBusinessObject {
 	private String sizeName;
 	/**腰围*/
 	private boolean waistlineable = false;
-	private Integer waislineStart;
-	private Integer waislineEnd;
+	private Integer waistlineStart;
+	private Integer waistlineEnd;
 	/**体重*/
 	private boolean weightable = false;
 	private Integer weightStart;
@@ -60,20 +60,20 @@ public class Size extends AbstractBusinessObject {
 		return this.id;
 	}
 	
-	public Integer getWaislineStart() {
-		return waislineStart;
+	public Integer getWaistlineStart() {
+		return waistlineStart;
 	}
 
-	public void setWaislineStart(Integer waislineStart) {
-		this.waislineStart = waislineStart;
+	public void setWaistlineStart(Integer waistlineStart) {
+		this.waistlineStart = waistlineStart;
 	}
 
-	public Integer getWaislineEnd() {
-		return waislineEnd;
+	public Integer getWaistlineEnd() {
+		return waistlineEnd;
 	}
 
-	public void setWaislineEnd(Integer waislineEnd) {
-		this.waislineEnd = waislineEnd;
+	public void setWaistlineEnd(Integer waistlineEnd) {
+		this.waistlineEnd = waistlineEnd;
 	}
 
 	public Integer getWeightStart() {

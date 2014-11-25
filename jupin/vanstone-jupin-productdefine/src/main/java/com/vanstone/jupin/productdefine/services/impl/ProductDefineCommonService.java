@@ -4,11 +4,13 @@
 package com.vanstone.jupin.productdefine.services.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author shipeng
  */
 @Service("productDefineCommonService")
+@Validated
 public class ProductDefineCommonService {
 
 	/**
@@ -16,7 +18,7 @@ public class ProductDefineCommonService {
 	 * @return
 	 */
 	public boolean validateProductCategoryByColor() {
-		return false;
+		return true;
 	}
 	
 	/**
@@ -25,6 +27,23 @@ public class ProductDefineCommonService {
 	 * @return
 	 */
 	public boolean validateProductCategoryBySizeTemplate(int sizeTemplateId) {
-		return false;
+		return true;
+	}
+	
+	/**
+	 * 验证Brand是否可以修改
+	 * @param brandID
+	 * @return
+	 */
+	public boolean validateProductCategoryByBrandID(int brandID) {
+		return true;
+	}
+	
+	/**
+	 * 刷新ProductCategory缓冲
+	 * @param categoryId
+	 */
+	public void refreshProductCateogryCache(int categoryId) {
+		
 	}
 }

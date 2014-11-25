@@ -38,7 +38,7 @@ public class Constants {
 		if (node.endsWith("/")) {
 			node = StringUtils.substring(node, 0, node.length()-1);
 		}
-		if (node.startsWith("/")) {
+		if (!node.startsWith("/")) {
 			node = "/" + node;
 		}
 		return ZK_LOCK_MUTEXT_NODE_PATH_PREFIX + node;
@@ -51,7 +51,7 @@ public class Constants {
 	public static final String buildZKLockMutexNodePath(AbstractBusinessObject businessObject) {
 		MyAssert4Business.objectInitialized(businessObject);
 		String node = businessObject.getKey();
-		return ZK_LOCK_MUTEXT_NODE_PATH_PREFIX + "/" + node;
+		return buildZKLockMutexNodePath("/" + node);
 	}
 	
 }

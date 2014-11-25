@@ -72,4 +72,12 @@ public class ProductCategory extends AbstractBusinessObject {
 		return this.id;
 	}
 	
+	public boolean isLeafable() {
+		return leafable;
+	}
+
+	public void setLeafable(boolean leafable) {
+		this.leafable = leafable;
+	}
+	
 }

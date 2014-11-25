@@ -116,4 +116,11 @@ public class Brand extends AbstractBusinessObject {
 		return productCount;
 	}
 	
+	/**
+	 * 是否存在LogoInfo
+	 * @return
+	 */
+	public boolean existLogoInfo() {
+		return this.logoImage != null;
+	}
 }

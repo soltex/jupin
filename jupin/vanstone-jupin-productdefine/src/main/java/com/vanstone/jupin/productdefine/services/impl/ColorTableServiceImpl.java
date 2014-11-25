@@ -64,7 +64,7 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 	@Override
 	public Color addColor(final Color color) throws ObjectDuplicateException {
 		PDTSkuColorTableDO model = this.pdtSkuColorTableDOMapper.selectByColorName(color.getColorName());
-		if (model == null) {
+		if (model != null) {
 			throw new ObjectDuplicateException();
 		}
 		this.execute(new TransactionCallbackWithoutResult() {

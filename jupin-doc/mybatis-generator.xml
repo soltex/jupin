@@ -10,8 +10,8 @@
 		</commentGenerator>
 		
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://127.0.0.1:3306/jupin" userId="root"
-			password="root" />
+			connectionURL="jdbc:mysql://192.168.1.120:10086/jupin" userId="root"
+			password="quid0s" />
 		
 		<javaModelGenerator targetPackage="com.vanstone.jupin.productdefine.persistence.object" targetProject="jupin-doc" />
 		<sqlMapGenerator targetPackage="com.vanstone.jupin.productdefine.persistence" targetProject="jupin-doc" />
@@ -19,8 +19,8 @@
 		
 		<table 
 			schema="jupin" 
-			tableName="PDT_SKU_SIZE_TEMPLATE" 
-			domainObjectName="PDTSkuSizeTemplateDO"
+			tableName="pdt_brand" 
+			domainObjectName="PDTBrandDO"
 			enableInsert="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" enableSelectByExample="false"
 			enableDeleteByExample="false" enableUpdateByExample="false"
@@ -28,8 +28,8 @@
 		
 		<table 
 			schema="jupin" 
-			tableName="PDT_SKU_SIZE_TABLE" 
-			domainObjectName="PDTSkuSizeTableDO"
+			tableName="pdt_product_brand_rel" 
+			domainObjectName="PDTProductBrandRelDO"
 			enableInsert="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" enableSelectByExample="false"
 			enableDeleteByExample="false" enableUpdateByExample="false"

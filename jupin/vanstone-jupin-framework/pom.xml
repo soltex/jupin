@@ -36,6 +36,11 @@
 			<artifactId>vanstone-jupin-common</artifactId>
 			<version>${jupin.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.vanstone</groupId>
+			<artifactId>vanstone-elasticsearch</artifactId>
+			<version>${vanstone.commons.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>

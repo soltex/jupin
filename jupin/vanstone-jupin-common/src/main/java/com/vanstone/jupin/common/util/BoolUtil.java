@@ -28,11 +28,11 @@ public class BoolUtil {
 	 * @param yesno
 	 * @return
 	 */
-	public static boolean parseInt(int yesno) {
-		if (yesno == 1) {
-			return true;
+	public static boolean parseInt(Integer yesno) {
+		if (yesno == null || yesno != 1) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	/**
@@ -40,11 +40,11 @@ public class BoolUtil {
 	 * @param yesno
 	 * @return
 	 */
-	public static YesNo parseIntToYesNO(int yesno) {
-		if (yesno == 1){
-			return YesNo.Yes;
+	public static YesNo parseIntToYesNO(Integer yesno) {
+		if (yesno == null || yesno != 1) {
+			return YesNo.No;
 		}
-		return YesNo.No;
+		return YesNo.Yes;
 	}
 	
 	/**

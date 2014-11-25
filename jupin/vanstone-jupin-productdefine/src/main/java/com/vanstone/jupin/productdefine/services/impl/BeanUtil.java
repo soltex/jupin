@@ -3,10 +3,13 @@
  */
 package com.vanstone.jupin.productdefine.services.impl;
 
+import com.vanstone.jupin.common.entity.ImageBean;
 import com.vanstone.jupin.common.util.BoolUtil;
+import com.vanstone.jupin.productdefine.Brand;
 import com.vanstone.jupin.productdefine.attr.sku.Color;
 import com.vanstone.jupin.productdefine.attr.sku.Size;
 import com.vanstone.jupin.productdefine.attr.sku.SizeTemplate;
+import com.vanstone.jupin.productdefine.persistence.object.PDTBrandDO;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuColorTableDO;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTemplateDO;
@@ -81,12 +84,114 @@ public class BeanUtil {
 		return pdtSkuSizeTemplateDO;
 	}
 	
-	public static PDTSkuSizeTableDO toPdtSkuSizeTableDO(Size size) {
-		return null;
+	public static PDTSkuSizeTableDO toPDTSkuSizeTableDO(Size size) {
+		PDTSkuSizeTableDO pDTSkuSizeTableDO = new PDTSkuSizeTableDO();
+		
+		pDTSkuSizeTableDO.setSizeTemplateId(size.getSizeTemplate().getId());
+		pDTSkuSizeTableDO.setId(size.getId());
+		pDTSkuSizeTableDO.setSizeName(size.getSizeName());
+		
+		pDTSkuSizeTableDO.setWaistlineable(BoolUtil.parseBoolean(size.isWaistlineable()));
+		pDTSkuSizeTableDO.setWaistlineEnd(size.getWaistlineEnd());
+		pDTSkuSizeTableDO.setWaistlineStart(size.getWaistlineStart());
+		
+		pDTSkuSizeTableDO.setWeightable(BoolUtil.parseBoolean(size.isWeightable()));
+		pDTSkuSizeTableDO.setWeightStart(size.getWeightStart());
+		pDTSkuSizeTableDO.setWeightEnd(size.getWeightEnd());
+		
+		pDTSkuSizeTableDO.setHipable(BoolUtil.parseBoolean(size.isHipable()));
+		pDTSkuSizeTableDO.setHipStart(size.getHipStart());
+		pDTSkuSizeTableDO.setHipEnd(size.getHipEnd());
+		
+		pDTSkuSizeTableDO.setChestable(BoolUtil.parseBoolean(size.isChestable()));
+		pDTSkuSizeTableDO.setChestStart(size.getChestStart());
+		pDTSkuSizeTableDO.setChestEnd(size.getChestEnd());
+		
+		pDTSkuSizeTableDO.setHeightable(BoolUtil.parseBoolean(size.isHeightable()));
+		pDTSkuSizeTableDO.setHeightStart(size.getHeightStart());
+		pDTSkuSizeTableDO.setHeightEnd(size.getHeightEnd());
+		
+		pDTSkuSizeTableDO.setShoulderable(BoolUtil.parseBoolean(size.isShoulderable()));
+		pDTSkuSizeTableDO.setShoulderStart(size.getShoulderStart());
+		pDTSkuSizeTableDO.setShoulderEnd(size.getShoulderEnd());
+		
+		return pDTSkuSizeTableDO;
 	}
 	
-	public static Size toSize(PDTSkuSizeTableDO pdtSkuSizeTableDO) {
-		return null;
+	public static Size toSize(PDTSkuSizeTableDO pDTSkuSizeTableDO,SizeTemplate sizeTemplate) {
+		Size size = new Size();
+		size.setId(pDTSkuSizeTableDO.getId());
+		size.setSizeName(pDTSkuSizeTableDO.getSizeName());
+		size.setSizeTemplate(sizeTemplate);
+		
+		size.setWaistlineable(BoolUtil.parseInt(pDTSkuSizeTableDO.getWaistlineable()));
+		size.setWaistlineEnd(pDTSkuSizeTableDO.getWaistlineEnd());
+		size.setWaistlineStart(pDTSkuSizeTableDO.getWaistlineStart());
+		
+		size.setWeightable(BoolUtil.parseInt(pDTSkuSizeTableDO.getWeightable()));
+		size.setWeightStart(pDTSkuSizeTableDO.getWeightStart());
+		size.setWeightEnd(pDTSkuSizeTableDO.getWeightEnd());
+		size.setHipable(BoolUtil.parseInt(pDTSkuSizeTableDO.getHipable()));
+		size.setHipStart(pDTSkuSizeTableDO.getHipStart());
+		size.setHipEnd(pDTSkuSizeTableDO.getHipEnd());
+		size.setChestable(BoolUtil.parseInt(pDTSkuSizeTableDO.getChestable()));
+		size.setChestStart(pDTSkuSizeTableDO.getChestStart());
+		size.setChestEnd(pDTSkuSizeTableDO.getChestEnd());
+		size.setHeightable(BoolUtil.parseInt(pDTSkuSizeTableDO.getHeightable()));
+		size.setHeightStart(pDTSkuSizeTableDO.getHeightStart());
+		size.setHeightEnd(pDTSkuSizeTableDO.getHeightEnd());
+		size.setShoulderable(BoolUtil.parseInt(pDTSkuSizeTableDO.getShoulderable()));
+		size.setShoulderStart(pDTSkuSizeTableDO.getShoulderStart());
+		size.setShoulderEnd(pDTSkuSizeTableDO.getShoulderEnd());
+		
+		return size;
 	}
 	
+	/**
+	 * The following are not being converted. 
+	 * java.lang.Integer productCategoryCount;
+	 * java.lang.Integer productCount;
+	 */
+	public static Brand toBrand(PDTBrandDO pdtBrandDO) {
+		Brand brand = new Brand();
+		brand.setId(pdtBrandDO.getId());
+		brand.setBrandName(pdtBrandDO.getBrandName());
+		brand.setBrandNameEN(pdtBrandDO.getBrandNameEn());
+		brand.setBrandNamefirstLetter(pdtBrandDO.getBrandNameFirstLetter());
+		brand.setContent(pdtBrandDO.getContent());
+		if (pdtBrandDO.getLogoFileId() != null && !pdtBrandDO.getLogoFileId().equals("")) {
+			ImageBean imageBean  = new ImageBean(pdtBrandDO.getLogoFileId(), pdtBrandDO.getLogoFileExt(), 
+					pdtBrandDO.getLogoWidth(), pdtBrandDO.getLogoHeight());
+			brand.setLogoImage(imageBean);
+		}
+		brand.setSystemable(BoolUtil.parseInt(pdtBrandDO.getSystemable()));
+		return brand;
+	}
+
+
+	/**
+	 * The following are not being converted. 
+	 * java.lang.Integer brandNameEn;
+	 * java.lang.String brandNameFirstLetter;
+	 * java.lang.String logoFileId;
+	 * java.lang.Integer logoWidth;
+	 * java.lang.Integer logoHeight;
+	 * java.lang.String logoFileExt;
+	 */
+	public static PDTBrandDO toPDTBrandDO(Brand brand) {
+		PDTBrandDO pdtBrandDO = new PDTBrandDO();
+		pdtBrandDO.setId(brand.getId());
+		pdtBrandDO.setBrandName(brand.getBrandName());
+		pdtBrandDO.setBrandNameEn(brand.getBrandNameEN());
+		pdtBrandDO.setBrandNameFirstLetter(brand.getBrandNamefirstLetter());
+		if (brand.getLogoImage() != null) {
+			pdtBrandDO.setLogoFileId(brand.getLogoImage().getWeedFile().getFileid());
+			pdtBrandDO.setLogoFileExt(brand.getLogoImage().getWeedFile().getExtName());
+			pdtBrandDO.setLogoWidth(brand.getLogoImage().getWidth());
+			pdtBrandDO.setLogoHeight(brand.getLogoImage().getHeight());
+		}
+		pdtBrandDO.setSystemable(BoolUtil.parseBoolean(brand.isSystemable()));
+		pdtBrandDO.setContent(brand.getContent());
+		return pdtBrandDO;
+	}
 }

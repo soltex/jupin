@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 
 import org.apache.commons.io.FilenameUtils;
 
+import com.vanstone.business.MyAssert4Business;
 import com.vanstone.common.util.image.ImagePropertyVO;
 import com.vanstone.common.util.image.ImageUtil;
 import com.vanstone.jupin.common.ImageFormatException;
@@ -32,6 +33,13 @@ public class ImageBean {
 	
 	public ImageBean(WeedFile weedFile, int width, int height) {
 		this.weedFile = weedFile;
+		this.width = width;
+		this.height = height;
+	}
+	
+	public ImageBean(String fileid, String extName, int width, int height) {
+		MyAssert4Business.hasText(fileid);
+		this.weedFile = new WeedFile(fileid, extName);
 		this.width = width;
 		this.height = height;
 	}

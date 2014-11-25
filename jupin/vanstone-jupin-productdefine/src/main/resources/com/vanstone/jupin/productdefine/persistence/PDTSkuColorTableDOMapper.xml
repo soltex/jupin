@@ -114,7 +114,7 @@
 		WHERE 
 		COLOR_NAME = #{colorName,jdbcType=VARCHAR} AND ID &lt;&gt; #{id,jdbcType=INTEGER}
 	</select>
-	<select id="selectAll" parameterType="map" resultMap=BaseResultMap">
+	<select id="selectAll" parameterType="map" resultMap="BaseResultMap">
 		SELECT <include refid="Base_Column_List"/> FROM 
 		pdt_sku_color_table 
 		ORDER BY SORT DESC 

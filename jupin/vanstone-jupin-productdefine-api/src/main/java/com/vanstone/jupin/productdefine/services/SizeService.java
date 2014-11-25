@@ -28,6 +28,7 @@ public interface SizeService {
 	 * 添加尺寸模板
 	 * @param templateName
 	 * @param content
+	 * @param systemable 系统内置
 	 * @param waistlineable 腰围
 	 * @param weightable	体重
 	 * @param hipable	臀围
@@ -38,7 +39,7 @@ public interface SizeService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	SizeTemplate addSizeTemplate(@NotNull String templateName, String content, boolean waistlineable,boolean weightable,boolean hipable,boolean chestable, boolean heightable,boolean shoulderable,@NotEmpty Collection<Size> sizes) throws ObjectDuplicateException;
+	SizeTemplate addSizeTemplate(@NotNull String templateName, String content, boolean systemable, boolean waistlineable,boolean weightable,boolean hipable,boolean chestable, boolean heightable,boolean shoulderable,@NotEmpty Collection<Size> sizes) throws ObjectDuplicateException;
 	
 	/**
 	 * 更新SizeTemplate基本信息
@@ -49,6 +50,22 @@ public interface SizeService {
 	 * @throws CategoryHasProductsException
 	 */
 	SizeTemplate updateBaseSizeTemplateInfo(int id, String templateName, String content) throws ObjectHasSubObjectException, CategoryHasProductsException;
+	
+	/**
+	 * 更新尺码详情信息
+	 * @param id
+	 * @param systemable
+	 * @param waistlineable
+	 * @param weightable
+	 * @param hipable
+	 * @param chestable
+	 * @param heightable
+	 * @param shoulderable
+	 * @param sizes
+	 * @return
+	 * @throws ObjectDuplicateException
+	 */
+	SizeTemplate updateSizeTemplate(int id, boolean systemable, boolean waistlineable,boolean weightable,boolean hipable,boolean chestable, boolean heightable,boolean shoulderable,@NotEmpty Collection<Size> sizes) throws ObjectDuplicateException, CategoryHasProductsException;
 	
 	/**
 	 * 删除尺码模板
@@ -100,6 +117,13 @@ public interface SizeService {
 	SizeTemplate getSizeTemplate(int id);
 	
 	/**
+	 * 通过Id获取Size
+	 * @param sizeId
+	 * @return
+	 */
+	Size getSize(int sizeId);
+	
+	/**
 	 * 获取并验证
 	 * @param id
 	 * @return
@@ -110,11 +134,5 @@ public interface SizeService {
 	 * 刷新尺码表
 	 */
 	void refreshSizeTables();
-	
-	/**
-	 * 通过模板id刷新sizetable
-	 * @param tempateId
-	 */
-	SizeTemplate refreshSizeTemplate(int tempateId);
 	
 }

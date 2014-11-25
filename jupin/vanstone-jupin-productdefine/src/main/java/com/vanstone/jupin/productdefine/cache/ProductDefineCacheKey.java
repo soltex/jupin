@@ -15,17 +15,6 @@ public class ProductDefineCacheKey {
 	public static final String COLOR_TABLE_LIST_KEY = "COLOR_LIST";
 	
 	/**尺码表集合模板前缀*/
-	public static final String SIZE_TEMLATE_PREFIX = "SIZE_TEMPALTE_";
+	public static final String SIZE_CACHE_PREFIX = "SIZE_CACHE_";
 	
-	/**
-	 * 获取尺码模板Cache KEY
-	 * @param id
-	 * @return
-	 */
-	public static String getSizeTemplateKey(int id) {
-		if (id <=0) {
-			throw new IllegalArgumentException();
-		}
-		return SIZE_TEMLATE_PREFIX + id;
-	}
 }
