@@ -6,10 +6,12 @@ package com.vanstone.jupin.productdefine.services.impl;
 import com.vanstone.jupin.common.entity.ImageBean;
 import com.vanstone.jupin.common.util.BoolUtil;
 import com.vanstone.jupin.productdefine.Brand;
+import com.vanstone.jupin.productdefine.ProductCategory;
 import com.vanstone.jupin.productdefine.attr.sku.Color;
 import com.vanstone.jupin.productdefine.attr.sku.Size;
 import com.vanstone.jupin.productdefine.attr.sku.SizeTemplate;
 import com.vanstone.jupin.productdefine.persistence.object.PDTBrandDO;
+import com.vanstone.jupin.productdefine.persistence.object.PDTCategoryDO;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuColorTableDO;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTemplateDO;
@@ -18,7 +20,7 @@ import com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTemplateDO;
  * @author shipeng
  */
 public class BeanUtil {
-
+	
 	public static Color toColor(PDTSkuColorTableDO pDTSkuColorTableDO) {
 		Color color = new Color();
 		color.setId(pDTSkuColorTableDO.getId());
@@ -194,4 +196,13 @@ public class BeanUtil {
 		pdtBrandDO.setContent(brand.getContent());
 		return pdtBrandDO;
 	}
+	
+	public static PDTCategoryDO toPdtCategoryDO(ProductCategory productCategory) {
+		return null;
+	}
+	
+	public static ProductCategory toProductCategory(PDTCategoryDO pdtCategoryDO) {
+		return null;
+	}
+	
 }

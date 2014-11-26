@@ -19,8 +19,8 @@
 		
 		<table 
 			schema="jupin" 
-			tableName="pdt_brand" 
-			domainObjectName="PDTBrandDO"
+			tableName="pdt_attribute_def" 
+			domainObjectName="PDTAttributeDefDO"
 			enableInsert="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" enableSelectByExample="false"
 			enableDeleteByExample="false" enableUpdateByExample="false"
@@ -28,13 +28,30 @@
 		
 		<table 
 			schema="jupin" 
-			tableName="pdt_product_brand_rel" 
-			domainObjectName="PDTProductBrandRelDO"
+			tableName="pdt_attribute_enumvalue" 
+			domainObjectName="PDTAttributeEnumvalueDO"
 			enableInsert="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" enableSelectByExample="false"
 			enableDeleteByExample="false" enableUpdateByExample="false"
 			selectByExampleQueryId="false" enableCountByExample="false" />
 			
+		<table 
+			schema="jupin" 
+			tableName="pdt_category" 
+			domainObjectName="PDTCategoryDO"
+			enableInsert="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" enableSelectByExample="false"
+			enableDeleteByExample="false" enableUpdateByExample="false"
+			selectByExampleQueryId="false" enableCountByExample="false" />
+		
+		<table 
+			schema="jupin" 
+			tableName="pdt_category_attribute_def_rel" 
+			domainObjectName="PDTCategoryAttributeDefRelDO"
+			enableInsert="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" enableSelectByExample="false"
+			enableDeleteByExample="false" enableUpdateByExample="false"
+			selectByExampleQueryId="false" enableCountByExample="false" />
 	</context>
 	
 </generatorConfiguration>

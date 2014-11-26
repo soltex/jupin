@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vanstone.jupin.productdefine.persistence.PDTCategoryAttributeDefRelDOMapper" >
+  <resultMap id="BaseResultMap" type="com.vanstone.jupin.productdefine.persistence.object.PDTCategoryAttributeDefRelDOKey" >
+    <id column="CATEGORY_ID" property="categoryId" jdbcType="INTEGER" />
+    <id column="ATTRIBUTE_DEF_ID" property="attributeDefId" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.vanstone.jupin.productdefine.persistence.object.PDTCategoryAttributeDefRelDOKey" >
+    delete from pdt_category_attribute_def_rel
+    where CATEGORY_ID = #{categoryId,jdbcType=INTEGER}
+      and ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.vanstone.jupin.productdefine.persistence.object.PDTCategoryAttributeDefRelDOKey" >
+    insert into pdt_category_attribute_def_rel (CATEGORY_ID, ATTRIBUTE_DEF_ID)
+    values (#{categoryId,jdbcType=INTEGER}, #{attributeDefId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.vanstone.jupin.productdefine.persistence.object.PDTCategoryAttributeDefRelDOKey" >
+    insert into pdt_category_attribute_def_rel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        CATEGORY_ID,
+      </if>
+      <if test="attributeDefId != null" >
+        ATTRIBUTE_DEF_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="attributeDefId != null" >
+        #{attributeDefId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

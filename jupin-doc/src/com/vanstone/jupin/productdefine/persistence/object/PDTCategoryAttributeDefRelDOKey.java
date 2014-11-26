@@ -1,9 +1,9 @@
 package com.vanstone.jupin.productdefine.persistence.object;
 
-public class PDTProductBrandRelDOKey {
+public class PDTCategoryAttributeDefRelDOKey {
     private Integer categoryId;
 
-    private Integer brandId;
+    private Integer attributeDefId;
 
     public Integer getCategoryId() {
         return categoryId;
@@ -13,11 +13,11 @@ public class PDTProductBrandRelDOKey {
         this.categoryId = categoryId;
     }
 
-    public Integer getBrandId() {
-        return brandId;
+    public Integer getAttributeDefId() {
+        return attributeDefId;
     }
 
-    public void setBrandId(Integer brandId) {
-        this.brandId = brandId;
+    public void setAttributeDefId(Integer attributeDefId) {
+        this.attributeDefId = attributeDefId;
     }
 }
