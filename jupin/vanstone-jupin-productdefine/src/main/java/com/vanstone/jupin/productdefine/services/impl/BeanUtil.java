@@ -198,6 +198,11 @@ public class BeanUtil {
 	}
 	
 	public static PDTCategoryDO toPdtCategoryDO(ProductCategory productCategory) {
+		PDTCategoryDO model = new PDTCategoryDO();
+		model.setId(productCategory.getId());
+		model.setCategoryName(productCategory.getCategoryName());
+		model.setDescription(productCategory.getDescription());
+		model.setCategoryBindPage(productCategory.getCategoryBindPage());
 		return null;
 	}
 	

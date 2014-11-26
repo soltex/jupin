@@ -69,7 +69,7 @@ public interface ProductCategoryService {
 	 * @param sort
 	 * @return
 	 */
-	ProductCategory updateBaseProductCategoryInfo(int id, String categoryName, String description, String categoryBindPage, String formTemplate, Integer sort);
+	ProductCategory updateBaseProductCategoryInfo(int id, String categoryName, String description, String categoryBindPage, String formTemplate, Integer sort) throws CategoryHasProductsException;
 	
 	/**
 	 * 更新品类封面图片
@@ -78,6 +78,13 @@ public interface ProductCategoryService {
 	 * @return
 	 */
 	ProductCategory updateProductCategoryCoverImage(int id, @NotNull ImageBean coverImage) throws CategoryHasProductsException;
+	
+	/**
+	 * 删除品类封面图片
+	 * @param id
+	 * @return
+	 */
+	ProductCategory deleteProductCategoryCoverImage(int id) throws CategoryHasProductsException;
 	
 	/**
 	 * 删除品类信息，错误码详见异常信息

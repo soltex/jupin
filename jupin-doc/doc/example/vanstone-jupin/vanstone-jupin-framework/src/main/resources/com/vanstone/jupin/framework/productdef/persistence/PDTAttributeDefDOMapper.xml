@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper
-	namespace="com.vanstone.jupin.framework.productdef.persistence.PDTAttributeDefDOMapper">
+<mapper namespace="com.vanstone.jupin.framework.productdef.persistence.PDTAttributeDefDOMapper">
 	<resultMap id="BaseResultMap" type="com.vanstone.jupin.framework.productdef.persistence.object.PDTAttributeDefDO">
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="ATTRIBUTE_NAME" property="attributeName" jdbcType="VARCHAR" />
@@ -10,8 +9,7 @@
 		<result column="ATTRIBUTE_SCOPE" property="attributeScope" jdbcType="INTEGER" />
 		<result column="LISTSHOWABLE" property="listshowable" jdbcType="INTEGER" />
 	</resultMap>
-	<resultMap id="ResultMapWithBLOBs"
-		type="com.vanstone.jupin.framework.productdef.persistence.object.PDTAttributeDefDO" extends="BaseResultMap">
+	<resultMap id="ResultMapWithBLOBs" type="com.vanstone.jupin.framework.productdef.persistence.object.PDTAttributeDefDO" extends="BaseResultMap">
 		<result column="ATTRIBUTE_DESCRIPTION" property="attributeDescription" jdbcType="LONGVARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">

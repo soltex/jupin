@@ -24,7 +24,7 @@
     http://www.springframework.org/schema/util/spring-util-3.1.xsd
     http://www.springframework.org/schema/data/mongo    
     http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
-	
+    
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="location">
@@ -48,7 +48,7 @@
 	
 	<!-- enable autowire -->
 	<context:annotation-config />
-	
+		 
 	<!--MyBatis integration with Spring as define sqlSessionFactory -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="pdp_datasource" />

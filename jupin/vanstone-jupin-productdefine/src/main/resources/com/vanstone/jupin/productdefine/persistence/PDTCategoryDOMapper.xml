@@ -169,4 +169,13 @@
       LEAFABLE = #{leafable,jdbcType=INTEGER}
     where ID = #{id,jdbcType=INTEGER}
   </update>
+  <update id="updateCoverImage" parameterType="map">
+  	update pdt_category
+    set 
+      COVER_FILE_ID = #{coverFileId,jdbcType=VARCHAR},
+      COVER_FILE_WIDTH = #{coverFileWidth,jdbcType=INTEGER},
+      COVER_FILE_HEIGHT = #{coverFileHeight,jdbcType=INTEGER},
+      COVER_FILE_EXT = #{coverFileExt,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>
