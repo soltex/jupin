@@ -35,6 +35,10 @@ public class ProductCategory extends AbstractBusinessObject {
 	private String description;
 	/** 栏目绑定的URL */
 	private String categoryBindPage;
+	/**表单模板*/
+	private String formTemplate;
+	/**封面图片*/
+	private ImageBean coverImage;
 	/** 排序 */
 	private int sort = Constants.SYS_DEFAULT_SORT;
 	/** 是否为叶子节点 */
@@ -44,7 +48,7 @@ public class ProductCategory extends AbstractBusinessObject {
 	/**是否存在商品*/
 	private boolean existProduct = false;
 	/**是否存在颜色*/
-	private boolean existColor=false;
+	private boolean skuColor=false;
 	/**选用的尺码模板*/
 	private SizeTemplate sizeTemplate;
 	/** 品类下的叶子节点 */
@@ -55,16 +59,14 @@ public class ProductCategory extends AbstractBusinessObject {
 	private Collection<ProductCategory> allChildProductCategories = new ArrayList<ProductCategory>();
 	/** 品类路径 不包含ROOT节点 */
 	private Collection<ProductCategory> productCategoryNodePath = new ArrayList<ProductCategory>();
+	
+	
 	/** 用来检索用的属性 */
 	private Collection<Attr4Enum> searchAttributes = new ArrayList<Attr4Enum>();
 	/** 全部商品属性 */
-	private Collection<AbstractAttribute> allAttributes = new ArrayList<AbstractAttribute>();
-	/** 全部商品属性 */
-	private Collection<AbstractAttribute> allProductAttributes = new ArrayList<AbstractAttribute>();
+	private Collection<AbstractAttribute> attributes = new ArrayList<AbstractAttribute>();
 	/** 旗下全部属性 */
-	private Collection<AbstractAttribute> allCurrentAttributes = new ArrayList<AbstractAttribute>();
-	/** 旗下商品属性 */
-	private Collection<AbstractAttribute> currentProductAttributes = new ArrayList<AbstractAttribute>();
+	private Collection<AbstractAttribute> currentAttributes = new ArrayList<AbstractAttribute>();
 	/**旗下关联品牌*/
 	private Collection<Brand> brands = new ArrayList<Brand>();
 	
@@ -73,10 +75,22 @@ public class ProductCategory extends AbstractBusinessObject {
 		return this.id;
 	}
 	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public ImageBean getCoverImage() {
+		return coverImage;
+	}
+	
+	public void setCoverImage(ImageBean coverImage) {
+		this.coverImage = coverImage;
+	}
+	
 	public boolean isLeafable() {
 		return leafable;
 	}
-
+	
 	public void setLeafable(boolean leafable) {
 		this.leafable = leafable;
 	}
@@ -113,6 +127,14 @@ public class ProductCategory extends AbstractBusinessObject {
 		this.description = description;
 	}
 
+	public String getFormTemplate() {
+		return formTemplate;
+	}
+
+	public void setFormTemplate(String formTemplate) {
+		this.formTemplate = formTemplate;
+	}
+
 	public String getCategoryBindPage() {
 		return categoryBindPage;
 	}
@@ -145,12 +167,12 @@ public class ProductCategory extends AbstractBusinessObject {
 		this.existProduct = existProduct;
 	}
 
-	public boolean isExistColor() {
-		return existColor;
+	public boolean isSkuColor() {
+		return skuColor;
 	}
 
-	public void setExistColor(boolean existColor) {
-		this.existColor = existColor;
+	public void setSkuColor(boolean skuColor) {
+		this.skuColor = skuColor;
 	}
 
 	public SizeTemplate getSizeTemplate() {
@@ -160,7 +182,12 @@ public class ProductCategory extends AbstractBusinessObject {
 	public void setSizeTemplate(SizeTemplate sizeTemplate) {
 		this.sizeTemplate = sizeTemplate;
 	}
-
+	
+	public boolean isExistSkuTemplate() {
+		return this.sizeTemplate != null;
+	}
+	
+	//==========================leaf product categories==================//
 	public Collection<ProductCategory> getLeafProductCategories() {
 		return leafProductCategories;
 	}
@@ -169,93 +196,130 @@ public class ProductCategory extends AbstractBusinessObject {
 		this.leafProductCategories.add(productCategory);
 	}
 	
+	public void addLeafProductCategories(Collection<ProductCategory> productCategories) {
+		this.leafProductCategories.addAll(productCategories);
+	}
+	
+	public void clearLeafProductCategories() {
+		this.leafProductCategories.clear();
+	}
+	
+	//========================== child product categories================//
 	public Collection<ProductCategory> getChildProductCategories() {
 		return childProductCategories;
 	}
-
-	public void setChildProductCategories(Collection<ProductCategory> childProductCategories) {
-		this.childProductCategories = childProductCategories;
+	
+	public void addChildProductCategory(ProductCategory productCategory) {
+		childProductCategories.add(productCategory);
 	}
 	
+	public void addChildProductCategories(Collection<ProductCategory> productCategories) {
+		childProductCategories.addAll(productCategories);
+	}
+	
+	public void clearChildProductCategories() {
+		this.childProductCategories.clear();
+	}
+	
+	//===============================All Child ProductCategoroies===============================//
 	public Collection<ProductCategory> getAllChildProductCategories() {
 		return allChildProductCategories;
 	}
-
-	public void setAllChildProductCategories(
-			Collection<ProductCategory> allChildProductCategories) {
-		this.allChildProductCategories = allChildProductCategories;
+	
+	public void addAllChildProductCategory(ProductCategory productCategory) {
+		this.allChildProductCategories.add(productCategory);
 	}
-
+	
+	public void addAllChildProductCategories(Collection<ProductCategory> productCategories) {
+		this.allChildProductCategories.addAll(productCategories);
+	}
+	
+	public void clearAllChildProductCategories() {
+		this.allChildProductCategories.clear();
+	}
+	
+	//===============================ProductCategory Node Path===============================//
 	public Collection<ProductCategory> getProductCategoryNodePath() {
 		return productCategoryNodePath;
 	}
-
-	public void setProductCategoryNodePath(
-			Collection<ProductCategory> productCategoryNodePath) {
-		this.productCategoryNodePath = productCategoryNodePath;
+	
+	public void addProductCategoryNodePath(ProductCategory productCategory) {
+		this.productCategoryNodePath.add(productCategory);
 	}
-
+	
+	public void addProductCategoriesNodePath(Collection<ProductCategory> productCategories) {
+		this.productCategoryNodePath.addAll(productCategories);
+	}
+	
+	public void clearProductCategoryNodePath() {
+		this.productCategoryNodePath.clear();
+	}
+	
+	//=======================search Attributes======================//
 	public Collection<Attr4Enum> getSearchAttributes() {
 		return searchAttributes;
 	}
-
-	public void setSearchAttributes(Collection<Attr4Enum> searchAttributes) {
-		this.searchAttributes = searchAttributes;
+	
+	public void addSearchSearchAttribute(Attr4Enum attr4Enum) {
+		this.searchAttributes.add(attr4Enum);
 	}
-
-	public Collection<AbstractAttribute> getAllAttributes() {
-		return allAttributes;
+	
+	public void addSearchAttributes(Collection<Attr4Enum> attr4Enums) {
+		this.searchAttributes.addAll(attr4Enums);
 	}
-
-	public void setAllAttributes(Collection<AbstractAttribute> allAttributes) {
-		this.allAttributes = allAttributes;
+	
+	public void clearSearchAttributes() {
+		this.searchAttributes.clear();
 	}
-
-	public Collection<AbstractAttribute> getAllProductAttributes() {
-		return allProductAttributes;
+	
+	//=====================attributes===========================//
+	public Collection<AbstractAttribute> getAttributes() {
+		return attributes;
 	}
-
-	public void setAllProductAttributes(
-			Collection<AbstractAttribute> allProductAttributes) {
-		this.allProductAttributes = allProductAttributes;
+	
+	public void addAttribute(AbstractAttribute attribute) {
+		attributes.add(attribute);
 	}
-
-	public Collection<AbstractAttribute> getAllCurrentAttributes() {
-		return allCurrentAttributes;
+	
+	public void addAttributes(Collection<AbstractAttribute> attributes) {
+		attributes.addAll(attributes);
 	}
-
-	public void setAllCurrentAttributes(
-			Collection<AbstractAttribute> allCurrentAttributes) {
-		this.allCurrentAttributes = allCurrentAttributes;
+	
+	public void clearAttributes() {
+		this.attributes.clear();
 	}
-
-	public Collection<AbstractAttribute> getCurrentProductAttributes() {
-		return currentProductAttributes;
+	//====================current attributes======================//
+	public Collection<AbstractAttribute> getCurrentAttributes() {
+		return currentAttributes;
 	}
-
-	public void setCurrentProductAttributes(Collection<AbstractAttribute> currentProductAttributes) {
-		this.currentProductAttributes = currentProductAttributes;
+	
+	public void addCurrentAttribute(AbstractAttribute attribute) {
+		currentAttributes.add(attribute);
 	}
-
+	
+	public void addCurrentAttributes(Collection<AbstractAttribute> attributes) {
+		currentAttributes.addAll(attributes);
+	}
+	
+	public void clearCurrentAttributes() {
+		currentAttributes.clear();
+	}
+	//===================brand s==============================//
 	public Collection<Brand> getBrands() {
 		return brands;
 	}
-
-	public void setBrands(Collection<Brand> brands) {
-		this.brands = brands;
-	}
-
+	
 	public void addBrand(Brand brand) {
 		MyAssert4Business.objectInitialized(brand);
 		this.brands.add(brand);
 	}
 	
-	public void clearBrands() {
-		this.brands.clear();
+	public void addBrands(Collection<Brand> brands) {
+		this.brands.addAll(brands);
 	}
 	
-	public void setId(Integer id) {
-		this.id = id;
+	public void clearBrands() {
+		this.brands.clear();
 	}
 	
 }

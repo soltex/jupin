@@ -7,15 +7,17 @@ import com.vanstone.business.lang.BaseEnum;
 
 /**
  * @author shipeng
+ *
  */
-public enum AttributeType implements BaseEnum<Integer> {
+public enum AttributeState implements BaseEnum<Integer> {
 	
-	Text("文本属性",0), Enum("枚举属性",1);
+	Active("启用",1), Forbit("禁用",0);
+	;
 	
 	private String desc;
 	private Integer code;
 	
-	private AttributeType(String desc, Integer code) {
+	private AttributeState(String desc, Integer code) {
 		this.desc = desc;
 		this.code = code;
 	}
@@ -24,7 +26,7 @@ public enum AttributeType implements BaseEnum<Integer> {
 	public Integer getCode() {
 		return this.code;
 	}
-	
+
 	@Override
 	public String getDesc() {
 		return this.desc;

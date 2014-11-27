@@ -1,5 +1,7 @@
 package com.vanstone.jupin.productdefine.persistence;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.vanstone.dal.mybatis.MyBatisRepository;
@@ -27,5 +29,6 @@ public interface PDTBrandDOMapper {
     
     int updateLogoInfo(@Param("id")Integer id, @Param("logoFileId")String logoFileId, @Param("logoFileExt")String logoFileExt, @Param("logoWidth")Integer logoWidth, @Param("logoHeight")Integer logoHeight);
     
+    List<PDTBrandDO> selectByCategoryIDs(@Param("categoryIDs")Integer[] categoryIDs);
     
 }

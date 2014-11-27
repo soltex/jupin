@@ -1,8 +1,7 @@
 package com.vanstone.jupin.productdefine.persistence;
 
-import com.vanstone.dal.mybatis.MyBatisRepository;
 import com.vanstone.jupin.productdefine.persistence.object.PDTAttributeDefDO;
-@MyBatisRepository
+
 public interface PDTAttributeDefDOMapper {
     int deleteByPrimaryKey(Integer id);
 

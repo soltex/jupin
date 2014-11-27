@@ -22,12 +22,8 @@ public class Attr4Enum extends AbstractAttribute {
 	/**枚举值*/
 	private Map<Integer, String> values = new LinkedHashMap<Integer, String>();
 	
-	protected Attr4Enum() {
-		super(AttributeType.Enum_Attribute);
-	}
-	
-	protected Attr4Enum(boolean usable) {
-		super(AttributeType.Enum_Attribute, usable);
+	public Attr4Enum() {
+		super(AttributeType.Enum);
 	}
 	
 	public boolean isSearchable() {

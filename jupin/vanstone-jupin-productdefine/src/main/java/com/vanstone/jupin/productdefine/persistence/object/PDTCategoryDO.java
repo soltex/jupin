@@ -23,6 +23,18 @@ public class PDTCategoryDO {
 
     private Integer leafable;
 
+    private Integer categoryState;
+
+    private Integer existProduct;
+
+    private Integer skuColorable;
+
+    private Integer skuSizeable;
+
+    private Integer sizeTemplateId;
+
+    private String formTemplate;
+
     public Integer getId() {
         return id;
     }
@@ -62,29 +74,29 @@ public class PDTCategoryDO {
     public void setCoverFileId(String coverFileId) {
         this.coverFileId = coverFileId;
     }
+    
+    public String getCoverFileExt() {
+		return coverFileExt;
+	}
 
-    public Integer getCoverFileWidth() {
-        return coverFileWidth;
-    }
+	public void setCoverFileExt(String coverFileExt) {
+		this.coverFileExt = coverFileExt;
+	}
 
-    public void setCoverFileWidth(Integer coverFileWidth) {
-        this.coverFileWidth = coverFileWidth;
-    }
+	public Integer getCoverFileWidth() {
+		return coverFileWidth;
+	}
 
-    public Integer getCoverFileHeight() {
+	public void setCoverFileWidth(Integer coverFileWidth) {
+		this.coverFileWidth = coverFileWidth;
+	}
+
+	public Integer getCoverFileHeight() {
         return coverFileHeight;
     }
 
     public void setCoverFileHeight(Integer coverFileHeight) {
         this.coverFileHeight = coverFileHeight;
-    }
-
-    public String getCoverFileExt() {
-        return coverFileExt;
-    }
-
-    public void setCoverFileExt(String coverFileExt) {
-        this.coverFileExt = coverFileExt;
     }
 
     public Integer getParentId() {
@@ -109,5 +121,53 @@ public class PDTCategoryDO {
 
     public void setLeafable(Integer leafable) {
         this.leafable = leafable;
+    }
+
+    public Integer getCategoryState() {
+        return categoryState;
+    }
+
+    public void setCategoryState(Integer categoryState) {
+        this.categoryState = categoryState;
+    }
+
+    public Integer getExistProduct() {
+        return existProduct;
+    }
+
+    public void setExistProduct(Integer existProduct) {
+        this.existProduct = existProduct;
+    }
+
+    public Integer getSkuColorable() {
+        return skuColorable;
+    }
+
+    public void setSkuColorable(Integer skuColorable) {
+        this.skuColorable = skuColorable;
+    }
+
+    public Integer getSkuSizeable() {
+        return skuSizeable;
+    }
+
+    public void setSkuSizeable(Integer skuSizeable) {
+        this.skuSizeable = skuSizeable;
+    }
+
+    public Integer getSizeTemplateId() {
+        return sizeTemplateId;
+    }
+
+    public void setSizeTemplateId(Integer sizeTemplateId) {
+        this.sizeTemplateId = sizeTemplateId;
+    }
+
+    public String getFormTemplate() {
+        return formTemplate;
+    }
+
+    public void setFormTemplate(String formTemplate) {
+        this.formTemplate = formTemplate;
     }
 }

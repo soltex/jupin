@@ -4,14 +4,18 @@
 package com.vanstone.jupin.productdefine.services;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.jupin.common.entity.ImageBean;
+import com.vanstone.jupin.productdefine.Brand;
 import com.vanstone.jupin.productdefine.ProductCategory;
 import com.vanstone.jupin.productdefine.attr.AbstractAttribute;
 import com.vanstone.jupin.productdefine.attr.Attr4Enum;
+import com.vanstone.jupin.productdefine.attr.Attr4EnumValue;
 import com.vanstone.jupin.productdefine.attr.Attr4Text;
 
 /**
@@ -72,6 +76,14 @@ public interface ProductCategoryService {
 	ProductCategory updateBaseProductCategoryInfo(int id, String categoryName, String description, String categoryBindPage, String formTemplate, Integer sort) throws CategoryHasProductsException;
 	
 	/**
+	 * 更新品类父级信息
+	 * @param id
+	 * @param parentCategoryID
+	 * @return
+	 */
+	ProductCategory updateParentProductCategory(int id, Integer parentCategoryID);
+	
+	/**
 	 * 更新品类封面图片
 	 * @param id
 	 * @param coverImage
@@ -99,7 +111,15 @@ public interface ProductCategoryService {
 	 * @return
 	 * @throws CategoryHasSubCategoriesException
 	 */
-	void addAttributeToProductCategory(int productCategoryId, Collection<AbstractAttribute> attributes) throws CategoryHasSubCategoriesException,ObjectDuplicateException;
+	void addAttributesToProductCategory(int productCategoryId, Collection<AbstractAttribute> attributes) throws CategoryHasSubCategoriesException,ObjectDuplicateException;
+	
+	/**
+	 * @param productCategoryId
+	 * @param attribute
+	 * @return
+	 * @throws CategoryHasSubCategoriesException
+	 */
+	void addAttributeToProductCategory(int productCategoryId, AbstractAttribute attribute) throws CategoryHasSubCategoriesException,ObjectDuplicateException;
 	
 	/**
 	 * 删除品类上的属性信息
@@ -107,7 +127,7 @@ public interface ProductCategoryService {
 	 * @param attributeId
 	 * @throws CategoryHasProductsException
 	 */
-	void deleteAttributeInProductCategory(int productCategoryId, int attributeId) throws CategoryHasProductsException;
+	void deleteAttributeInProductCategory(ProductCategory productCategoryId, AbstractAttribute attribute) throws CategoryHasProductsException;
 	
 	/**
 	 * 强制删除品类信息
@@ -116,9 +136,9 @@ public interface ProductCategoryService {
 	void forceDeleteProductCategory(int id);
 	
 	/**
-	 * 刷新全部ProductCategory
+	 *  清除全部ProductCategory
 	 */
-	void refreshAllProductCategories();
+	void clearAllProductCategoriesInCache();
 	
 	/**
 	 * 刷新品类信息
@@ -145,14 +165,108 @@ public interface ProductCategoryService {
 	 */
 	Collection<ProductCategory> getProductCategories(Integer parentID);
 	
-	AbstractAttribute addAttribute(AbstractAttribute attribute);
-
+	/**
+	 * 判断属性是否存在于ProductCategory中
+	 * @param productCategoryID
+	 * @param attribute
+	 * @return
+	 */
+	boolean attributeExistInProductCategory(int productCategoryID, AbstractAttribute attribute);
+	
+	/**
+	 * 判断属性是否存在于ProductCategory中
+	 * @param productCategoryID
+	 * @param attributes
+	 * @return
+	 */
+	boolean attributesExistInProductCategory(int productCategoryID, Collection<AbstractAttribute> attributes);
+	
+	/**
+	 * 添加文本类型属性
+	 * @param attr4Text
+	 * @return
+	 */
+	Attr4Text addAttr4Text(Attr4Text attr4Text);
+	
+	/**
+	 * 添加枚举类型
+	 * @param attr4Enum
+	 * @param objectValues
+	 * @return
+	 */
+	Attr4Enum addAttr4Enum(Attr4Enum attr4Enum, Set<String> objectValues);
+	
+	/**
+	 * 新增枚举值
+	 * @param attr4Enum
+	 * @param objectValue
+	 * @return
+	 * @throws ObjectDuplicateException
+	 */
+	Attr4Enum appendAttr4EnumValue(Attr4Enum attr4Enum, String objectValue, Integer sort) throws ObjectDuplicateException;
+	
+	/**
+	 * 更新枚举值信息
+	 * @param attr4EnumValue
+	 * @return
+	 * @throws ObjectDuplicateException
+	 */
+	Attr4Enum updateAttr4EnumValue(Attr4EnumValue attr4EnumValue) throws ObjectDuplicateException;
+	
+	/**
+	 * 删除枚举值,当枚举值不存在了，一并删除属性
+	 * @param enumValueId
+	 * @return
+	 */
+	void deleteAttr4EnumValue(int enumValueId);
+	
+	/**
+	 * 获取枚举值
+	 * @param enumValueID
+	 * @return
+	 */
+	Attr4EnumValue getAttr4EnumValue(int enumValueID);
+	
+	/**
+	 * 更新文本属性信息
+	 * @param attr4Text
+	 * @return
+	 */
 	Attr4Text updateAttr4Text(Attr4Text attr4Text);
 	
-	Attr4Enum updateAttr4Enum(Attr4Enum attr4Enum);
+	/**
+	 * 更新基本信息
+	 * @param attr4Enum
+	 * @return
+	 */
+	Attr4Enum updateBaseAttr4Enum(Attr4Enum attr4Enum);
 	
+	/**
+	 * 获取属性
+	 * @param id
+	 * @return
+	 */
 	AbstractAttribute getAttribute(int id);
 	
-	Collection<AbstractAttribute> getAttributesByIDs(Collection<Integer> ids);
+	/**
+	 * 通过一组ID获取属性Map
+	 * @param ids
+	 * @return
+	 */
+	Map<Integer, AbstractAttribute> getAttributesByIDsMap(Collection<Integer> ids);
+	
+	/**
+	 * 刷新缓冲中的Attribute
+	 * @param id
+	 * @return
+	 */
+	AbstractAttribute refreshAttribute(int id);
+	
+	/**
+	 * 通过商品品类获取Brand列表
+	 * @param productCategory
+	 * @return
+	 */
+	Collection<Brand> getBrands(ProductCategory productCategory);
 	
 }

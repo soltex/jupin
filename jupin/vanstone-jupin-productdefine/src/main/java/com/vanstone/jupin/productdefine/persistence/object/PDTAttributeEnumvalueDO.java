@@ -7,7 +7,9 @@ public class PDTAttributeEnumvalueDO {
 
     private Integer sort;
 
-    private String objectvalue;
+    private Integer valueState;
+
+    private String objecttext;
 
     public Integer getId() {
         return id;
@@ -33,11 +35,19 @@ public class PDTAttributeEnumvalueDO {
         this.sort = sort;
     }
 
-    public String getObjectvalue() {
-        return objectvalue;
+    public Integer getValueState() {
+        return valueState;
     }
 
-    public void setObjectvalue(String objectvalue) {
-        this.objectvalue = objectvalue;
+    public void setValueState(Integer valueState) {
+        this.valueState = valueState;
+    }
+
+    public String getObjecttext() {
+        return objecttext;
+    }
+
+    public void setObjecttext(String objecttext) {
+        this.objecttext = objecttext;
     }
 }

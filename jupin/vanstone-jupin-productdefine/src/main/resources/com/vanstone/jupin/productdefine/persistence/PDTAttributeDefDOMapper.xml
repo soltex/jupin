@@ -6,14 +6,17 @@
     <result column="ATTRIBUTE_NAME" property="attributeName" jdbcType="VARCHAR" />
     <result column="ATTRIBUTE_TYPE" property="attributeType" jdbcType="INTEGER" />
     <result column="SEARCHABLE" property="searchable" jdbcType="INTEGER" />
-    <result column="ATTRIBUTE_SCOPE" property="attributeScope" jdbcType="INTEGER" />
     <result column="LISTSHOWABLE" property="listshowable" jdbcType="INTEGER" />
+    <result column="MULTISELECTABLE" property="multiselectable" jdbcType="INTEGER" />
+    <result column="EXIST_PRODUCT" property="existProduct" jdbcType="INTEGER" />
+    <result column="REQUIREDABLE" property="requiredable" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.vanstone.jupin.productdefine.persistence.object.PDTAttributeDefDO" extends="BaseResultMap" >
     <result column="ATTRIBUTE_DESCRIPTION" property="attributeDescription" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE, SEARCHABLE, ATTRIBUTE_SCOPE, LISTSHOWABLE
+    ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE, SEARCHABLE, LISTSHOWABLE, MULTISELECTABLE, EXIST_PRODUCT, 
+    REQUIREDABLE
   </sql>
   <sql id="Blob_Column_List" >
     ATTRIBUTE_DESCRIPTION
@@ -31,19 +34,21 @@
     where ID = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.vanstone.jupin.productdefine.persistence.object.PDTAttributeDefDO" 
-  		useGeneratedKeys="true" keyProperty="id">
+  	useGeneratedKeys="true" keyProperty="id">
 		<selectKey resultType="int" order="AFTER" keyProperty="id">
 			select LAST_INSERT_ID() as id
 		</selectKey>
     insert into pdt_attribute_def (ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE, 
-      SEARCHABLE, ATTRIBUTE_SCOPE, LISTSHOWABLE, 
-      ATTRIBUTE_DESCRIPTION)
+      SEARCHABLE, LISTSHOWABLE, MULTISELECTABLE, 
+      EXIST_PRODUCT, REQUIREDABLE, ATTRIBUTE_DESCRIPTION
+      )
     values (#{id,jdbcType=INTEGER}, #{attributeName,jdbcType=VARCHAR}, #{attributeType,jdbcType=INTEGER}, 
-      #{searchable,jdbcType=INTEGER}, #{attributeScope,jdbcType=INTEGER}, #{listshowable,jdbcType=INTEGER}, 
-      #{attributeDescription,jdbcType=LONGVARCHAR})
+      #{searchable,jdbcType=INTEGER}, #{listshowable,jdbcType=INTEGER}, #{multiselectable,jdbcType=INTEGER}, 
+      #{existProduct,jdbcType=INTEGER}, #{requiredable,jdbcType=INTEGER}, #{attributeDescription,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.vanstone.jupin.productdefine.persistence.object.PDTAttributeDefDO" 
-  	useGeneratedKeys="true" keyProperty="id">
+  		useGeneratedKeys="true" keyProperty="id">
 		<selectKey resultType="int" order="AFTER" keyProperty="id">
 			select LAST_INSERT_ID() as id
 		</selectKey>
@@ -61,11 +66,17 @@
       <if test="searchable != null" >
         SEARCHABLE,
       </if>
-      <if test="attributeScope != null" >
-        ATTRIBUTE_SCOPE,
-      </if>
       <if test="listshowable != null" >
         LISTSHOWABLE,
+      </if>
+      <if test="multiselectable != null" >
+        MULTISELECTABLE,
+      </if>
+      <if test="existProduct != null" >
+        EXIST_PRODUCT,
+      </if>
+      <if test="requiredable != null" >
+        REQUIREDABLE,
       </if>
       <if test="attributeDescription != null" >
         ATTRIBUTE_DESCRIPTION,
@@ -84,11 +95,17 @@
       <if test="searchable != null" >
         #{searchable,jdbcType=INTEGER},
       </if>
-      <if test="attributeScope != null" >
-        #{attributeScope,jdbcType=INTEGER},
-      </if>
       <if test="listshowable != null" >
         #{listshowable,jdbcType=INTEGER},
+      </if>
+      <if test="multiselectable != null" >
+        #{multiselectable,jdbcType=INTEGER},
+      </if>
+      <if test="existProduct != null" >
+        #{existProduct,jdbcType=INTEGER},
+      </if>
+      <if test="requiredable != null" >
+        #{requiredable,jdbcType=INTEGER},
       </if>
       <if test="attributeDescription != null" >
         #{attributeDescription,jdbcType=LONGVARCHAR},
@@ -107,11 +124,17 @@
       <if test="searchable != null" >
         SEARCHABLE = #{searchable,jdbcType=INTEGER},
       </if>
-      <if test="attributeScope != null" >
-        ATTRIBUTE_SCOPE = #{attributeScope,jdbcType=INTEGER},
-      </if>
       <if test="listshowable != null" >
         LISTSHOWABLE = #{listshowable,jdbcType=INTEGER},
+      </if>
+      <if test="multiselectable != null" >
+        MULTISELECTABLE = #{multiselectable,jdbcType=INTEGER},
+      </if>
+      <if test="existProduct != null" >
+        EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER},
+      </if>
+      <if test="requiredable != null" >
+        REQUIREDABLE = #{requiredable,jdbcType=INTEGER},
       </if>
       <if test="attributeDescription != null" >
         ATTRIBUTE_DESCRIPTION = #{attributeDescription,jdbcType=LONGVARCHAR},
@@ -124,8 +147,10 @@
     set ATTRIBUTE_NAME = #{attributeName,jdbcType=VARCHAR},
       ATTRIBUTE_TYPE = #{attributeType,jdbcType=INTEGER},
       SEARCHABLE = #{searchable,jdbcType=INTEGER},
-      ATTRIBUTE_SCOPE = #{attributeScope,jdbcType=INTEGER},
       LISTSHOWABLE = #{listshowable,jdbcType=INTEGER},
+      MULTISELECTABLE = #{multiselectable,jdbcType=INTEGER},
+      EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER},
+      REQUIREDABLE = #{requiredable,jdbcType=INTEGER},
       ATTRIBUTE_DESCRIPTION = #{attributeDescription,jdbcType=LONGVARCHAR}
     where ID = #{id,jdbcType=INTEGER}
   </update>
@@ -134,8 +159,10 @@
     set ATTRIBUTE_NAME = #{attributeName,jdbcType=VARCHAR},
       ATTRIBUTE_TYPE = #{attributeType,jdbcType=INTEGER},
       SEARCHABLE = #{searchable,jdbcType=INTEGER},
-      ATTRIBUTE_SCOPE = #{attributeScope,jdbcType=INTEGER},
-      LISTSHOWABLE = #{listshowable,jdbcType=INTEGER}
+      LISTSHOWABLE = #{listshowable,jdbcType=INTEGER},
+      MULTISELECTABLE = #{multiselectable,jdbcType=INTEGER},
+      EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER},
+      REQUIREDABLE = #{requiredable,jdbcType=INTEGER}
     where ID = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

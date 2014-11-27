@@ -9,9 +9,13 @@ public class PDTAttributeDefDO {
 
     private Integer searchable;
 
-    private Integer attributeScope;
-
     private Integer listshowable;
+
+    private Integer multiselectable;
+
+    private Integer existProduct;
+
+    private Integer requiredable;
 
     private String attributeDescription;
 
@@ -47,20 +51,36 @@ public class PDTAttributeDefDO {
         this.searchable = searchable;
     }
 
-    public Integer getAttributeScope() {
-        return attributeScope;
-    }
-
-    public void setAttributeScope(Integer attributeScope) {
-        this.attributeScope = attributeScope;
-    }
-
     public Integer getListshowable() {
         return listshowable;
     }
 
     public void setListshowable(Integer listshowable) {
         this.listshowable = listshowable;
+    }
+
+    public Integer getMultiselectable() {
+        return multiselectable;
+    }
+
+    public void setMultiselectable(Integer multiselectable) {
+        this.multiselectable = multiselectable;
+    }
+
+    public Integer getExistProduct() {
+        return existProduct;
+    }
+
+    public void setExistProduct(Integer existProduct) {
+        this.existProduct = existProduct;
+    }
+
+    public Integer getRequiredable() {
+        return requiredable;
+    }
+
+    public void setRequiredable(Integer requiredable) {
+        this.requiredable = requiredable;
     }
 
     public String getAttributeDescription() {

@@ -21,21 +21,14 @@ public abstract class AbstractAttribute extends AbstractBusinessObject {
 	/**属性描述*/
 	private String attributeDescription;
 	/**属性类型*/
-	private AttributeType attributeType = AttributeType.Common_Attribute;
+	private AttributeType attributeType = AttributeType.Text;
 	/**是否显示在列表页上*/
 	private boolean listshowable = false;
-	/**是否已使用*/
-	private boolean usable = false;
 	/**是否为必填项*/
 	private boolean requiredable=false;
 	
 	protected AbstractAttribute(AttributeType attributeType) {
 		this.attributeType = attributeType;
-	}
-	
-	protected AbstractAttribute(AttributeType attributeType, boolean usable) {
-		this(attributeType);
-		this.usable = usable;
 	}
 	
 	@Override
@@ -82,11 +75,7 @@ public abstract class AbstractAttribute extends AbstractBusinessObject {
 	public void setListshowable(boolean listshowable) {
 		this.listshowable = listshowable;
 	}
-
-	public boolean isUsable() {
-		return usable;
-	}
-
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}

@@ -3,9 +3,11 @@
  */
 package com.vanstone.jupin.productdefine.services.impl;
 
+import com.vanstone.business.lang.EnumUtils;
 import com.vanstone.jupin.common.entity.ImageBean;
 import com.vanstone.jupin.common.util.BoolUtil;
 import com.vanstone.jupin.productdefine.Brand;
+import com.vanstone.jupin.productdefine.CategoryState;
 import com.vanstone.jupin.productdefine.ProductCategory;
 import com.vanstone.jupin.productdefine.attr.sku.Color;
 import com.vanstone.jupin.productdefine.attr.sku.Size;
@@ -203,11 +205,45 @@ public class BeanUtil {
 		model.setCategoryName(productCategory.getCategoryName());
 		model.setDescription(productCategory.getDescription());
 		model.setCategoryBindPage(productCategory.getCategoryBindPage());
-		return null;
+		model.setFormTemplate(productCategory.getFormTemplate());
+		if (productCategory.getCoverImage() != null) {
+			model.setCoverFileId(productCategory.getCoverImage().getWeedFile().getFileid());
+			model.setCoverFileExt(productCategory.getCoverImage().getWeedFile().getExtName());
+			model.setCoverFileWidth(productCategory.getCoverImage().getWidth());
+			model.setCoverFileHeight(productCategory.getCoverImage().getHeight());
+		}
+		if (productCategory.getParentProductCategory() != null) {
+			model.setParentId(productCategory.getParentProductCategory().getId());
+		}
+		model.setSort(productCategory.getSort());
+		model.setLeafable(BoolUtil.parseBoolean(productCategory.isLeafable()));
+		model.setCategoryState(productCategory.getCategoryState().getCode());
+		model.setExistProduct(BoolUtil.parseBoolean(productCategory.isExistProduct()));
+		model.setSkuColorable(BoolUtil.parseBoolean(productCategory.isSkuColor()));
+		model.setSkuSizeable(BoolUtil.parseBoolean(productCategory.isExistSkuTemplate()));
+		model.setSizeTemplateId(productCategory.getSizeTemplate() != null ? productCategory.getSizeTemplate().getId() : null);
+		return model;
 	}
 	
-	public static ProductCategory toProductCategory(PDTCategoryDO pdtCategoryDO) {
-		return null;
+	public static ProductCategory toProductCategory(PDTCategoryDO pdtCategoryDO, ProductCategory parentProductCategory, SizeTemplate sizeTemplate) {
+		ProductCategory category = new ProductCategory();
+		category.setId(pdtCategoryDO.getId());
+		category.setCategoryName(pdtCategoryDO.getCategoryName());
+		category.setDescription(pdtCategoryDO.getDescription());
+		category.setCategoryBindPage(pdtCategoryDO.getCategoryBindPage());
+		category.setFormTemplate(pdtCategoryDO.getFormTemplate());
+		if (pdtCategoryDO.getCoverFileId() != null && !pdtCategoryDO.getCoverFileId().equals("")) {
+			ImageBean imageBean = new ImageBean(pdtCategoryDO.getCoverFileId(), pdtCategoryDO.getCoverFileExt(), pdtCategoryDO.getCoverFileWidth(), pdtCategoryDO.getCoverFileHeight());
+			category.setCoverImage(imageBean);
+		}
+		category.setParentProductCategory(parentProductCategory);
+		category.setSort(pdtCategoryDO.getSort());
+		category.setLeafable(BoolUtil.parseInt(pdtCategoryDO.getLeafable()));
+		category.setCategoryState((CategoryState)EnumUtils.getByCode(pdtCategoryDO.getCategoryState(), CategoryState.class));
+		category.setExistProduct(BoolUtil.parseInt(pdtCategoryDO.getExistProduct()));
+		category.setSkuColor(BoolUtil.parseInt(pdtCategoryDO.getSkuColorable()));
+		category.setSizeTemplate(sizeTemplate);
+		return category;
 	}
 	
 }
