@@ -1,7 +1,13 @@
 package com.vanstone.jupin.productdefine.persistence;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.vanstone.dal.mybatis.MyBatisRepository;
 import com.vanstone.jupin.productdefine.persistence.object.PDTAttributeDefDO;
 
+@MyBatisRepository
 public interface PDTAttributeDefDOMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -16,4 +22,7 @@ public interface PDTAttributeDefDOMapper {
     int updateByPrimaryKeyWithBLOBs(PDTAttributeDefDO record);
 
     int updateByPrimaryKey(PDTAttributeDefDO record);
+    
+    List<Integer> selectIDsByCategoryIDs_Searchable(@Param("categoryIds")Integer[] categoryIds, @Param("searchable")boolean searchable);
+    
 }

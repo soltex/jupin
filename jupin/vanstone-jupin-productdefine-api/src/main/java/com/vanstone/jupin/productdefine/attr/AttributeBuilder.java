@@ -3,6 +3,7 @@
  */
 package com.vanstone.jupin.productdefine.attr;
 
+
 /**
  * @author shipeng
  */
@@ -16,15 +17,25 @@ public class AttributeBuilder {
 	 * @return
 	 */
 	public static Attr4Text newText(String attributeName, boolean listshowable, boolean requiredable) {
-		return null;
+		Attr4Text attr4Text = new Attr4Text();
+		attr4Text.setAttributeName(attributeName);
+		attr4Text.setListshowable(listshowable);
+		attr4Text.setRequiredable(requiredable);
+		return attr4Text;
 	}
 	
 	/**
-	 * 创建枚举类型属性
+	 * 创建枚举类型基本属性
 	 * @return
 	 */
-	public static Attr4Enum newEnum(String attributeName, boolean searchable, boolean listshowable, boolean multiselectable) {
-		return null;
+	public static Attr4Enum newBaseEnum(String attributeName, boolean listshowable, boolean requiredable, boolean searchable, boolean multiselectable) {
+		Attr4Enum attr = new Attr4Enum();
+		attr.setAttributeName(attributeName);
+		attr.setListshowable(listshowable);
+		attr.setRequiredable(requiredable);
+		attr.setSearchable(searchable);
+		attr.setMultiselectable(multiselectable);
+		return attr;
 	}
 	
 }

@@ -6,7 +6,6 @@ package com.vanstone.jupin.productdefine;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.vanstone.business.MyAssert4Business;
 import com.vanstone.business.def.AbstractBusinessObject;
 import com.vanstone.jupin.common.Constants;
 import com.vanstone.jupin.common.entity.ImageBean;
@@ -193,11 +192,15 @@ public class ProductCategory extends AbstractBusinessObject {
 	}
 	
 	public void addLeafProductCategory(ProductCategory productCategory) {
-		this.leafProductCategories.add(productCategory);
+		if (productCategory != null) {
+			this.leafProductCategories.add(productCategory);
+		}
 	}
 	
 	public void addLeafProductCategories(Collection<ProductCategory> productCategories) {
-		this.leafProductCategories.addAll(productCategories);
+		if (productCategories != null && productCategories.size() >0) {
+			this.leafProductCategories.addAll(productCategories);
+		}
 	}
 	
 	public void clearLeafProductCategories() {
@@ -210,11 +213,15 @@ public class ProductCategory extends AbstractBusinessObject {
 	}
 	
 	public void addChildProductCategory(ProductCategory productCategory) {
-		childProductCategories.add(productCategory);
+		if (productCategory != null) {
+			childProductCategories.add(productCategory);
+		}
 	}
 	
 	public void addChildProductCategories(Collection<ProductCategory> productCategories) {
-		childProductCategories.addAll(productCategories);
+		if (productCategories != null && productCategories.size() >0) {
+			childProductCategories.addAll(productCategories);
+		}
 	}
 	
 	public void clearChildProductCategories() {
@@ -227,11 +234,15 @@ public class ProductCategory extends AbstractBusinessObject {
 	}
 	
 	public void addAllChildProductCategory(ProductCategory productCategory) {
-		this.allChildProductCategories.add(productCategory);
+		if (productCategory != null) {
+			this.allChildProductCategories.add(productCategory);
+		}
 	}
 	
 	public void addAllChildProductCategories(Collection<ProductCategory> productCategories) {
-		this.allChildProductCategories.addAll(productCategories);
+		if (productCategories != null && productCategories.size() >0) {
+			this.allChildProductCategories.addAll(productCategories);
+		}
 	}
 	
 	public void clearAllChildProductCategories() {
@@ -244,11 +255,15 @@ public class ProductCategory extends AbstractBusinessObject {
 	}
 	
 	public void addProductCategoryNodePath(ProductCategory productCategory) {
-		this.productCategoryNodePath.add(productCategory);
+		if (productCategory != null) {
+			this.productCategoryNodePath.add(productCategory);
+		}
 	}
 	
 	public void addProductCategoriesNodePath(Collection<ProductCategory> productCategories) {
-		this.productCategoryNodePath.addAll(productCategories);
+		if (productCategories != null && productCategories.size() >0) {
+			this.productCategoryNodePath.addAll(productCategories);
+		}
 	}
 	
 	public void clearProductCategoryNodePath() {
@@ -261,11 +276,15 @@ public class ProductCategory extends AbstractBusinessObject {
 	}
 	
 	public void addSearchSearchAttribute(Attr4Enum attr4Enum) {
-		this.searchAttributes.add(attr4Enum);
+		if (attr4Enum != null) {
+			this.searchAttributes.add(attr4Enum);
+		}
 	}
 	
 	public void addSearchAttributes(Collection<Attr4Enum> attr4Enums) {
-		this.searchAttributes.addAll(attr4Enums);
+		if (attr4Enums != null && attr4Enums.size() >0) {
+			this.searchAttributes.addAll(attr4Enums);
+		}
 	}
 	
 	public void clearSearchAttributes() {
@@ -278,11 +297,17 @@ public class ProductCategory extends AbstractBusinessObject {
 	}
 	
 	public void addAttribute(AbstractAttribute attribute) {
-		attributes.add(attribute);
+		if (attribute != null) {
+			attributes.add(attribute);
+		}
 	}
 	
 	public void addAttributes(Collection<AbstractAttribute> attributes) {
-		attributes.addAll(attributes);
+		if (attributes != null && attributes.size() >0) {
+			for(AbstractAttribute attribute : attributes) {
+				this.attributes.add(attribute);
+			}
+		}
 	}
 	
 	public void clearAttributes() {
@@ -294,11 +319,17 @@ public class ProductCategory extends AbstractBusinessObject {
 	}
 	
 	public void addCurrentAttribute(AbstractAttribute attribute) {
-		currentAttributes.add(attribute);
+		if (attribute != null) {
+			currentAttributes.add(attribute);
+		}
 	}
 	
 	public void addCurrentAttributes(Collection<AbstractAttribute> attributes) {
-		currentAttributes.addAll(attributes);
+		if (attributes != null && attributes.size() >0) {
+			for (AbstractAttribute attribute : attributes) {
+				currentAttributes.add(attribute);
+			}
+		}
 	}
 	
 	public void clearCurrentAttributes() {
@@ -310,12 +341,15 @@ public class ProductCategory extends AbstractBusinessObject {
 	}
 	
 	public void addBrand(Brand brand) {
-		MyAssert4Business.objectInitialized(brand);
-		this.brands.add(brand);
+		if (brand != null) {
+			this.brands.add(brand);
+		}
 	}
 	
 	public void addBrands(Collection<Brand> brands) {
-		this.brands.addAll(brands);
+		if (brands != null && brands.size() >0) {
+			this.brands.addAll(brands);
+		}
 	}
 	
 	public void clearBrands() {

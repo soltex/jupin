@@ -75,4 +75,20 @@
     and 
     ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER} 
   </delete>
+  <select id="selectByCategoryID" parameterType="map" resultMap="BaseResultMap">
+	SELECT <include refid="Base_Column_List"/> FROM 
+  	pdt_category_attribute_def_rel 
+  	WHERE CATEGORY_ID = #{categoryId,jdbcType=INTEGER} 
+  	ORDER BY SORT DESC 
+  </select>
+  <select id="selectByCategoryIDs" parameterType="map" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/> FROM 
+  	pdt_category_attribute_def_rel 
+  	WHERE 
+  	CATEGORY_ID IN 
+  	<foreach collection="categoryIds" open="(" close=")" separator="," item="categoryId" index="index">
+	  	${categoryId} 
+  	</foreach>
+  	ORDER BY SORT DESC 
+  </select>
 </mapper>

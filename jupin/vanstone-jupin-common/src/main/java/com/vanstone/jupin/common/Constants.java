@@ -3,11 +3,6 @@
  */
 package com.vanstone.jupin.common;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.vanstone.business.MyAssert4Business;
-import com.vanstone.business.def.AbstractBusinessObject;
-import com.vanstone.common.MyAssert;
 
 /**
  * jupin常量信息
@@ -28,30 +23,8 @@ public class Constants {
 	
 	/**业务执行等待时间 单位 秒*/
 	public static final int ZK_BUSINESS_EXECUTE_WAITING_TIME = 1;
-	/**
-	 * 建立ZK锁信号量路径
-	 * @param node
-	 * @return
-	 */
-	public static String buildZKLockMutexNodePath(String node) {
-		MyAssert.hasText(node);
-		if (node.endsWith("/")) {
-			node = StringUtils.substring(node, 0, node.length()-1);
-		}
-		if (!node.startsWith("/")) {
-			node = "/" + node;
-		}
-		return ZK_LOCK_MUTEXT_NODE_PATH_PREFIX + node;
-	}
 	
-	/**
-	 * 建立ZK锁信号量路径
-	 * @param businessObject
-	 */
-	public static final String buildZKLockMutexNodePath(AbstractBusinessObject businessObject) {
-		MyAssert4Business.objectInitialized(businessObject);
-		String node = businessObject.getKey();
-		return buildZKLockMutexNodePath("/" + node);
-	}
+	/**默认品类根节点*/
+	public static final String DEFAULT_PRODUCT_CATEGORY_ROOT_NODE_NAME = "ROOT";
 	
 }

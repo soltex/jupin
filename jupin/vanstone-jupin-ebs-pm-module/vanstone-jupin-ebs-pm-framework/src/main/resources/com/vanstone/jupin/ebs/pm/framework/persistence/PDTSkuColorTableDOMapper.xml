@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vanstone.jupin.ebs.pm.framework.persistence.PDTSkuColorTableDOMapper">
+	<resultMap id="BaseResultMap" type="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTSkuColorTableDO">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="COLOR_NAME" property="colorName" jdbcType="VARCHAR" />
+		<result column="COLOR_RGB" property="colorRgb" jdbcType="VARCHAR" />
+		<result column="COLOR_CSS" property="colorCss" jdbcType="VARCHAR" />
+		<result column="SORT" property="sort" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, COLOR_NAME, COLOR_RGB, COLOR_CSS, SORT
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from pdt_sku_color_table
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		pdt_sku_color_table
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTSkuColorTableDO"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+		insert into pdt_sku_color_table (ID, COLOR_NAME, COLOR_RGB,
+		COLOR_CSS,
+		SORT)
+		values (#{id,jdbcType=INTEGER}, #{colorName,jdbcType=VARCHAR},
+		#{colorRgb,jdbcType=VARCHAR},
+		#{colorCss,jdbcType=VARCHAR},
+		#{sort,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTSkuColorTableDO"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+		insert into pdt_sku_color_table
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="colorName != null">
+				COLOR_NAME,
+			</if>
+			<if test="colorRgb != null">
+				COLOR_RGB,
+			</if>
+			<if test="colorCss != null">
+				COLOR_CSS,
+			</if>
+			<if test="sort != null">
+				SORT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="colorName != null">
+				#{colorName,jdbcType=VARCHAR},
+			</if>
+			<if test="colorRgb != null">
+				#{colorRgb,jdbcType=VARCHAR},
+			</if>
+			<if test="colorCss != null">
+				#{colorCss,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				#{sort,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTSkuColorTableDO">
+		update pdt_sku_color_table
+		<set>
+			<if test="colorName != null">
+				COLOR_NAME = #{colorName,jdbcType=VARCHAR},
+			</if>
+			<if test="colorRgb != null">
+				COLOR_RGB = #{colorRgb,jdbcType=VARCHAR},
+			</if>
+			<if test="colorCss != null">
+				COLOR_CSS = #{colorCss,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				SORT = #{sort,jdbcType=INTEGER},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTSkuColorTableDO">
+		update pdt_sku_color_table
+		set COLOR_NAME =
+		#{colorName,jdbcType=VARCHAR},
+		COLOR_RGB =
+		#{colorRgb,jdbcType=VARCHAR},
+		COLOR_CSS = #{colorCss,jdbcType=VARCHAR},
+		SORT = #{sort,jdbcType=INTEGER}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectByColorName" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		pdt_sku_color_table
+		WHERE
+		COLOR_NAME = #{colorName,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByColorName_NotSelf" parameterType="map"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		pdt_sku_color_table
+		WHERE
+		COLOR_NAME = #{colorName,jdbcType=VARCHAR} AND ID &lt;&gt;
+		#{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectAll" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		pdt_sku_color_table
+		ORDER BY SORT DESC
+	</select>
+</mapper>

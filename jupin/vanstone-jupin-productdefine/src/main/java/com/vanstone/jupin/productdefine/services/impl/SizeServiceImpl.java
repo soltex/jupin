@@ -14,8 +14,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
@@ -23,12 +21,9 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.validation.annotation.Validated;
 
-import redis.clients.jedis.Jedis;
-
 import com.vanstone.business.MyAssert4Business;
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.business.ObjectHasSubObjectException;
-import com.vanstone.business.def.BusinessObjectKeyBuilder;
 import com.vanstone.framework.business.services.DefaultBusinessService;
 import com.vanstone.framework.business.services.ServiceUtil;
 import com.vanstone.jupin.common.Constants;
@@ -36,18 +31,18 @@ import com.vanstone.jupin.common.util.BoolUtil;
 import com.vanstone.jupin.common.util.InterProcessMutexCallback;
 import com.vanstone.jupin.common.util.ZKUtil;
 import com.vanstone.jupin.framework.cache.JupinRedisRef;
+import com.vanstone.jupin.productdefine.ProductDefineCache;
 import com.vanstone.jupin.productdefine.attr.sku.Size;
 import com.vanstone.jupin.productdefine.attr.sku.SizeTemplate;
 import com.vanstone.jupin.productdefine.attr.sku.SizeTemplateWrapBean;
-import com.vanstone.jupin.productdefine.cache.ProductDefineCacheKey;
 import com.vanstone.jupin.productdefine.persistence.PDTSkuSizeTableDOMapper;
 import com.vanstone.jupin.productdefine.persistence.PDTSkuSizeTemplateDOMapper;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTableDO;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuSizeTemplateDO;
 import com.vanstone.jupin.productdefine.persistence.object.QuerySizeTemplateDOWithSizeTableResultMap;
-import com.vanstone.jupin.productdefine.services.CategoryHasProductsException;
+import com.vanstone.jupin.productdefine.services.DefineCommonService;
+import com.vanstone.jupin.productdefine.services.ExistProductsNotAllowWriteException;
 import com.vanstone.jupin.productdefine.services.SizeService;
-import com.vanstone.redis.RedisCallbackWithoutResult;
 import com.vanstone.redis.RedisTemplate;
 
 /**
@@ -60,8 +55,6 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 	/***/
 	private static final long serialVersionUID = 5077934760251196625L;
 	
-	private static Logger LOG = LoggerFactory.getLogger(SizeServiceImpl.class);
-	
 	@Autowired
 	private PDTSkuSizeTableDOMapper pdtSkuSizeTableDOMapper;
 	@Autowired
@@ -69,7 +62,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 	@Autowired
 	private RedisTemplate redisTemplate;
 	@Autowired
-	private ProductDefineCommonService productDefineCommonService;
+	private DefineCommonService defineCommonService;
 	
 	@Override
 	public SizeTemplate addSizeTemplate(final String templateName, final String content, final boolean systemable,
@@ -145,6 +138,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 					//写入尺码数据
 					pdtSkuSizeTableDOMapper.insert(sizeTableDO);
 				}
+				defineCommonService.clearProductDefineCache();
 				return getSizeTemplate(templateDO.getId());
 			}
 		});
@@ -155,7 +149,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 			final boolean waistlineable, final boolean weightable, final boolean hipable,
 			final boolean chestable, final boolean heightable, final boolean shoulderable,
 			final @NotEmpty Collection<Size> sizes)
-			throws ObjectDuplicateException, CategoryHasProductsException {
+			throws ObjectDuplicateException, ExistProductsNotAllowWriteException {
 		SizeTemplate sizeTemplate = this.getSizeTemplate(id);
 		if (sizeTemplate == null) {
 			throw new IllegalArgumentException();
@@ -319,10 +313,10 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 	}
 	
 	@Override
-	public SizeTemplate updateBaseSizeTemplateInfo(final int id, final String templateName, final String content) throws ObjectHasSubObjectException, CategoryHasProductsException {
+	public SizeTemplate updateBaseSizeTemplateInfo(final int id, final String templateName, final String content) throws ObjectHasSubObjectException, ExistProductsNotAllowWriteException {
 		final SizeTemplate loadSizeTemplate = this.getSizeTemplateAndValidate(id);
-		if (!this.productDefineCommonService.validateProductCategoryBySizeTemplate(id)) {
-			throw new CategoryHasProductsException();
+		if (!this.defineCommonService.validateAllowUDOperateSizeTemplate(id)) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		PDTSkuSizeTemplateDO tempModel = this.pdtSkuSizeTemplateDOMapper.selectByTemplateName_NotSelf(id, templateName);
 		if (tempModel != null) {
@@ -337,7 +331,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				pdtSkuSizeTemplateDOMapper.updateByPrimaryKeyWithBLOBs(model);
 			}
 		});
-		refreshSizeTables();
+		defineCommonService.clearSizeTableCache();
 		return getSizeTemplate(id);
 	}
 	
@@ -345,10 +339,10 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 	 * @see com.vanstone.jupin.productdefine.services.SizeService#deleteSizeTemplate(int)
 	 */
 	@Override
-	public void deleteSizeTemplate(final int sizeTemplateId) throws CategoryHasProductsException {
+	public void deleteSizeTemplate(final int sizeTemplateId) throws ExistProductsNotAllowWriteException {
 		this.getSizeTemplateAndValidate(sizeTemplateId);
-		if(!this.productDefineCommonService.validateProductCategoryBySizeTemplate(sizeTemplateId)) {
-			throw new CategoryHasProductsException();
+		if(!this.defineCommonService.validateAllowUDOperateSizeTemplate(sizeTemplateId)) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		this.execute(new TransactionCallbackWithoutResult() {
 			@Override
@@ -357,7 +351,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				pdtSkuSizeTemplateDOMapper.deleteByPrimaryKey(sizeTemplateId);
 			}
 		});
-		refreshSizeTables();
+		defineCommonService.clearSizeTableCache();
 	}
 	
 	/* (non-Javadoc)
@@ -380,10 +374,10 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 	 * @see com.vanstone.jupin.productdefine.services.SizeService#addSize(com.vanstone.jupin.productdefine.attr.sku.Size)
 	 */
 	@Override
-	public Size addSize(final Size size) throws ObjectDuplicateException,CategoryHasProductsException {
+	public Size addSize(final Size size) throws ObjectDuplicateException,ExistProductsNotAllowWriteException {
 		MyAssert4Business.objectInitialized(size.getSizeTemplate());
-		if (!this.productDefineCommonService.validateProductCategoryBySizeTemplate(size.getSizeTemplate().getId())) {
-			throw new CategoryHasProductsException();
+		if (!defineCommonService.validateAllowUDOperateSizeTemplate(size.getSizeTemplate().getId())) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		PDTSkuSizeTableDO tempModel = this.pdtSkuSizeTableDOMapper.selectBySizeTemplateId_SizeName(size.getSizeTemplate().getId(), size.getSizeName());
 		if (tempModel != null) {
@@ -432,7 +426,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				size.setId(model.getId());
 			}
 		});
-		refreshSizeTables();
+		defineCommonService.clearSizeTableCache();
 		return size;
 	}
 	
@@ -440,11 +434,11 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 	 * @see com.vanstone.jupin.productdefine.services.SizeService#updateSize(com.vanstone.jupin.productdefine.attr.sku.Size)
 	 */
 	@Override
-	public Size updateSize(final Size size) throws ObjectDuplicateException, CategoryHasProductsException {
+	public Size updateSize(final Size size) throws ObjectDuplicateException, ExistProductsNotAllowWriteException {
 		MyAssert4Business.objectInitialized(size.getSizeTemplate());
 		MyAssert4Business.objectInitialized(size);
-		if (!this.productDefineCommonService.validateProductCategoryBySizeTemplate(size.getSizeTemplate().getId())) {
-			throw new CategoryHasProductsException();
+		if (!defineCommonService.validateAllowUDOperateSizeTemplate(size.getSizeTemplate().getId())) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		PDTSkuSizeTableDO tempModel = this.pdtSkuSizeTableDOMapper.selectBySizeTemplateId_SizeName_NotSelf(size.getSizeTemplate().getId(), size.getSizeName(),size.getId());
 		if (tempModel != null) {
@@ -492,7 +486,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				pdtSkuSizeTableDOMapper.updateByPrimaryKey(model);
 			}
 		});
-		refreshSizeTables();
+		defineCommonService.clearSizeTableCache();
 		return size;
 	}
 	
@@ -500,7 +494,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 	 * @see com.vanstone.jupin.productdefine.services.SizeService#deleteSize(int)
 	 */
 	@Override
-	public void deleteSize(final int sizeId) throws CategoryHasProductsException {
+	public void deleteSize(final int sizeId) throws ExistProductsNotAllowWriteException {
 		PDTSkuSizeTableDO model = this.pdtSkuSizeTableDOMapper.selectByPrimaryKey(sizeId);
 		if (model == null) {
 			throw new IllegalArgumentException();
@@ -511,7 +505,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				pdtSkuSizeTableDOMapper.deleteByPrimaryKey(sizeId);
 			}
 		});
-		refreshSizeTables();
+		defineCommonService.clearSizeTableCache();
 	}
 	
 	/* (non-Javadoc)
@@ -637,7 +631,8 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 	
 	@Override
 	public Size getSize(final int sizeId) {
-		Size loadSize = ZKUtil.executeMutex(Constants.buildZKLockMutexNodePath(BusinessObjectKeyBuilder.class2key(Size.class, sizeId)), new InterProcessMutexCallback<Size>() {
+		final String key = ProductDefineCache.getSizeKey(sizeId);
+		Size loadSize = ZKUtil.executeMutex(key, new InterProcessMutexCallback<Size>() {
 			@Override
 			public Size doInAcquireMutex(CuratorFramework curatorFramework) {
 				PDTSkuSizeTableDO model = pdtSkuSizeTableDOMapper.selectByPrimaryKey(sizeId);
@@ -650,7 +645,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				}
 				Size size = BeanUtil.toSize(model, sizeTemplate);
 				ServiceUtil<Size, Integer> serviceUtil = new ServiceUtil<Size, Integer>();
-				serviceUtil.setObjectToRedis(redisTemplate, JupinRedisRef.Jupin_Core, ProductDefineCacheKey.SIZE_CACHE_PREFIX + BusinessObjectKeyBuilder.class2key(Size.class, sizeId), size);
+				serviceUtil.setObjectToRedis(redisTemplate, JupinRedisRef.Jupin_Core, key, size);
 				return size;
 			}
 			
@@ -676,20 +671,5 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 		return loadSizeTemplate;
 	}
 	
-	@Override
-	public void refreshSizeTables() {
-		this.redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallbackWithoutResult() {
-			@Override
-			public void doInRedisWithoutResult(Jedis jedis) {
-				//清理内置缓冲
-				Set<String> keies = jedis.keys(ProductDefineCacheKey.SIZE_CACHE_PREFIX + "*");
-				if (keies == null || keies.size() <=0) {
-					return;
-				}
-				jedis.del(keies.toArray(new String[keies.size()]));
-				LOG.info("Refreshed Size Cache");
-			}
-		});
-	}
 }
                                                           

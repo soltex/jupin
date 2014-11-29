@@ -310,11 +310,45 @@
 		LEAFABLE = #{leafable,jdbcType=INTEGER} 
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
-	<select id="selectByParentID" parameterMap="map">
+	<select id="selectByParentID" parameterType="map" resultMap="ResultMapWithBLOBs">
 		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/> FROM 
 		pdt_category 
 		WHERE 
 		PARENT_ID = #{parentId,jdbcType=INTEGER} 
 		ORDER BY ID DESC 
+	</select>
+	<select id="selectByColorable_ExistProduct" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/> FROM 
+		pdt_category 
+		WHERE 
+		SKU_COLORABLE = #{colorable, jdbcType=INTEGER} 
+		AND 
+		EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER}
+	</select>
+	<select id="selectBySizeTemplateId_ExistProduct" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/> FROM 
+		pdt_category 
+		WHERE 
+		SIZE_TEMPLATE_ID = #{sizeTemplateId,jdbcType=INTEGER}
+		AND 
+		EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER}
+	</select>
+	<select id="selectByBrandId_ExistProduct" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/>
+		FROM 
+		pdt_category INNER JOIN PDT_PRODUCT_BRAND_REL 
+		ON 
+		pdt_category.ID = PDT_PRODUCT_BRAND_REL.CATEGORY_ID 
+		WHERE 
+		PDT_PRODUCT_BRAND_REL.BRAND_ID = #{brandId,jdbcType=INTEGER} 
+		AND 
+		pdt_category.EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER}
+	</select>
+	<select id="selectLevel1Category" resultType="integer">
+		SELECT ID FROM 
+		pdt_category 
+		WHERE 
+		pdt_category.PARENT_ID IS NULL 
+		ORDER BY SORT DESC 
 	</select>
 </mapper>

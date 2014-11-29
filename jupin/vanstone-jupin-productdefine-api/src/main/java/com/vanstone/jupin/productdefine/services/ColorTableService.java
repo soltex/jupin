@@ -34,7 +34,7 @@ public interface ColorTableService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	Color updateColor(@NotNull Color skuColor) throws ObjectDuplicateException, CategoryHasProductsException;
+	Color updateColor(@NotNull Color skuColor) throws ObjectDuplicateException, ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 获取颜色代码值
@@ -55,13 +55,7 @@ public interface ColorTableService {
 	 * @param id
 	 * @throws ObjectHasSubObjectException
 	 */
-	void deleteColor(int id) throws CategoryHasProductsException;
-	
-	/**
-	 * 强制删除颜色代码
-	 * @param id
-	 */
-	void forceDeleteColor(int id);
+	void deleteColor(int id) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 获取颜色列表，排序通过排序字段以及自然ID进行排序(将整个列表放入到缓冲中)

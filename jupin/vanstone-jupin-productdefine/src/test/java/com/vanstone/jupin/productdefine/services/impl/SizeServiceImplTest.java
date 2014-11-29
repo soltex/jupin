@@ -16,7 +16,7 @@ import com.vanstone.business.serialize.GsonCreator;
 import com.vanstone.jupin.productdefine.attr.sku.Size;
 import com.vanstone.jupin.productdefine.attr.sku.SizeTemplate;
 import com.vanstone.jupin.productdefine.attr.sku.SizeTemplateWrapBean;
-import com.vanstone.jupin.productdefine.services.CategoryHasProductsException;
+import com.vanstone.jupin.productdefine.services.ExistProductsNotAllowWriteException;
 import com.vanstone.jupin.productdefine.services.SizeService;
 
 @ContextConfiguration(locations = { 
@@ -85,7 +85,7 @@ public class SizeServiceImplTest {
 		
 		try {
 			this.sizeService.updateBaseSizeTemplateInfo(4, "体恤尺码", "体恤尺码体恤尺码");
-		} catch (CategoryHasProductsException e) {
+		} catch (ExistProductsNotAllowWriteException e) {
 			e.printStackTrace();
 		} catch (ObjectHasSubObjectException e) {
 			e.printStackTrace();
@@ -96,7 +96,7 @@ public class SizeServiceImplTest {
 	public void testDeleteSizeTemplate() {
 		try {
 			this.sizeService.deleteSizeTemplate(4);
-		} catch (CategoryHasProductsException e) {
+		} catch (ExistProductsNotAllowWriteException e) {
 			e.printStackTrace();
 		}
 	}
@@ -119,7 +119,7 @@ public class SizeServiceImplTest {
 			size = sizeService.addSize(size);
 			Gson gson = GsonCreator.createPretty();
 			System.out.println(gson.toJson(size));
-		} catch (CategoryHasProductsException e) {
+		} catch (ExistProductsNotAllowWriteException e) {
 			e.printStackTrace();
 		} catch (ObjectDuplicateException e) {
 			e.printStackTrace();
@@ -133,7 +133,7 @@ public class SizeServiceImplTest {
 		size.setWeightStart(100);
 		try {
 			this.sizeService.updateSize(size);
-		} catch (CategoryHasProductsException e) {
+		} catch (ExistProductsNotAllowWriteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ObjectDuplicateException e) {
@@ -155,7 +155,7 @@ public class SizeServiceImplTest {
 	public void testDeleteSize() {
 		try {
 			this.sizeService.deleteSize(26);
-		} catch (CategoryHasProductsException e) {
+		} catch (ExistProductsNotAllowWriteException e) {
 			e.printStackTrace();
 		}
 	}
@@ -176,6 +176,5 @@ public class SizeServiceImplTest {
 
 	@Test
 	public void testRefreshSizeTables() {
-		this.sizeService.refreshSizeTables();
 	}
 }

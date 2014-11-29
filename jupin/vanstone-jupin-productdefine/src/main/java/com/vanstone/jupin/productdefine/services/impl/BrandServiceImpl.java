@@ -23,8 +23,6 @@ import redis.clients.jedis.Jedis;
 
 import com.google.gson.Gson;
 import com.vanstone.business.ObjectDuplicateException;
-import com.vanstone.business.def.BusinessObjectKeyBuilder;
-import com.vanstone.business.serialize.GsonCreator;
 import com.vanstone.framework.business.services.DefaultBusinessService;
 import com.vanstone.framework.business.services.ServiceUtil;
 import com.vanstone.jupin.common.Constants;
@@ -34,13 +32,16 @@ import com.vanstone.jupin.common.util.ZKUtil;
 import com.vanstone.jupin.framework.cache.JupinRedisRef;
 import com.vanstone.jupin.productdefine.Brand;
 import com.vanstone.jupin.productdefine.ProductCategory;
+import com.vanstone.jupin.productdefine.ProductDefineCache;
 import com.vanstone.jupin.productdefine.persistence.PDTBrandDOMapper;
 import com.vanstone.jupin.productdefine.persistence.PDTProductBrandRelDOMapper;
 import com.vanstone.jupin.productdefine.persistence.object.PDTBrandDO;
 import com.vanstone.jupin.productdefine.persistence.object.PDTProductBrandRelDOKey;
+import com.vanstone.jupin.productdefine.serializer.GsonCreatorOfProductDefine;
 import com.vanstone.jupin.productdefine.services.BrandService;
-import com.vanstone.jupin.productdefine.services.CategoryHasProductsException;
-import com.vanstone.jupin.productdefine.services.MustLeafNodeofProductCategoryException;
+import com.vanstone.jupin.productdefine.services.ExistProductsNotAllowWriteException;
+import com.vanstone.jupin.productdefine.services.DefineCommonService;
+import com.vanstone.jupin.productdefine.services.CategoryMustLeafNodeException;
 import com.vanstone.redis.RedisCallback;
 import com.vanstone.redis.RedisTemplate;
 import com.vanstone.weedfs.client.impl.WeedFSClient;
@@ -63,7 +64,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	@Autowired
 	private RedisTemplate redisTemplate;
 	@Autowired
-	private ProductDefineCommonService commonService;
+	private DefineCommonService defineCommonService;
 	
 	@Override
 	public Brand addBrand(final Brand brand) throws ObjectDuplicateException {
@@ -79,11 +80,12 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 				brand.setId(model.getId());
 			}
 		});
+		defineCommonService.clearProductDefineCache();
 		return brand;
 	}
 	
 	@Override
-	public Brand addBrand(final Brand brand, final Collection<ProductCategory> productCategories) throws MustLeafNodeofProductCategoryException, ObjectDuplicateException {
+	public Brand addBrand(final Brand brand, final Collection<ProductCategory> productCategories) throws CategoryMustLeafNodeException, ObjectDuplicateException {
 		PDTBrandDO tempModel = this.pdtBrandDOMapper.selectByBrandName(brand.getBrandName());
 		if (tempModel != null) {
 			throw new ObjectDuplicateException();
@@ -101,6 +103,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 					key.setCategoryId(category.getId());
 					pdtProductBrandRelDOMapper.insert(key);
 				}
+				defineCommonService.clearProductDefineCache();
 				return brand;
 			}
 		});
@@ -110,16 +113,16 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	 * 验证节点 
 	 * @param productCategories
 	 * @return
-	 * @throws MustLeafNodeofProductCategoryException
+	 * @throws CategoryMustLeafNodeException
 	 */
-	private void _validateProdudctCategories(Collection<ProductCategory> productCategories) throws MustLeafNodeofProductCategoryException {
+	private void _validateProdudctCategories(Collection<ProductCategory> productCategories) throws CategoryMustLeafNodeException {
 		if (productCategories == null || productCategories.size() <=0) {
 			return;
 		}
 		Collection<Integer> productCategoryIds = new ArrayList<Integer>();
 		for (ProductCategory category : productCategories) {
 			if (!category.isLeafable()) {
-				throw new MustLeafNodeofProductCategoryException();
+				throw new CategoryMustLeafNodeException();
 			}
 			if (productCategoryIds.contains(category.getId())) {
 				LOG.error("Duplicate category id has been contain, {}" , category.getId());
@@ -131,7 +134,13 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	
 	@Override
 	public Brand getBrand(final int id) {
-		return ZKUtil.executeMutex(Constants.buildZKLockMutexNodePath(BusinessObjectKeyBuilder.class2key(Brand.class, id)), new InterProcessMutexCallback<Brand>() {
+		final String key = ProductDefineCache.getBrandKey(id);
+		final ServiceUtil<Brand, String> serviceUtil = new ServiceUtil<Brand, String>();
+		Brand loadBrand = serviceUtil.getObjectFromRedisByKey(redisTemplate, JupinRedisRef.Jupin_Core, Brand.class, key);
+		if (loadBrand != null) {
+			return loadBrand;
+		}
+		return ZKUtil.executeMutex(key, new InterProcessMutexCallback<Brand>() {
 			@Override
 			public Brand doInAcquireMutex(CuratorFramework curatorFramework) {
 				PDTBrandDO pdtBrandDO = pdtBrandDOMapper.selectByPrimaryKey(id);
@@ -139,6 +148,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 					return null;
 				}
 				Brand brand = BeanUtil.toBrand(pdtBrandDO);
+				serviceUtil.setObjectToRedis(redisTemplate, JupinRedisRef.Jupin_Core, key, brand);
 				return brand;
 			}
 			@Override
@@ -164,7 +174,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 				Collection<String> keies = new ArrayList<String>();
 				Map<Integer, Brand> dataMap = new LinkedHashMap<Integer, Brand>();
 				for (Integer id : ids) {
-					String key = BusinessObjectKeyBuilder.class2key(Brand.class, id);
+					String key = ProductDefineCache.getBrandKey(id);
 					keies.add(key);
 				}
 				List<String> values = jedis.mget(keies.toArray(new String[keies.size()]));
@@ -173,7 +183,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 					String value = values.get(index);
 					Brand brand = null;
 					if (value != null && value.length() > 0) {
-						Gson gson = GsonCreator.create();
+						Gson gson = GsonCreatorOfProductDefine.create();
 						brand = gson.fromJson(value, Brand.class);
 					}else{
 						brand = getBrand(id);
@@ -205,6 +215,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 			weedFSClient.delete(brand.getLogoImage().getWeedFile().getFileid());
 			LOG.info("DELETE WeedFS {}", brand.getLogoImage().getWeedFile().getFileid());
 		}
+		defineCommonService.clearProductDefineCache();
 	}
 	
 	@Override
@@ -224,6 +235,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 				pdtBrandDOMapper.updateByPrimaryKeyWithBLOBs(model);
 			}
 		});
+		defineCommonService.clearProductDefineCache();
 		return loadBrand;
 	}
 	
@@ -240,11 +252,12 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 				pdtBrandDOMapper.updateLogoInfo(brandId, imageBean.getWeedFile().getFileid(), imageBean.getWeedFile().getExtName(), imageBean.getWidth(), imageBean.getHeight());
 			}
 		});
+		defineCommonService.clearProductDefineCache();
 		return loadBrand;
 	}
 	
 	@Override
-	public void deleteBrand(final int brandId) throws CategoryHasProductsException {
+	public void deleteBrand(final int brandId) throws ExistProductsNotAllowWriteException {
 		Brand loadBrand = this.getBrand(brandId);
 		if (loadBrand == null) {
 			throw new IllegalArgumentException();
@@ -255,8 +268,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 				pdtBrandDOMapper.deleteByPrimaryKey(brandId);
 			}
 		});
-		ServiceUtil<Brand, Integer> serviceUtil = new ServiceUtil<Brand, Integer>();
-		serviceUtil.deleteFromRedis(redisTemplate, JupinRedisRef.Jupin_Core, loadBrand);
+		defineCommonService.clearProductDefineCache();
 		if (loadBrand.getLogoImage() != null) {
 			WeedFSClient weedFSClient = new WeedFSClient();
 			weedFSClient.delete(loadBrand.getLogoImage().getWeedFile().getFileid());
@@ -269,7 +281,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 		// TODO 强制删除Brand，暂时不实现
 		
 	}
-
+	
 	@Override
 	public Collection<Brand> getBrandsWithStat(ProductCategory productCategory, String key, int offset, int limit) {
 		// TODO Auto-generated method stub

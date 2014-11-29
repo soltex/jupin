@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vanstone.jupin.ebs.pm.framework.persistence.PDTBrandDOMapper">
+	<resultMap id="BaseResultMap" type="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTBrandDO">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="BRAND_NAME" property="brandName" jdbcType="VARCHAR" />
+		<result column="BRAND_NAME_EN" property="brandNameEn" jdbcType="VARCHAR" />
+		<result column="BRAND_NAME_FIRST_LETTER" property="brandNameFirstLetter" jdbcType="VARCHAR" />
+		<result column="LOGO_FILE_ID" property="logoFileId" jdbcType="VARCHAR" />
+		<result column="LOGO_WIDTH" property="logoWidth" jdbcType="INTEGER" />
+		<result column="LOGO_HEIGHT" property="logoHeight" jdbcType="INTEGER" />
+		<result column="LOGO_FILE_EXT" property="logoFileExt" jdbcType="VARCHAR" />
+		<result column="SYSTEMABLE" property="systemable" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTBrandDO" extends="BaseResultMap">
+		<result column="CONTENT" property="content" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, BRAND_NAME, BRAND_NAME_EN, BRAND_NAME_FIRST_LETTER, LOGO_FILE_ID,
+		LOGO_WIDTH,
+		LOGO_HEIGHT, LOGO_FILE_EXT, SYSTEMABLE
+	</sql>
+	<sql id="Blob_Column_List">
+		CONTENT
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from pdt_brand
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		pdt_brand
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTBrandDO"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+		insert into pdt_brand (ID, BRAND_NAME, BRAND_NAME_EN,
+		BRAND_NAME_FIRST_LETTER, LOGO_FILE_ID, LOGO_WIDTH,
+		LOGO_HEIGHT,
+		LOGO_FILE_EXT, SYSTEMABLE,
+		CONTENT)
+		values (#{id,jdbcType=INTEGER},
+		#{brandName,jdbcType=VARCHAR},
+		#{brandNameEn,jdbcType=VARCHAR},
+		#{brandNameFirstLetter,jdbcType=VARCHAR},
+		#{logoFileId,jdbcType=VARCHAR}, #{logoWidth,jdbcType=INTEGER},
+		#{logoHeight,jdbcType=INTEGER}, #{logoFileExt,jdbcType=VARCHAR},
+		#{systemable,jdbcType=INTEGER},
+		#{content,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTBrandDO"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+		insert into pdt_brand
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="brandName != null">
+				BRAND_NAME,
+			</if>
+			<if test="brandNameEn != null">
+				BRAND_NAME_EN,
+			</if>
+			<if test="brandNameFirstLetter != null">
+				BRAND_NAME_FIRST_LETTER,
+			</if>
+			<if test="logoFileId != null">
+				LOGO_FILE_ID,
+			</if>
+			<if test="logoWidth != null">
+				LOGO_WIDTH,
+			</if>
+			<if test="logoHeight != null">
+				LOGO_HEIGHT,
+			</if>
+			<if test="logoFileExt != null">
+				LOGO_FILE_EXT,
+			</if>
+			<if test="systemable != null">
+				SYSTEMABLE,
+			</if>
+			<if test="content != null">
+				CONTENT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="brandName != null">
+				#{brandName,jdbcType=VARCHAR},
+			</if>
+			<if test="brandNameEn != null">
+				#{brandNameEn,jdbcType=VARCHAR},
+			</if>
+			<if test="brandNameFirstLetter != null">
+				#{brandNameFirstLetter,jdbcType=VARCHAR},
+			</if>
+			<if test="logoFileId != null">
+				#{logoFileId,jdbcType=VARCHAR},
+			</if>
+			<if test="logoWidth != null">
+				#{logoWidth,jdbcType=INTEGER},
+			</if>
+			<if test="logoHeight != null">
+				#{logoHeight,jdbcType=INTEGER},
+			</if>
+			<if test="logoFileExt != null">
+				#{logoFileExt,jdbcType=VARCHAR},
+			</if>
+			<if test="systemable != null">
+				#{systemable,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTBrandDO">
+		update pdt_brand
+		<set>
+			<if test="brandName != null">
+				BRAND_NAME = #{brandName,jdbcType=VARCHAR},
+			</if>
+			<if test="brandNameEn != null">
+				BRAND_NAME_EN = #{brandNameEn,jdbcType=VARCHAR},
+			</if>
+			<if test="brandNameFirstLetter != null">
+				BRAND_NAME_FIRST_LETTER =
+				#{brandNameFirstLetter,jdbcType=VARCHAR},
+			</if>
+			<if test="logoFileId != null">
+				LOGO_FILE_ID = #{logoFileId,jdbcType=VARCHAR},
+			</if>
+			<if test="logoWidth != null">
+				LOGO_WIDTH = #{logoWidth,jdbcType=INTEGER},
+			</if>
+			<if test="logoHeight != null">
+				LOGO_HEIGHT = #{logoHeight,jdbcType=INTEGER},
+			</if>
+			<if test="logoFileExt != null">
+				LOGO_FILE_EXT = #{logoFileExt,jdbcType=VARCHAR},
+			</if>
+			<if test="systemable != null">
+				SYSTEMABLE = #{systemable,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				CONTENT = #{content,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTBrandDO">
+		update pdt_brand
+		set BRAND_NAME =
+		#{brandName,jdbcType=VARCHAR},
+		BRAND_NAME_EN =
+		#{brandNameEn,jdbcType=VARCHAR},
+		BRAND_NAME_FIRST_LETTER =
+		#{brandNameFirstLetter,jdbcType=VARCHAR},
+		LOGO_FILE_ID =
+		#{logoFileId,jdbcType=VARCHAR},
+		LOGO_WIDTH =
+		#{logoWidth,jdbcType=INTEGER},
+		LOGO_HEIGHT =
+		#{logoHeight,jdbcType=INTEGER},
+		LOGO_FILE_EXT =
+		#{logoFileExt,jdbcType=VARCHAR},
+		SYSTEMABLE =
+		#{systemable,jdbcType=INTEGER},
+		CONTENT =
+		#{content,jdbcType=LONGVARCHAR}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTBrandDO">
+		update pdt_brand
+		set BRAND_NAME =
+		#{brandName,jdbcType=VARCHAR},
+		BRAND_NAME_EN =
+		#{brandNameEn,jdbcType=VARCHAR},
+		BRAND_NAME_FIRST_LETTER =
+		#{brandNameFirstLetter,jdbcType=VARCHAR},
+		LOGO_FILE_ID =
+		#{logoFileId,jdbcType=VARCHAR},
+		LOGO_WIDTH =
+		#{logoWidth,jdbcType=INTEGER},
+		LOGO_HEIGHT =
+		#{logoHeight,jdbcType=INTEGER},
+		LOGO_FILE_EXT =
+		#{logoFileExt,jdbcType=VARCHAR},
+		SYSTEMABLE =
+		#{systemable,jdbcType=INTEGER}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectByBrandName" parameterType="map"
+		resultMap="ResultMapWithBLOBs">
+		SELECT
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		FROM
+		pdt_brand
+		WHERE
+		BRAND_NAME = #{brandName,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByBrandName_NotSelf" parameterType="map"
+		resultMap="ResultMapWithBLOBs">
+		SELECT
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		FROM
+		pdt_brand
+		WHERE
+		BRAND_NAME = #{brandName,jdbcType=VARCHAR}
+		AND
+		ID
+		&lt;&gt; #{id,jdbcType=INTEGER}
+	</select>
+	<update id="updateLogoInfo" parameterType="map">
+		UPDATE pdt_brand
+		set
+		LOGO_FILE_ID = #{logoFileId,jdbcType=VARCHAR},
+		LOGO_WIDTH =
+		#{logoWidth,jdbcType=INTEGER},
+		LOGO_HEIGHT =
+		#{logoHeight,jdbcType=INTEGER},
+		LOGO_FILE_EXT =
+		#{logoFileExt,jdbcType=VARCHAR}
+		WHERE
+		ID = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectByCategoryIDs" parameterType="map"
+		resultMap="ResultMapWithBLOBs">
+		SELECT
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		FROM
+		pdt_brand INNER JOIN PDT_PRODUCT_BRAND_REL ON pdt_brand.ID =
+		PDT_PRODUCT_BRAND_REL.BRAND_ID
+		WHERE
+		PDT_PRODUCT_BRAND_REL.CATEGORY_ID IN
+		<foreach collection="categoryIDs" item="categoryID" open="("
+			close=")" separator=",">
+			${categoryID}
+		</foreach>
+		ORDER BY pdt_brand.BRAND_NAME
+	</select>
+</mapper>

@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.curator.framework.CuratorFramework;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
@@ -29,12 +27,13 @@ import com.vanstone.jupin.common.Constants;
 import com.vanstone.jupin.common.util.InterProcessMutexCallback;
 import com.vanstone.jupin.common.util.ZKUtil;
 import com.vanstone.jupin.framework.cache.JupinRedisRef;
+import com.vanstone.jupin.productdefine.ProductDefineCache;
 import com.vanstone.jupin.productdefine.attr.sku.Color;
-import com.vanstone.jupin.productdefine.cache.ProductDefineCacheKey;
 import com.vanstone.jupin.productdefine.persistence.PDTSkuColorTableDOMapper;
 import com.vanstone.jupin.productdefine.persistence.object.PDTSkuColorTableDO;
-import com.vanstone.jupin.productdefine.services.CategoryHasProductsException;
+import com.vanstone.jupin.productdefine.services.ExistProductsNotAllowWriteException;
 import com.vanstone.jupin.productdefine.services.ColorTableService;
+import com.vanstone.jupin.productdefine.services.DefineCommonService;
 import com.vanstone.redis.RedisCallback;
 import com.vanstone.redis.RedisCallbackWithoutResult;
 import com.vanstone.redis.RedisTemplate;
@@ -49,14 +48,12 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 	/***/
 	private static final long serialVersionUID = 1494174772850428828L;
 	
-	private static Logger LOG = LoggerFactory.getLogger(ColorTableServiceImpl.class);
-	
 	@Autowired
 	private PDTSkuColorTableDOMapper pdtSkuColorTableDOMapper;
 	@Autowired
 	private RedisTemplate redisTemplate;
 	@Autowired
-	private ProductDefineCommonService commonService;
+	private DefineCommonService defineCommonService;
 	
 	/* (non-Javadoc)
 	 * @see com.vanstone.jupin.productdefine.services.ColorTableService#addSkuColor(com.vanstone.jupin.productdefine.attr.sku.Color)
@@ -75,7 +72,7 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 				color.setId(model.getId());
 			}
 		});
-		this.refreshColorTable();
+		refreshColorTable();
 		return color;
 	}
 	
@@ -83,11 +80,11 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 	 * @see com.vanstone.jupin.productdefine.services.ColorTableService#updateSkuColor(com.vanstone.jupin.productdefine.attr.sku.Color)
 	 */
 	@Override
-	public Color updateColor(final Color skuColor) throws ObjectDuplicateException, CategoryHasProductsException{
+	public Color updateColor(final Color skuColor) throws ObjectDuplicateException, ExistProductsNotAllowWriteException{
 		MyAssert4Business.objectInitialized(skuColor);
 		final Color loadColor = this.getColorAndValidate(skuColor.getId());
-		if (!commonService.validateProductCategoryByColor()) {
-			throw new CategoryHasProductsException();
+		if (!defineCommonService.validateAllowUDOperateColor()) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		PDTSkuColorTableDO _tempModel = this.pdtSkuColorTableDOMapper.selectByColorName_NotSelf(skuColor.getColorName(), skuColor.getId());
 		if (_tempModel != null) {
@@ -102,7 +99,7 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 				pdtSkuColorTableDOMapper.updateByPrimaryKey(BeanUtil.toPDTSkuColorTableDO(loadColor));
 			}
 		});
-		this.refreshColorTable();
+		refreshColorTable();
 		return loadColor;
 	}
 	
@@ -115,7 +112,7 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 			Color loadColor = this.redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallback<Color>() {
 				@Override
 				public Color doInRedis(Jedis jedis) {
-					String value = jedis.hget(ProductDefineCacheKey.COLOR_TABLE_LIST_KEY, BusinessObjectKeyBuilder.class2key(Color.class, id));
+					String value = jedis.hget(ProductDefineCache.COLOR_TABLE_LIST_KEY, BusinessObjectKeyBuilder.class2key(Color.class, id));
 					if (value != null) {
 						Gson gson = GsonCreator.create();
 						return gson.fromJson(value, Color.class);
@@ -144,10 +141,10 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 	 * @see com.vanstone.jupin.productdefine.services.ColorTableService#deleteSkuColor(int)
 	 */
 	@Override
-	public void deleteColor(final int id) throws CategoryHasProductsException {
+	public void deleteColor(final int id) throws ExistProductsNotAllowWriteException {
 		this.getColorAndValidate(id);
-		if (!commonService.validateProductCategoryByColor()) {
-			throw new CategoryHasProductsException();
+		if (!defineCommonService.validateAllowUDOperateColor()) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		this.execute(new TransactionCallbackWithoutResult() {
 			@Override
@@ -159,14 +156,6 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 	}
 	
 	/* (non-Javadoc)
-	 * @see com.vanstone.jupin.productdefine.services.ColorTableService#forceDeleteSkuColor(int)
-	 */
-	@Override
-	public void forceDeleteColor(int id) {
-		//TODO 暂时不实现，待品类升级后在实现
-	}
-
-	/* (non-Javadoc)
 	 * @see com.vanstone.jupin.productdefine.services.ColorTableService#getSkuColors()
 	 */
 	@Override
@@ -174,11 +163,11 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 		Collection<Color> loadColors = this.redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallback<Collection<Color>>() {
 			@Override
 			public Collection<Color> doInRedis(Jedis jedis) {
-				boolean exist = jedis.exists(ProductDefineCacheKey.COLOR_TABLE_LIST_KEY);
+				boolean exist = jedis.exists(ProductDefineCache.COLOR_TABLE_LIST_KEY);
 				if (!exist) {
 					return null;
 				}
-				List<String> values = jedis.hvals(ProductDefineCacheKey.COLOR_TABLE_LIST_KEY);
+				List<String> values = jedis.hvals(ProductDefineCache.COLOR_TABLE_LIST_KEY);
 				if (values == null || values.size() <=0) {
 					return null;
 				}
@@ -193,8 +182,8 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 		if (loadColors != null) {
 			return loadColors;
 		}
-		return ZKUtil.executeMutex(Constants.buildZKLockMutexNodePath(ProductDefineCacheKey.COLOR_TABLE_LIST_KEY), new InterProcessMutexCallback<Collection<Color>>() {
-
+		return ZKUtil.executeMutex(ProductDefineCache.COLOR_TABLE_LIST_KEY, new InterProcessMutexCallback<Collection<Color>>() {
+			
 			@Override
 			public Collection<Color> doInAcquireMutex(CuratorFramework curatorFramework) {
 				//获取到锁
@@ -211,7 +200,7 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 					public void doInRedisWithoutResult(Jedis jedis) {
 						for (Color color : colors) {
 							Gson gson = GsonCreator.create();
-							jedis.hset(ProductDefineCacheKey.COLOR_TABLE_LIST_KEY, BusinessObjectKeyBuilder.class2key(Color.class, color.getId()), gson.toJson(color));
+							jedis.hset(ProductDefineCache.COLOR_TABLE_LIST_KEY, BusinessObjectKeyBuilder.class2key(Color.class, color.getId()), gson.toJson(color));
 						}
 					}
 				});
@@ -232,15 +221,7 @@ public class ColorTableServiceImpl extends DefaultBusinessService implements Col
 	
 	@Override
 	public int refreshColorTable() {
-		this.redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallbackWithoutResult() {
-			@Override
-			public void doInRedisWithoutResult(Jedis jedis) {
-				if (jedis.exists(ProductDefineCacheKey.COLOR_TABLE_LIST_KEY)) {
-					jedis.del(ProductDefineCacheKey.COLOR_TABLE_LIST_KEY);
-				}
-			}
-		});
-		LOG.info("Refresh Color Table , In Redis {}", ProductDefineCacheKey.COLOR_TABLE_LIST_KEY);
+		this.defineCommonService.clearColorTableCache();
 		Collection<Color> colors = this.getColors();
 		if (colors != null) {
 			return colors.size();

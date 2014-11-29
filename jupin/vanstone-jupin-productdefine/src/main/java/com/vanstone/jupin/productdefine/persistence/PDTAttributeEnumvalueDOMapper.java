@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.vanstone.dal.mybatis.MyBatisRepository;
 import com.vanstone.jupin.productdefine.persistence.object.PDTAttributeEnumvalueDO;
 
+@MyBatisRepository
 public interface PDTAttributeEnumvalueDOMapper {
 	
     int deleteByPrimaryKey(Integer id);

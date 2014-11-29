@@ -47,9 +47,9 @@ public interface SizeService {
 	 * @param templateName
 	 * @param content
 	 * @return
-	 * @throws CategoryHasProductsException
+	 * @throws ExistProductsNotAllowWriteException
 	 */
-	SizeTemplate updateBaseSizeTemplateInfo(int id, String templateName, String content) throws ObjectHasSubObjectException, CategoryHasProductsException;
+	SizeTemplate updateBaseSizeTemplateInfo(int id, String templateName, String content) throws ObjectHasSubObjectException, ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 更新尺码详情信息
@@ -65,15 +65,15 @@ public interface SizeService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	SizeTemplate updateSizeTemplate(int id, boolean systemable, boolean waistlineable,boolean weightable,boolean hipable,boolean chestable, boolean heightable,boolean shoulderable,@NotEmpty Collection<Size> sizes) throws ObjectDuplicateException, CategoryHasProductsException;
+	SizeTemplate updateSizeTemplate(int id, boolean systemable, boolean waistlineable,boolean weightable,boolean hipable,boolean chestable, boolean heightable,boolean shoulderable,@NotEmpty Collection<Size> sizes) throws ObjectDuplicateException, ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 删除尺码模板
 	 * @param sizeTemplateId
 	 * @return
-	 * @throws CategoryHasProductsException
+	 * @throws ExistProductsNotAllowWriteException
 	 */
-	void deleteSizeTemplate(int sizeTemplateId) throws CategoryHasProductsException;
+	void deleteSizeTemplate(int sizeTemplateId) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 获取尺码模板列表
@@ -87,7 +87,7 @@ public interface SizeService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	Size addSize(Size size) throws ObjectDuplicateException,CategoryHasProductsException;
+	Size addSize(Size size) throws ObjectDuplicateException,ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 更新尺码信息
@@ -95,13 +95,13 @@ public interface SizeService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	Size updateSize(Size size) throws ObjectDuplicateException, CategoryHasProductsException;
+	Size updateSize(Size size) throws ObjectDuplicateException, ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 删除尺码
 	 * @param sizeId
 	 */
-	void deleteSize(int sizeId) throws CategoryHasProductsException;
+	void deleteSize(int sizeId) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 获取尺码模板列表（并带有统计信息，以及尺码信息）
@@ -129,10 +129,5 @@ public interface SizeService {
 	 * @return
 	 */
 	SizeTemplate getSizeTemplateAndValidate(int id);
-	
-	/**
-	 * 刷新尺码表
-	 */
-	void refreshSizeTables();
 	
 }

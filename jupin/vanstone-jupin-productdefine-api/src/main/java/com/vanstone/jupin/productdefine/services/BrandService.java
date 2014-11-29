@@ -37,7 +37,7 @@ public interface BrandService {
 	 * @param productCategories
 	 * @return
 	 */
-	Brand addBrand(@NotNull Brand brand, Collection<ProductCategory> productCategories) throws MustLeafNodeofProductCategoryException, ObjectDuplicateException;
+	Brand addBrand(@NotNull Brand brand, Collection<ProductCategory> productCategories) throws CategoryMustLeafNodeException, ObjectDuplicateException;
 	
 	/**
 	 * 通过ID获取品牌信息（放入到缓冲中）
@@ -83,7 +83,7 @@ public interface BrandService {
 	 * @param brandId
 	 * @throws ObjectHasSubObjectException
 	 */
-	void deleteBrand(int brandId) throws CategoryHasProductsException;
+	void deleteBrand(int brandId) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 强制删除品牌信息

@@ -33,4 +33,12 @@ public interface PDTCategoryDOMapper {
     
     List<PDTCategoryDO> selectByParentID(@Param("parentId")Integer parentID);
     
+    List<PDTCategoryDO> selectByColorable_ExistProduct(@Param("colorable")Integer colorable, @Param("existProduct")Integer existProduct);
+    
+    List<PDTCategoryDO> selectBySizeTemplateId_ExistProduct(@Param("sizeTemplateId")Integer sizeTemplateId, @Param("existProduct")Integer existProduct);
+    
+    List<PDTCategoryDO> selectByBrandId_ExistProduct(@Param("brandId")Integer brandId, @Param("existProduct")Integer existProduct);
+    
+    List<Integer> selectLevel1Category();
+    
 }

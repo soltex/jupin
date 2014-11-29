@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.vanstone.jupin.ebs.pm.framework.persistence.PDTCategoryDOMapper">
+	<resultMap id="BaseResultMap" type="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTCategoryDO">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="CATEGORY_NAME" property="categoryName" jdbcType="VARCHAR" />
+		<result column="DESCRIPTION" property="description" jdbcType="VARCHAR" />
+		<result column="CATEGORY_BIND_PAGE" property="categoryBindPage" jdbcType="VARCHAR" />
+		<result column="COVER_FILE_ID" property="coverFileId" jdbcType="VARCHAR" />
+		<result column="COVER_FILE_WIDTH" property="coverFileWidth" jdbcType="INTEGER" />
+		<result column="COVER_FILE_HEIGHT" property="coverFileHeight" jdbcType="INTEGER" />
+		<result column="COVER_FILE_EXT" property="coverFileExt" jdbcType="VARCHAR" />
+		<result column="PARENT_ID" property="parentId" jdbcType="INTEGER" />
+		<result column="SORT" property="sort" jdbcType="INTEGER" />
+		<result column="LEAFABLE" property="leafable" jdbcType="INTEGER" />
+		<result column="CATEGORY_STATE" property="categoryState" jdbcType="INTEGER" />
+		<result column="EXIST_PRODUCT" property="existProduct" jdbcType="INTEGER" />
+		<result column="SKU_COLORABLE" property="skuColorable" jdbcType="INTEGER" />
+		<result column="SKU_SIZEABLE" property="skuSizeable" jdbcType="INTEGER" />
+		<result column="SIZE_TEMPLATE_ID" property="sizeTemplateId" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTCategoryDO" extends="BaseResultMap">
+		<result column="FORM_TEMPLATE" property="formTemplate" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, CATEGORY_NAME, DESCRIPTION, CATEGORY_BIND_PAGE, COVER_FILE_ID,
+		COVER_FILE_WIDTH,
+		COVER_FILE_HEIGHT, COVER_FILE_EXT, PARENT_ID, SORT, LEAFABLE, CATEGORY_STATE,
+		EXIST_PRODUCT,
+		SKU_COLORABLE, SKU_SIZEABLE, SIZE_TEMPLATE_ID
+	</sql>
+	<sql id="Blob_Column_List">
+		FORM_TEMPLATE
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from pdt_category
+		where ID = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from pdt_category
+		where ID = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTCategoryDO"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+		insert into pdt_category (ID, CATEGORY_NAME, DESCRIPTION,
+		CATEGORY_BIND_PAGE, COVER_FILE_ID, COVER_FILE_WIDTH,
+		COVER_FILE_HEIGHT, COVER_FILE_EXT, PARENT_ID,
+		SORT, LEAFABLE, CATEGORY_STATE,
+		EXIST_PRODUCT, SKU_COLORABLE, SKU_SIZEABLE,
+		SIZE_TEMPLATE_ID, FORM_TEMPLATE)
+		values (#{id,jdbcType=INTEGER}, #{categoryName,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{categoryBindPage,jdbcType=VARCHAR}, #{coverFileId,jdbcType=VARCHAR}, #{coverFileWidth,jdbcType=BIGINT},
+		#{coverFileHeight,jdbcType=INTEGER}, #{coverFileExt,jdbcType=INTEGER},
+		#{parentId,jdbcType=INTEGER},
+		#{sort,jdbcType=INTEGER}, #{leafable,jdbcType=INTEGER}, #{categoryState,jdbcType=INTEGER},
+		#{existProduct,jdbcType=INTEGER}, #{skuColorable,jdbcType=INTEGER},
+		#{skuSizeable,jdbcType=INTEGER},
+		#{sizeTemplateId,jdbcType=INTEGER}, #{formTemplate,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTCategoryDO"
+		useGeneratedKeys="true" keyProperty="id">
+		<selectKey resultType="int" order="AFTER" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+		insert into pdt_category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="categoryName != null">
+				CATEGORY_NAME,
+			</if>
+			<if test="description != null">
+				DESCRIPTION,
+			</if>
+			<if test="categoryBindPage != null">
+				CATEGORY_BIND_PAGE,
+			</if>
+			<if test="coverFileId != null">
+				COVER_FILE_ID,
+			</if>
+			<if test="coverFileWidth != null">
+				COVER_FILE_WIDTH,
+			</if>
+			<if test="coverFileHeight != null">
+				COVER_FILE_HEIGHT,
+			</if>
+			<if test="coverFileExt != null">
+				COVER_FILE_EXT,
+			</if>
+			<if test="parentId != null">
+				PARENT_ID,
+			</if>
+			<if test="sort != null">
+				SORT,
+			</if>
+			<if test="leafable != null">
+				LEAFABLE,
+			</if>
+			<if test="categoryState != null">
+				CATEGORY_STATE,
+			</if>
+			<if test="existProduct != null">
+				EXIST_PRODUCT,
+			</if>
+			<if test="skuColorable != null">
+				SKU_COLORABLE,
+			</if>
+			<if test="skuSizeable != null">
+				SKU_SIZEABLE,
+			</if>
+			<if test="sizeTemplateId != null">
+				SIZE_TEMPLATE_ID,
+			</if>
+			<if test="formTemplate != null">
+				FORM_TEMPLATE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="categoryName != null">
+				#{categoryName,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="categoryBindPage != null">
+				#{categoryBindPage,jdbcType=VARCHAR},
+			</if>
+			<if test="coverFileId != null">
+				#{coverFileId,jdbcType=VARCHAR},
+			</if>
+			<if test="coverFileWidth != null">
+				#{coverFileWidth,jdbcType=BIGINT},
+			</if>
+			<if test="coverFileHeight != null">
+				#{coverFileHeight,jdbcType=INTEGER},
+			</if>
+			<if test="coverFileExt != null">
+				#{coverFileExt,jdbcType=INTEGER},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="sort != null">
+				#{sort,jdbcType=INTEGER},
+			</if>
+			<if test="leafable != null">
+				#{leafable,jdbcType=INTEGER},
+			</if>
+			<if test="categoryState != null">
+				#{categoryState,jdbcType=INTEGER},
+			</if>
+			<if test="existProduct != null">
+				#{existProduct,jdbcType=INTEGER},
+			</if>
+			<if test="skuColorable != null">
+				#{skuColorable,jdbcType=INTEGER},
+			</if>
+			<if test="skuSizeable != null">
+				#{skuSizeable,jdbcType=INTEGER},
+			</if>
+			<if test="sizeTemplateId != null">
+				#{sizeTemplateId,jdbcType=INTEGER},
+			</if>
+			<if test="formTemplate != null">
+				#{formTemplate,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTCategoryDO">
+		update pdt_category
+		<set>
+			<if test="categoryName != null">
+				CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				DESCRIPTION = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="categoryBindPage != null">
+				CATEGORY_BIND_PAGE = #{categoryBindPage,jdbcType=VARCHAR},
+			</if>
+			<if test="coverFileId != null">
+				COVER_FILE_ID = #{coverFileId,jdbcType=VARCHAR},
+			</if>
+			<if test="coverFileWidth != null">
+				COVER_FILE_WIDTH = #{coverFileWidth,jdbcType=BIGINT},
+			</if>
+			<if test="coverFileHeight != null">
+				COVER_FILE_HEIGHT = #{coverFileHeight,jdbcType=INTEGER},
+			</if>
+			<if test="coverFileExt != null">
+				COVER_FILE_EXT = #{coverFileExt,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				PARENT_ID = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="sort != null">
+				SORT = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="leafable != null">
+				LEAFABLE = #{leafable,jdbcType=INTEGER},
+			</if>
+			<if test="categoryState != null">
+				CATEGORY_STATE = #{categoryState,jdbcType=INTEGER},
+			</if>
+			<if test="existProduct != null">
+				EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER},
+			</if>
+			<if test="skuColorable != null">
+				SKU_COLORABLE = #{skuColorable,jdbcType=INTEGER},
+			</if>
+			<if test="skuSizeable != null">
+				SKU_SIZEABLE = #{skuSizeable,jdbcType=INTEGER},
+			</if>
+			<if test="sizeTemplateId != null">
+				SIZE_TEMPLATE_ID = #{sizeTemplateId,jdbcType=INTEGER},
+			</if>
+			<if test="formTemplate != null">
+				FORM_TEMPLATE = #{formTemplate,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTCategoryDO">
+		update pdt_category
+		set CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+		DESCRIPTION = #{description,jdbcType=VARCHAR},
+		CATEGORY_BIND_PAGE = #{categoryBindPage,jdbcType=VARCHAR},
+		COVER_FILE_ID = #{coverFileId,jdbcType=VARCHAR},
+		COVER_FILE_WIDTH = #{coverFileWidth,jdbcType=BIGINT},
+		COVER_FILE_HEIGHT = #{coverFileHeight,jdbcType=INTEGER},
+		COVER_FILE_EXT = #{coverFileExt,jdbcType=VARCHAR},
+		PARENT_ID = #{parentId,jdbcType=INTEGER},
+		SORT = #{sort,jdbcType=INTEGER},
+		LEAFABLE = #{leafable,jdbcType=INTEGER},
+		CATEGORY_STATE = #{categoryState,jdbcType=INTEGER},
+		EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER},
+		SKU_COLORABLE = #{skuColorable,jdbcType=INTEGER},
+		SKU_SIZEABLE = #{skuSizeable,jdbcType=INTEGER},
+		SIZE_TEMPLATE_ID = #{sizeTemplateId,jdbcType=INTEGER},
+		FORM_TEMPLATE = #{formTemplate,jdbcType=LONGVARCHAR}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTCategoryDO">
+		update pdt_category
+		set CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+		DESCRIPTION = #{description,jdbcType=VARCHAR},
+		CATEGORY_BIND_PAGE = #{categoryBindPage,jdbcType=VARCHAR},
+		COVER_FILE_ID = #{coverFileId,jdbcType=VARCHAR},
+		COVER_FILE_WIDTH = #{coverFileWidth,jdbcType=BIGINT},
+		COVER_FILE_HEIGHT = #{coverFileHeight,jdbcType=INTEGER},
+		COVER_FILE_EXT = #{coverFileExt,jdbcType=VARCHAR},
+		PARENT_ID = #{parentId,jdbcType=INTEGER},
+		SORT = #{sort,jdbcType=INTEGER},
+		LEAFABLE = #{leafable,jdbcType=INTEGER},
+		CATEGORY_STATE = #{categoryState,jdbcType=INTEGER},
+		EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER},
+		SKU_COLORABLE = #{skuColorable,jdbcType=INTEGER},
+		SKU_SIZEABLE = #{skuSizeable,jdbcType=INTEGER},
+		SIZE_TEMPLATE_ID = #{sizeTemplateId,jdbcType=INTEGER}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateCoverImage" parameterType="map">
+		update pdt_category
+		set
+		COVER_FILE_ID = #{coverFileId,jdbcType=VARCHAR},
+		COVER_FILE_WIDTH = #{coverFileWidth,jdbcType=BIGINT},
+		COVER_FILE_HEIGHT = #{coverFileHeight,jdbcType=INTEGER},
+		COVER_FILE_EXT = #{coverFileExt,jdbcType=VARCHAR},
+		PARENT_ID = #{parentId,jdbcType=INTEGER}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateProductCategoryBaseInfo" parameterType="map">
+		update pdt_category
+		set
+		CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+		DESCRIPTION = #{description,jdbcType=VARCHAR},
+		CATEGORY_BIND_PAGE = #{categoryBindPage,jdbcType=VARCHAR},
+		SORT = #{sort,jdbcType=INTEGER},
+		FORM_TEMPLATE = #{formTemplate,jdbcType=LONGVARCHAR}
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateParentCategoryID" parameterType="map" >
+		update pdt_category 
+		set 
+		PARENT_ID = #{parentId, jdbcType=INTEGER} 
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateLeafable" parameterType="map" >
+		UPDATE pdt_category 
+		set 
+		LEAFABLE = #{leafable,jdbcType=INTEGER} 
+		where ID = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectByParentID" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/> FROM 
+		pdt_category 
+		WHERE 
+		PARENT_ID = #{parentId,jdbcType=INTEGER} 
+		ORDER BY ID DESC 
+	</select>
+	<select id="selectByColorable_ExistProduct" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/> FROM 
+		pdt_category 
+		WHERE 
+		SKU_COLORABLE = #{colorable, jdbcType=INTEGER} 
+		AND 
+		EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER}
+	</select>
+	<select id="selectBySizeTemplateId_ExistProduct" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/> FROM 
+		pdt_category 
+		WHERE 
+		SIZE_TEMPLATE_ID = #{sizeTemplateId,jdbcType=INTEGER}
+		AND 
+		EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER}
+	</select>
+	<select id="selectByBrandId_ExistProduct" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/>
+		FROM 
+		pdt_category INNER JOIN PDT_PRODUCT_BRAND_REL 
+		ON 
+		pdt_category.ID = PDT_PRODUCT_BRAND_REL.CATEGORY_ID 
+		WHERE 
+		PDT_PRODUCT_BRAND_REL.BRAND_ID = #{brandId,jdbcType=INTEGER} 
+		AND 
+		pdt_category.EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER}
+	</select>
+	<select id="selectLevel1Category" resultType="integer">
+		SELECT ID FROM 
+		pdt_category 
+		WHERE 
+		pdt_category.PARENT_ID IS NULL 
+		ORDER BY SORT DESC 
+	</select>
+	<select id="selectByKey" parameterType="map" resultType="integer">
+		SELECT ID 
+		FROM 
+		pdt_category 
+		<include refid="SELECT_KEY_CONDITION"/>
+		ORDER BY PARENT_ID 
+	</select>
+	<select id="selectTotalByKey" parameterType="map" resultType="integer">
+		SELECT COUNT(ID) AS C 
+		FROM 
+		pdt_category 
+		<include refid="SELECT_KEY_CONDITION"/>
+	</select>
+	<sql id="SELECT_KEY_CONDITION">
+		<where>
+			<if test="key != null and key != ''">
+				OR CATEGORY_NAME LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			</if>
+			<if test="key != null and key != ''">
+				OR DESCRIPTION LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			</if>
+			<if test="key != null and key != ''">
+				OR CATEGORY_BIND_PAGE LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			</if>
+			<if test="key != null and key != ''">
+				OR FORM_TEMPLATE LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			</if>
+			<if test="key != null and key != ''">
+				OR ID = #{key}
+			</if>
+		</where>
+	</sql>
+</mapper>

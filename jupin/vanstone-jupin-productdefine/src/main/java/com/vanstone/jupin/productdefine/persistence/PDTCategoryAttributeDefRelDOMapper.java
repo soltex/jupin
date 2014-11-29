@@ -1,10 +1,14 @@
 package com.vanstone.jupin.productdefine.persistence;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
+import com.vanstone.dal.mybatis.MyBatisRepository;
 import com.vanstone.jupin.productdefine.persistence.object.PDTCategoryAttributeDefRelDO;
 import com.vanstone.jupin.productdefine.persistence.object.PDTCategoryAttributeDefRelDOKey;
 
+@MyBatisRepository
 public interface PDTCategoryAttributeDefRelDOMapper {
     int deleteByPrimaryKey(PDTCategoryAttributeDefRelDOKey key);
 
@@ -19,5 +23,9 @@ public interface PDTCategoryAttributeDefRelDOMapper {
     int updateByPrimaryKey(PDTCategoryAttributeDefRelDO record);
     
     int deleteByProductCategoryID_AttributeID(@Param("categoryId")Integer productCategoryId, @Param("attributeDefId")Integer attributeId);
+    
+    List<PDTCategoryAttributeDefRelDO> selectByCategoryID(@Param("categoryId")Integer productCategoryId);
+    
+    List<PDTCategoryAttributeDefRelDO> selectByCategoryIDs(@Param("categoryIds")Integer[] productCategoryIds);
     
 }
