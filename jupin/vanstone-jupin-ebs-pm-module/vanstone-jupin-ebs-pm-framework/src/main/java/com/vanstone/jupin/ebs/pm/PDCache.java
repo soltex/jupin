@@ -43,7 +43,7 @@ public class PDCache {
 	 * @param id
 	 * @return
 	 */
-	public static String getCategryKey(int id) {
+	public static String getCategoryKey(int id) {
 		return PRODUCT_CATEGORY_CACHE_PREFIX + id;
 	}
 	

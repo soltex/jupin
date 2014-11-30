@@ -31,6 +31,11 @@
 			<version>2.0</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.vanstone</groupId>
+			<artifactId>vanstone-webframework</artifactId>
+			<version>${vanstone.commons.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>vanstone-jupin-admin-webapp</finalName>

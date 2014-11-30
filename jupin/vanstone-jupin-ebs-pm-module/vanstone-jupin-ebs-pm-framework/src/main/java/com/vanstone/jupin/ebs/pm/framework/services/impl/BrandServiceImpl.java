@@ -6,11 +6,15 @@ package com.vanstone.jupin.ebs.pm.framework.services.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +22,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.validation.annotation.Validated;
 
 import redis.clients.jedis.Jedis;
 
 import com.google.gson.Gson;
+import com.vanstone.business.MyAssert4Business;
 import com.vanstone.business.ObjectDuplicateException;
+import com.vanstone.common.util.PinyinUtil;
 import com.vanstone.framework.business.services.DefaultBusinessService;
 import com.vanstone.framework.business.services.ServiceUtil;
 import com.vanstone.jupin.common.Constants;
@@ -32,9 +39,10 @@ import com.vanstone.jupin.common.util.ZKUtil;
 import com.vanstone.jupin.ebs.pm.GsonCreatorOfPD;
 import com.vanstone.jupin.ebs.pm.PDCache;
 import com.vanstone.jupin.ebs.pm.framework.persistence.PDTBrandDOMapper;
-import com.vanstone.jupin.ebs.pm.framework.persistence.PDTProductBrandRelDOMapper;
+import com.vanstone.jupin.ebs.pm.framework.persistence.PDTCategoryBrandRelDOMapper;
 import com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTBrandDO;
-import com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTProductBrandRelDOKey;
+import com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTCategoryBrandRelDOKey;
+import com.vanstone.jupin.ebs.pm.framework.persistence.object.QueryBrandStatResultMap;
 import com.vanstone.jupin.ebs.pm.productdefine.Brand;
 import com.vanstone.jupin.ebs.pm.productdefine.ProductCategory;
 import com.vanstone.jupin.ebs.pm.productdefine.services.BrandService;
@@ -50,6 +58,7 @@ import com.vanstone.weedfs.client.impl.WeedFSClient;
  * @author shipeng
  */
 @Service("brandService")
+@Validated
 public class BrandServiceImpl extends DefaultBusinessService implements BrandService {
 
 	/***/
@@ -60,7 +69,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	@Autowired
 	private PDTBrandDOMapper pdtBrandDOMapper;
 	@Autowired
-	private PDTProductBrandRelDOMapper pdtProductBrandRelDOMapper;
+	private PDTCategoryBrandRelDOMapper pdtCategoryBrandRelDOMapper;
 	@Autowired
 	private RedisTemplate redisTemplate;
 	@Autowired
@@ -75,6 +84,12 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 		this.execute(new TransactionCallbackWithoutResult() {
 			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				brand.setBrandNamefirstLetter(PinyinUtil.firstLetterOfString(brand.getBrandName()) != null ? PinyinUtil.firstLetterOfString(brand.getBrandName()).charAt(0) : null);
+				String pinyin = PinyinUtil.cnstr2pinyinstr(brand.getBrandName());
+				if (pinyin != null && !pinyin.equals("")) {
+					pinyin = StringUtils.replaceChars(pinyin, Constants.BRAND_NAME_CHARS, "");
+					brand.setBrandNamePinyin(pinyin);
+				}
 				PDTBrandDO model  = BeanUtil.toPDTBrandDO(brand);
 				pdtBrandDOMapper.insert(model);
 				brand.setId(model.getId());
@@ -98,10 +113,10 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 				pdtBrandDOMapper.insert(model);
 				brand.setId(model.getId());
 				for (ProductCategory category : productCategories) {
-					PDTProductBrandRelDOKey key = new PDTProductBrandRelDOKey();
+					PDTCategoryBrandRelDOKey key = new PDTCategoryBrandRelDOKey();
 					key.setBrandId(brand.getId());
 					key.setCategoryId(category.getId());
-					pdtProductBrandRelDOMapper.insert(key);
+					pdtCategoryBrandRelDOMapper.insert(key);
 				}
 				defineCommonService.clearProductDefineCache();
 				return brand;
@@ -164,6 +179,15 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	}
 	
 	@Override
+	public Brand getBrandAndValidate(int id) {
+		Brand brand = this.getBrand(id);
+		if (brand == null) {
+			throw new IllegalArgumentException();
+		}
+		return brand;
+	}
+	
+	@Override
 	public Map<Integer, Brand> getBrandsMap(final Collection<Integer> ids) {
 		if (ids == null || ids.size() <=0) {
 			return null;
@@ -199,10 +223,10 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	}
 	
 	@Override
-	public void deleteBrandLogoImage(final int id) {
-		final Brand brand = this.getBrand(id);
-		if (brand == null) {
-			throw new IllegalArgumentException();
+	public void deleteBrandLogoImage(final int id) throws ExistProductsNotAllowWriteException{
+		final Brand brand = this.getBrandAndValidate(id);
+		if (!defineCommonService.validateAllowUDOperateBrand(id)) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		if (brand.getLogoImage() != null) {
 			this.execute(new TransactionCallbackWithoutResult() {
@@ -219,10 +243,10 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	}
 	
 	@Override
-	public Brand updateBrandBaseInfo(final int brandId, final String brandName, final String brandNameEN, final String content, final boolean systemable) throws ObjectDuplicateException {
-		final Brand loadBrand = this.getBrand(brandId);
-		if (loadBrand == null) {
-			throw new IllegalArgumentException();
+	public Brand updateBrandBaseInfo(final int brandId, final String brandName, final String brandNameEN, final String content, final boolean systemable) throws ObjectDuplicateException, ExistProductsNotAllowWriteException {
+		final Brand loadBrand = this.getBrandAndValidate(brandId);
+		if (!defineCommonService.validateAllowUDOperateBrand(brandId)) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		this.execute(new TransactionCallbackWithoutResult() {
 			@Override
@@ -240,10 +264,10 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	}
 	
 	@Override
-	public Brand updateBrandLogoInfo(final int brandId, final ImageBean imageBean) {
-		final Brand loadBrand = this.getBrand(brandId);
-		if (loadBrand == null) {
-			throw new IllegalArgumentException();
+	public Brand updateBrandLogoInfo(final int brandId, final ImageBean imageBean)  throws ExistProductsNotAllowWriteException {
+		final Brand loadBrand = this.getBrandAndValidate(brandId);
+		if (!defineCommonService.validateAllowUDOperateBrand(brandId)) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		this.execute(new TransactionCallbackWithoutResult() {
 			@Override
@@ -258,14 +282,15 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	
 	@Override
 	public void deleteBrand(final int brandId) throws ExistProductsNotAllowWriteException {
-		Brand loadBrand = this.getBrand(brandId);
-		if (loadBrand == null) {
-			throw new IllegalArgumentException();
+		final Brand loadBrand = this.getBrandAndValidate(brandId);
+		if (!defineCommonService.validateAllowUDOperateBrand(brandId)) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		this.execute(new TransactionCallbackWithoutResult() {
 			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
 				pdtBrandDOMapper.deleteByPrimaryKey(brandId);
+				pdtCategoryBrandRelDOMapper.deleteByBrandId(brandId);
 			}
 		});
 		defineCommonService.clearProductDefineCache();
@@ -277,20 +302,100 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	}
 	
 	@Override
-	public void forceDeleteBrand(int brandId) {
-		// TODO 强制删除Brand，暂时不实现
-		
+	public Collection<Brand> getBrandsWithStat(ProductCategory productCategory, String key, int offset, int limit) {
+		Integer[] categoryIDs = null;
+		if (productCategory != null) {
+			Set<Integer> tempIDs = new LinkedHashSet<Integer>();
+			if (productCategory.getAllChildProductCategories() != null && productCategory.getAllChildProductCategories().size() >0) {
+				for (ProductCategory pc : productCategory.getAllChildProductCategories()) {
+					tempIDs.add(pc.getId());
+				}
+			}
+			tempIDs.add(productCategory.getId());
+			categoryIDs = tempIDs.toArray(new Integer[tempIDs.size()]);
+		}
+		List<QueryBrandStatResultMap> rms = this.pdtBrandDOMapper.selectByCategoryIDs_Key(categoryIDs, key, new RowBounds(offset, limit));
+		if (rms == null || rms.size() <=0) {
+			return null;
+		}
+		Collection<Brand> brands = new ArrayList<Brand>();
+		for (QueryBrandStatResultMap rm : rms) {
+			Brand brand = BeanUtil.toBrand(rm);
+			brands.add(brand);
+		}
+		return brands;
 	}
 	
 	@Override
-	public Collection<Brand> getBrandsWithStat(ProductCategory productCategory, String key, int offset, int limit) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public int getTotalBrands(ProductCategory productCategory, String key) {
-		return 0;
+		Integer[] categoryIDs = null;
+		if (productCategory != null) {
+			Set<Integer> tempIDs = new LinkedHashSet<Integer>();
+			if (productCategory.getAllChildProductCategories() != null && productCategory.getAllChildProductCategories().size() >0) {
+				for (ProductCategory pc : productCategory.getAllChildProductCategories()) {
+					tempIDs.add(pc.getId());
+				}
+			}
+			tempIDs.add(productCategory.getId());
+			categoryIDs = tempIDs.toArray(new Integer[tempIDs.size()]);
+		}
+		return this.pdtBrandDOMapper.selectTotalByCategoryIDs_Key(categoryIDs, key);
+	}
+	
+	@Override
+	public Collection<Brand> getBrandsByPrefix(String prefix, int limit) {
+		List<PDTBrandDO> models = this.pdtBrandDOMapper.selectByPinyinKey(prefix, new RowBounds(0, limit));
+		if (models == null || models.size() <= 0) {
+			return null;
+		}
+		Collection<Brand> brands = new ArrayList<Brand>();
+		for (PDTBrandDO model : models) {
+			brands.add(BeanUtil.toBrand(model));
+		}
+		return brands;
+	}
+	
+	@Override
+	public void appendBrandToProductCategory(final ProductCategory productCategory, final Brand brand) throws ObjectDuplicateException, CategoryMustLeafNodeException {
+		MyAssert4Business.objectInitialized(productCategory);
+		MyAssert4Business.objectInitialized(brand);
+		if (!productCategory.isLeafable()) {
+			throw new CategoryMustLeafNodeException();
+		}
+		PDTCategoryBrandRelDOKey relDOKey = this.pdtCategoryBrandRelDOMapper.selectByPrimaryKey(productCategory.getId(), brand.getId());
+		if (relDOKey != null) {
+			throw new ObjectDuplicateException();
+		}
+		this.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				PDTCategoryBrandRelDOKey model = new PDTCategoryBrandRelDOKey();
+				model.setBrandId(brand.getId());
+				model.setCategoryId(productCategory.getId());
+				pdtCategoryBrandRelDOMapper.insert(model);
+			}
+		});
+		this.defineCommonService.clearProductDefineCache();
+	}
+	
+	@Override
+	public void deleteBrandFromProductCategory(final ProductCategory productCategory, final Brand brand) throws ExistProductsNotAllowWriteException {
+		MyAssert4Business.objectInitialized(productCategory);
+		MyAssert4Business.objectInitialized(brand);
+		PDTCategoryBrandRelDOKey relDOKey = this.pdtCategoryBrandRelDOMapper.selectByPrimaryKey(productCategory.getId(), brand.getId());
+		if (relDOKey != null) {
+			throw new IllegalArgumentException();
+		}
+		this.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				PDTCategoryBrandRelDOKey key = new PDTCategoryBrandRelDOKey();
+				key.setCategoryId(productCategory.getId());
+				key.setBrandId(brand.getId());
+				pdtCategoryBrandRelDOMapper.deleteByPrimaryKey(key);
+			}
+		});
+		this.defineCommonService.clearProductDefineCache();
 	}
 	
 }

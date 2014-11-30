@@ -24,7 +24,9 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vanstone</groupId>
-			<artifactId>vanstone-jupin-productdefine-api</artifactId>
+			<artifactId>
+				vanstone-jupin-ebs-pm-productdefine-api
+			</artifactId>
 			<version>${jupin.version}</version>
 		</dependency>
 	</dependencies>

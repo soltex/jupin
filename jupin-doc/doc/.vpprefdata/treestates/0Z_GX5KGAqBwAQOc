@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ProjectTreeState projectID="oNRqC5KGAqACYgeN" projectPath="D:\jupin\jupin-doc\doc\jupin.vpp">
 	<TreeState name="ModelRepository" viewX="0" viewY="0"/>
-	<TreeState name="DiagramNavigator" viewX="0" viewY="23">
+	<TreeState name="DiagramNavigator" viewX="0" viewY="0">
 		<ExpandedPath>DiagramNavigator</ExpandedPath>
 		<ExpandedPath>DiagramNavigator,UML Diagrams</ExpandedPath>
 		<ExpandedPath>ComponentDiagram</ExpandedPath>
-		<ExpandedPath>DeploymentDiagram</ExpandedPath>
 		<SelectedPath>ComponentDiagram,P4pqC5KGAqACYgmL</SelectedPath>
 	</TreeState>
 	<TreeState name="ClassBrowser" viewX="0" viewY="0"/>

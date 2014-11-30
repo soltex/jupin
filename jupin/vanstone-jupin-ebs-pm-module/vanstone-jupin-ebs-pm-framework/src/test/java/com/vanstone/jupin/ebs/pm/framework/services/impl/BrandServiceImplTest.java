@@ -3,6 +3,7 @@ package com.vanstone.jupin.ebs.pm.framework.services.impl;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -111,4 +112,19 @@ public class BrandServiceImplTest {
 		fail("Not yet implemented");
 	}
 
+	@Test
+	public void testgetBrandsWithStat() {
+		Collection<Brand> brands = this.brandService.getBrandsWithStat(null, "S", 0, 100);
+		for (Brand brand : brands) {
+			System.out.println(brand.getBrandName());
+		}
+	}
+	
+	@Test
+	public void testgetBrandsByPrefix() {
+		Collection<Brand> brands = this.brandService.getBrandsByPrefix( "Sab", 100);
+		for (Brand brand : brands) {
+			System.out.println(brand.getBrandName());
+		}
+	}
 }

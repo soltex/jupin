@@ -9,6 +9,8 @@ public class PDTBrandDO {
 
     private String brandNameFirstLetter;
 
+    private String brandNamePinyin;
+    
     private String logoFileId;
 
     private Integer logoWidth;
@@ -100,4 +102,12 @@ public class PDTBrandDO {
     public void setContent(String content) {
         this.content = content;
     }
+
+	public String getBrandNamePinyin() {
+		return brandNamePinyin;
+	}
+
+	public void setBrandNamePinyin(String brandNamePinyin) {
+		this.brandNamePinyin = brandNamePinyin;
+	}
 }

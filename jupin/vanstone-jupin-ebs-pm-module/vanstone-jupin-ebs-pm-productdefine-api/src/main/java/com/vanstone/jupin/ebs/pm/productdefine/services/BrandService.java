@@ -47,6 +47,13 @@ public interface BrandService {
 	Brand getBrand(int id);
 	
 	/**
+	 * 通过ID获取品牌信息并验证
+	 * @param id
+	 * @return
+	 */
+	Brand getBrandAndValidate(int id);
+	
+	/**
 	 * 获取Brand Map
 	 * @param ids
 	 * @return
@@ -57,7 +64,7 @@ public interface BrandService {
 	 * 删除品牌Logo信息
 	 * @param id
 	 */
-	void deleteBrandLogoImage(int id);
+	void deleteBrandLogoImage(int id) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 更新品牌基本信息
@@ -68,7 +75,7 @@ public interface BrandService {
 	 * @param systemable
 	 * @return
 	 */
-	Brand updateBrandBaseInfo(int brandId, String brandName, String brandNameEN, String content, boolean systemable) throws ObjectDuplicateException;
+	Brand updateBrandBaseInfo(int brandId, String brandName, String brandNameEN, String content, boolean systemable) throws ObjectDuplicateException, ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 更新品牌基本信息
@@ -76,7 +83,7 @@ public interface BrandService {
 	 * @param imageBean
 	 * @return
 	 */
-	Brand updateBrandLogoInfo(int brandId, ImageBean imageBean);
+	Brand updateBrandLogoInfo(int brandId, ImageBean imageBean) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 删除品牌信息
@@ -84,12 +91,6 @@ public interface BrandService {
 	 * @throws ObjectHasSubObjectException
 	 */
 	void deleteBrand(int brandId) throws ExistProductsNotAllowWriteException;
-	
-	/**
-	 * 强制删除品牌信息
-	 * @param brandId
-	 */
-	void forceDeleteBrand(int brandId);
 	
 	/**
 	 * 获取品牌列表（包含统计信息，用作后台统计使用，不进入缓冲）
@@ -109,4 +110,27 @@ public interface BrandService {
 	 */
 	int getTotalBrands(ProductCategory productCategory, String key);
 	
+	/**
+	 * 通过拼音前缀获Brand列表
+	 * @param prefixPinyin
+	 * @param limit
+	 * @return
+	 */
+	Collection<Brand> getBrandsByPrefix(String prefixPinyin, int limit);
+	
+	/**
+	 * 增加Brand到ProductCategory中
+	 * @param productCategory
+	 * @param brand
+	 * @return
+	 */
+	void appendBrandToProductCategory(ProductCategory productCategory, Brand brand) throws ObjectDuplicateException, CategoryMustLeafNodeException ;
+	
+	/**
+	 * 从ProductCategory清理Brand
+	 * @param productCategory
+	 * @param brand
+	 * @return
+	 */
+	void deleteBrandFromProductCategory(ProductCategory productCategory, Brand brand) throws ExistProductsNotAllowWriteException;
 }

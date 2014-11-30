@@ -21,7 +21,9 @@ public class Brand extends AbstractBusinessObject {
 	/**品牌英文名称*/
 	private String brandNameEN;
 	/**品牌首字母*/
-	private String brandNamefirstLetter;
+	private Character brandNamefirstLetter;
+	/**品牌名称拼音*/
+	private String brandNamePinyin; 
 	/**品牌介绍*/
 	private String content;
 	/**是否系统内置品牌*/
@@ -71,15 +73,7 @@ public class Brand extends AbstractBusinessObject {
 	public void setBrandNameEN(String brandNameEN) {
 		this.brandNameEN = brandNameEN;
 	}
-
-	public String getBrandNamefirstLetter() {
-		return brandNamefirstLetter;
-	}
-
-	public void setBrandNamefirstLetter(String brandNamefirstLetter) {
-		this.brandNamefirstLetter = brandNamefirstLetter;
-	}
-
+	
 	public String getContent() {
 		return content;
 	}
@@ -116,6 +110,22 @@ public class Brand extends AbstractBusinessObject {
 		return productCount;
 	}
 	
+	public String getBrandNamePinyin() {
+		return brandNamePinyin;
+	}
+
+	public void setBrandNamePinyin(String brandNamePinyin) {
+		this.brandNamePinyin = brandNamePinyin;
+	}
+	
+	public Character getBrandNamefirstLetter() {
+		return brandNamefirstLetter;
+	}
+
+	public void setBrandNamefirstLetter(Character brandNamefirstLetter) {
+		this.brandNamefirstLetter = brandNamefirstLetter;
+	}
+
 	/**
 	 * 是否存在LogoInfo
 	 * @return

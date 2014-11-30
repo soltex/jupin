@@ -11,6 +11,7 @@ import com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTCategoryDO;
 import com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTSkuColorTableDO;
 import com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTSkuSizeTableDO;
 import com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTSkuSizeTemplateDO;
+import com.vanstone.jupin.ebs.pm.framework.persistence.object.QueryBrandStatResultMap;
 import com.vanstone.jupin.ebs.pm.productdefine.Brand;
 import com.vanstone.jupin.ebs.pm.productdefine.CategoryState;
 import com.vanstone.jupin.ebs.pm.productdefine.ProductCategory;
@@ -161,7 +162,8 @@ public class BeanUtil {
 		brand.setId(pdtBrandDO.getId());
 		brand.setBrandName(pdtBrandDO.getBrandName());
 		brand.setBrandNameEN(pdtBrandDO.getBrandNameEn());
-		brand.setBrandNamefirstLetter(pdtBrandDO.getBrandNameFirstLetter());
+		brand.setBrandNamefirstLetter(pdtBrandDO.getBrandNameFirstLetter() != null ? pdtBrandDO.getBrandNameFirstLetter().charAt(0) : null);
+		brand.setBrandNamePinyin(pdtBrandDO.getBrandNamePinyin());
 		brand.setContent(pdtBrandDO.getContent());
 		if (pdtBrandDO.getLogoFileId() != null && !pdtBrandDO.getLogoFileId().equals("")) {
 			ImageBean imageBean  = new ImageBean(pdtBrandDO.getLogoFileId(), pdtBrandDO.getLogoFileExt(), 
@@ -171,23 +173,32 @@ public class BeanUtil {
 		brand.setSystemable(BoolUtil.parseInt(pdtBrandDO.getSystemable()));
 		return brand;
 	}
+	
+	public static Brand toBrand(QueryBrandStatResultMap resultMap) {
+		Brand brand = new Brand(resultMap.getCategoryIDCount(), 0);
+		brand.setId(resultMap.getId());
+		brand.setBrandName(resultMap.getBrandName());
+		brand.setBrandNameEN(resultMap.getBrandNameEn());
+		brand.setBrandNamefirstLetter(resultMap.getBrandNameFirstLetter() != null ? resultMap.getBrandNameFirstLetter().charAt(0) : null);
+		brand.setBrandNamePinyin(resultMap.getBrandNamePinyin());
+		brand.setContent(resultMap.getContent());
+		if (resultMap.getLogoFileId() != null && !resultMap.getLogoFileId().equals("")) {
+			ImageBean imageBean  = new ImageBean(resultMap.getLogoFileId(), resultMap.getLogoFileExt(), 
+					resultMap.getLogoWidth(), resultMap.getLogoHeight());
+			brand.setLogoImage(imageBean);
+		}
+		brand.setSystemable(BoolUtil.parseInt(resultMap.getSystemable()));
+		return brand;
+	}
+	
 
-
-	/**
-	 * The following are not being converted. 
-	 * java.lang.Integer brandNameEn;
-	 * java.lang.String brandNameFirstLetter;
-	 * java.lang.String logoFileId;
-	 * java.lang.Integer logoWidth;
-	 * java.lang.Integer logoHeight;
-	 * java.lang.String logoFileExt;
-	 */
 	public static PDTBrandDO toPDTBrandDO(Brand brand) {
 		PDTBrandDO pdtBrandDO = new PDTBrandDO();
 		pdtBrandDO.setId(brand.getId());
 		pdtBrandDO.setBrandName(brand.getBrandName());
 		pdtBrandDO.setBrandNameEn(brand.getBrandNameEN());
-		pdtBrandDO.setBrandNameFirstLetter(brand.getBrandNamefirstLetter());
+		pdtBrandDO.setBrandNameFirstLetter(brand.getBrandNamefirstLetter() != null ? brand.getBrandNamefirstLetter().toString() : null);
+		pdtBrandDO.setBrandNamePinyin(brand.getBrandNamePinyin());
 		if (brand.getLogoImage() != null) {
 			pdtBrandDO.setLogoFileId(brand.getLogoImage().getWeedFile().getFileid());
 			pdtBrandDO.setLogoFileExt(brand.getLogoImage().getWeedFile().getExtName());

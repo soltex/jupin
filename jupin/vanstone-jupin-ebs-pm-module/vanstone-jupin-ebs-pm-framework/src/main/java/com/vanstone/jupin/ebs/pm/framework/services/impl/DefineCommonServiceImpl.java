@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import redis.clients.jedis.Jedis;
 
@@ -27,6 +28,7 @@ import com.vanstone.redis.RedisTemplate;
  * @author shipeng
  */
 @Service("defineCommonService")
+@Validated
 public class DefineCommonServiceImpl extends DefaultBusinessService implements DefineCommonService {
 	
 	/***/
@@ -128,5 +130,5 @@ public class DefineCommonServiceImpl extends DefaultBusinessService implements D
 		}
 		return true;
 	}
-	
+
 }

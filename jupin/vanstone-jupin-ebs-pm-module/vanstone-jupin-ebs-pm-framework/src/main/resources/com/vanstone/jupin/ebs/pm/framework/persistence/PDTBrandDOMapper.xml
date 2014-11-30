@@ -6,6 +6,7 @@
 		<result column="BRAND_NAME" property="brandName" jdbcType="VARCHAR" />
 		<result column="BRAND_NAME_EN" property="brandNameEn" jdbcType="VARCHAR" />
 		<result column="BRAND_NAME_FIRST_LETTER" property="brandNameFirstLetter" jdbcType="VARCHAR" />
+		<result column="BRAND_NAME_PINYIN" property="brandNamePinyin" jdbcType="VARCHAR" />
 		<result column="LOGO_FILE_ID" property="logoFileId" jdbcType="VARCHAR" />
 		<result column="LOGO_WIDTH" property="logoWidth" jdbcType="INTEGER" />
 		<result column="LOGO_HEIGHT" property="logoHeight" jdbcType="INTEGER" />
@@ -15,8 +16,12 @@
 	<resultMap id="ResultMapWithBLOBs" type="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTBrandDO" extends="BaseResultMap">
 		<result column="CONTENT" property="content" jdbcType="LONGVARCHAR" />
 	</resultMap>
+	<resultMap type="com.vanstone.jupin.ebs.pm.framework.persistence.object.QueryBrandStatResultMap" id="QueryBrandStatResultMap" extends="ResultMapWithBLOBs">
+		<result column="CATEGORY_ID_COUNT" property="categoryIDCount" jdbcType="INTEGER" />
+	</resultMap>
 	<sql id="Base_Column_List">
-		ID, BRAND_NAME, BRAND_NAME_EN, BRAND_NAME_FIRST_LETTER, LOGO_FILE_ID,
+		ID, BRAND_NAME, BRAND_NAME_EN, BRAND_NAME_FIRST_LETTER, BRAND_NAME_PINYIN,
+		LOGO_FILE_ID,
 		LOGO_WIDTH,
 		LOGO_HEIGHT, LOGO_FILE_EXT, SYSTEMABLE
 	</sql>
@@ -44,7 +49,8 @@
 			select LAST_INSERT_ID() as id
 		</selectKey>
 		insert into pdt_brand (ID, BRAND_NAME, BRAND_NAME_EN,
-		BRAND_NAME_FIRST_LETTER, LOGO_FILE_ID, LOGO_WIDTH,
+		BRAND_NAME_FIRST_LETTER, BRAND_NAME_PINYIN,
+		LOGO_FILE_ID, LOGO_WIDTH,
 		LOGO_HEIGHT,
 		LOGO_FILE_EXT, SYSTEMABLE,
 		CONTENT)
@@ -52,6 +58,7 @@
 		#{brandName,jdbcType=VARCHAR},
 		#{brandNameEn,jdbcType=VARCHAR},
 		#{brandNameFirstLetter,jdbcType=VARCHAR},
+		#{brandNamePinyin,jdbcType=VARCHAR},
 		#{logoFileId,jdbcType=VARCHAR}, #{logoWidth,jdbcType=INTEGER},
 		#{logoHeight,jdbcType=INTEGER}, #{logoFileExt,jdbcType=VARCHAR},
 		#{systemable,jdbcType=INTEGER},
@@ -76,6 +83,9 @@
 			</if>
 			<if test="brandNameFirstLetter != null">
 				BRAND_NAME_FIRST_LETTER,
+			</if>
+			<if test="brandNamePinyin != null">
+				BRAND_NAME_PINYIN,
 			</if>
 			<if test="logoFileId != null">
 				LOGO_FILE_ID,
@@ -109,6 +119,9 @@
 			<if test="brandNameFirstLetter != null">
 				#{brandNameFirstLetter,jdbcType=VARCHAR},
 			</if>
+			<if test="brandNamePinyin != null">
+				#{brandNamePinyin,jdbcType=VARCHAR},
+			</if>
 			<if test="logoFileId != null">
 				#{logoFileId,jdbcType=VARCHAR},
 			</if>
@@ -140,8 +153,10 @@
 				BRAND_NAME_EN = #{brandNameEn,jdbcType=VARCHAR},
 			</if>
 			<if test="brandNameFirstLetter != null">
-				BRAND_NAME_FIRST_LETTER =
-				#{brandNameFirstLetter,jdbcType=VARCHAR},
+				BRAND_NAME_FIRST_LETTER = #{brandNameFirstLetter,jdbcType=VARCHAR},
+			</if>
+			<if test="brandNamePinyin != null">
+				BRAND_NAME_PINYIN = #{brandNamePinyin,jdbcType=VARCHAR},
 			</if>
 			<if test="logoFileId != null">
 				LOGO_FILE_ID = #{logoFileId,jdbcType=VARCHAR},
@@ -167,24 +182,16 @@
 	<update id="updateByPrimaryKeyWithBLOBs"
 		parameterType="com.vanstone.jupin.ebs.pm.framework.persistence.object.PDTBrandDO">
 		update pdt_brand
-		set BRAND_NAME =
-		#{brandName,jdbcType=VARCHAR},
-		BRAND_NAME_EN =
-		#{brandNameEn,jdbcType=VARCHAR},
-		BRAND_NAME_FIRST_LETTER =
-		#{brandNameFirstLetter,jdbcType=VARCHAR},
-		LOGO_FILE_ID =
-		#{logoFileId,jdbcType=VARCHAR},
-		LOGO_WIDTH =
-		#{logoWidth,jdbcType=INTEGER},
-		LOGO_HEIGHT =
-		#{logoHeight,jdbcType=INTEGER},
-		LOGO_FILE_EXT =
-		#{logoFileExt,jdbcType=VARCHAR},
-		SYSTEMABLE =
-		#{systemable,jdbcType=INTEGER},
-		CONTENT =
-		#{content,jdbcType=LONGVARCHAR}
+		set BRAND_NAME = #{brandName,jdbcType=VARCHAR},
+		BRAND_NAME_EN = #{brandNameEn,jdbcType=VARCHAR},
+		BRAND_NAME_FIRST_LETTER = #{brandNameFirstLetter,jdbcType=VARCHAR},
+		BRAND_NAME_PINYIN = #{brandNamePinyin,jdbcType=VARCHAR},
+		LOGO_FILE_ID = #{logoFileId,jdbcType=VARCHAR},
+		LOGO_WIDTH = #{logoWidth,jdbcType=INTEGER},
+		LOGO_HEIGHT = #{logoHeight,jdbcType=INTEGER},
+		LOGO_FILE_EXT = #{logoFileExt,jdbcType=VARCHAR},
+		SYSTEMABLE = #{systemable,jdbcType=INTEGER},
+		CONTENT =#{content,jdbcType=LONGVARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 	<update id="updateByPrimaryKey"
@@ -196,16 +203,12 @@
 		#{brandNameEn,jdbcType=VARCHAR},
 		BRAND_NAME_FIRST_LETTER =
 		#{brandNameFirstLetter,jdbcType=VARCHAR},
-		LOGO_FILE_ID =
-		#{logoFileId,jdbcType=VARCHAR},
-		LOGO_WIDTH =
-		#{logoWidth,jdbcType=INTEGER},
-		LOGO_HEIGHT =
-		#{logoHeight,jdbcType=INTEGER},
-		LOGO_FILE_EXT =
-		#{logoFileExt,jdbcType=VARCHAR},
-		SYSTEMABLE =
-		#{systemable,jdbcType=INTEGER}
+		BRAND_NAME_PINYIN = #{brandNamePinyin,jdbcType=VARCHAR},
+		LOGO_FILE_ID =#{logoFileId,jdbcType=VARCHAR},
+		LOGO_WIDTH =#{logoWidth,jdbcType=INTEGER},
+		LOGO_HEIGHT =#{logoHeight,jdbcType=INTEGER},
+		LOGO_FILE_EXT =#{logoFileExt,jdbcType=VARCHAR},
+		SYSTEMABLE =#{systemable,jdbcType=INTEGER}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
 	<select id="selectByBrandName" parameterType="map"
@@ -246,21 +249,90 @@
 		WHERE
 		ID = #{id,jdbcType=INTEGER}
 	</update>
-	<select id="selectByCategoryIDs" parameterType="map"
-		resultMap="ResultMapWithBLOBs">
+	<select id="selectByCategoryIDs" parameterType="map" resultMap="ResultMapWithBLOBs">
 		SELECT
 		<include refid="Base_Column_List" />
 		,
 		<include refid="Blob_Column_List" />
 		FROM
-		pdt_brand INNER JOIN PDT_PRODUCT_BRAND_REL ON pdt_brand.ID =
-		PDT_PRODUCT_BRAND_REL.BRAND_ID
+		pdt_brand LEFT JOIN PDT_CATEGORY_BRAND_REL ON pdt_brand.ID =
+		PDT_CATEGORY_BRAND_REL.BRAND_ID
 		WHERE
-		PDT_PRODUCT_BRAND_REL.CATEGORY_ID IN
-		<foreach collection="categoryIDs" item="categoryID" open="("
-			close=")" separator=",">
+		PDT_CATEGORY_BRAND_REL.CATEGORY_ID IN 
+		<foreach collection="categoryIDs" item="categoryID" open="(" close=")" separator=",">
 			${categoryID}
 		</foreach>
 		ORDER BY pdt_brand.BRAND_NAME
+	</select>
+	
+	<select id="selectByCategoryIDs_Key" parameterType="map" resultMap="QueryBrandStatResultMap">
+		SELECT pdt_brand.* , COUNT(pdt_category_brand_rel.CATEGORY_ID) AS CATEGORY_ID_COUNT
+		FROM 
+		pdt_brand 
+		LEFT JOIN pdt_category_brand_rel ON pdt_brand.ID = pdt_category_brand_rel.BRAND_ID 
+		<where>
+		<if test="categoryIDs != null">
+			AND 
+			pdt_category_brand_rel.CATEGORY_ID IN 
+			<foreach collection="categoryIDs" open="(" close=")" item="categoryID" separator=",">
+			${categoryID}
+			</foreach>
+		</if>
+		<if test="key != null and key !=''">
+			AND 
+			(
+			pdt_brand.BRAND_NAME LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			OR 
+			pdt_brand.BRAND_NAME_EN	LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			OR 
+			pdt_brand.BRAND_NAME_FIRST_LETTER LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			OR 
+			pdt_brand.BRAND_NAME_PINYIN LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			)
+		</if>
+		</where> 
+		GROUP BY 
+		pdt_brand.ID 
+		ORDER BY pdt_brand.BRAND_NAME_FIRST_LETTER 
+	</select>
+	<select id="selectTotalByCategoryIDs_Key" parameterType="map" resultType="integer">
+		SELECT COUNT(0) AS C 
+		FROM 
+		pdt_brand 
+		LEFT JOIN pdt_category_brand_rel ON pdt_brand.ID = pdt_category_brand_rel.BRAND_ID 
+		<where>
+		<if test="categoryIDs != null">
+			AND 
+			pdt_category_brand_rel.CATEGORY_ID IN 
+			<foreach collection="categoryIDs" open="(" close=")" item="categoryID" separator=",">
+			${categoryID}
+			</foreach>
+		</if>
+		<if test="key != null and key !=''">
+			AND 
+			(
+			pdt_brand.BRAND_NAME LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			OR 
+			pdt_brand.BRAND_NAME_EN	LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			OR 
+			pdt_brand.BRAND_NAME_FIRST_LETTER LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			OR 
+			pdt_brand.BRAND_NAME_PINYIN LIKE "%"#{key,jdbcType=VARCHAR}"%" 
+			)
+		</if>
+		</where> 
+		GROUP BY 
+		pdt_brand.ID 
+	</select>
+	<select id="selectByPinyinKey" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/>
+		FROM 
+		pdt_brand 
+		<where>
+		<if test="pinyinKey != null and pinyinKey != ''">
+		pdt_brand.BRAND_NAME_PINYIN LIKE #{pinyinKey,jdbcType=VARCHAR}"%" 
+		</if>		
+		</where>
+		ORDER BY BRAND_NAME 
 	</select>
 </mapper>

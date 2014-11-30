@@ -16,12 +16,15 @@ import com.google.gson.Gson;
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.business.serialize.GsonCreator;
 import com.vanstone.jupin.ebs.pm.GsonCreatorOfPD;
+import com.vanstone.jupin.ebs.pm.productdefine.Brand;
 import com.vanstone.jupin.ebs.pm.productdefine.ProductCategory;
 import com.vanstone.jupin.ebs.pm.productdefine.attribute.AbstractAttribute;
 import com.vanstone.jupin.ebs.pm.productdefine.attribute.Attr4Enum;
 import com.vanstone.jupin.ebs.pm.productdefine.attribute.Attr4Text;
 import com.vanstone.jupin.ebs.pm.productdefine.attribute.AttributeBuilder;
-import com.vanstone.jupin.ebs.pm.productdefine.services.CategoryHasChildCategoriesException;
+import com.vanstone.jupin.ebs.pm.productdefine.services.AttributeService;
+import com.vanstone.jupin.ebs.pm.productdefine.services.BrandService;
+import com.vanstone.jupin.ebs.pm.productdefine.services.CategoryMustLeafNodeException;
 import com.vanstone.jupin.ebs.pm.productdefine.services.CategoryService;
 import com.vanstone.jupin.ebs.pm.productdefine.services.ExistProductsNotAllowWriteException;
 
@@ -34,6 +37,10 @@ public class ProductCategoryServiceImplTest {
 
 	@Autowired
 	private CategoryService productCategoryService;
+	@Autowired
+	private AttributeService attributeService;
+	@Autowired
+	private BrandService brandService;
 	
 	@Test
 	public void testAddProductCategoryProductCategory() {
@@ -115,17 +122,15 @@ public class ProductCategoryServiceImplTest {
 
 	@Test
 	public void testAddAttributesToProductCategory() {
-		AbstractAttribute attribute1 = this.productCategoryService.getAttribute(1);
-		AbstractAttribute attribute2 = this.productCategoryService.getAttribute(2);
-		AbstractAttribute attribute3 = this.productCategoryService.getAttribute(3);
+		AbstractAttribute attribute1 = this.attributeService.getAttribute(1);
+		AbstractAttribute attribute2 = this.attributeService.getAttribute(2);
+		AbstractAttribute attribute3 = this.attributeService.getAttribute(3);
 		
 		ProductCategory productCategory = this.productCategoryService.getProductCategoryDetail(4);
 		try {
 			this.productCategoryService.addAttributeToProductCategory(productCategory.getId(), attribute1);
 			this.productCategoryService.addAttributeToProductCategory(productCategory.getId(), attribute2);
 			this.productCategoryService.addAttributeToProductCategory(productCategory.getId(), attribute3);
-		} catch (CategoryHasChildCategoriesException e) {
-			e.printStackTrace();
 		} catch (ObjectDuplicateException e) {
 			e.printStackTrace();
 		}
@@ -184,10 +189,10 @@ public class ProductCategoryServiceImplTest {
 	@Test
 	public void testAddAttr4Text() {
 		Attr4Text attr4Text = AttributeBuilder.newText("产地", true, true);
-		this.productCategoryService.addAttr4Text(attr4Text);
+		this.attributeService.addAttr4Text(attr4Text);
 		
 		Attr4Text attr4Text2 = AttributeBuilder.newText("净重", false, true);
-		this.productCategoryService.addAttr4Text(attr4Text2);
+		this.attributeService.addAttr4Text(attr4Text2);
 	}
 
 	@Test
@@ -198,7 +203,7 @@ public class ProductCategoryServiceImplTest {
 		values1.add("丝棉");
 		values1.add("纸面");
 		Attr4Enum attr4Enum1 = AttributeBuilder.newBaseEnum("材质", true, true, true, false, values1);
-		this.productCategoryService.addAttr4Enum(attr4Enum1);
+		this.attributeService.addAttr4Enum(attr4Enum1);
 	}
 
 	@Test
@@ -209,13 +214,13 @@ public class ProductCategoryServiceImplTest {
 	@Test
 	public void testGetAttribute() {
 		Gson gson = GsonCreator.create();
-		AbstractAttribute attr1 = this.productCategoryService.getAttribute(1);
+		AbstractAttribute attr1 = this.attributeService.getAttribute(1);
 		System.out.println(gson.toJson(attr1));
 		
-		AbstractAttribute attr2 = this.productCategoryService.getAttribute(2);
+		AbstractAttribute attr2 = this.attributeService.getAttribute(2);
 		System.out.println(gson.toJson(attr2));
 		
-		AbstractAttribute attr3 = this.productCategoryService.getAttribute(3);
+		AbstractAttribute attr3 = this.attributeService.getAttribute(3);
 		System.out.println(gson.toJson(attr3));
 		
 	}
@@ -257,7 +262,13 @@ public class ProductCategoryServiceImplTest {
 
 	@Test
 	public void testGetBrands() {
-		fail("Not yet implemented");
+		ProductCategory productCategory = this.productCategoryService.getProductCategoryDetail(4);
+		Collection<Brand> brands = productCategory.getBrands();
+		if (brands != null && brands.size() >0) {
+			for (Brand brand : brands) {
+				System.out.println(brand.getId() + "\t"+brand.getBrandName() + "\t" + brand.getBrandNamePinyin());
+			}
+		}
 	}
 	
 	@Test
@@ -265,5 +276,22 @@ public class ProductCategoryServiceImplTest {
 		Collection<ProductCategory> pcs = this.productCategoryService.getProductCategories("装", 0, 100);
 		Gson gson = GsonCreator.createPretty();
 		System.out.println(gson.toJson(pcs));
+	}
+	
+	@Test
+	public void testappendBrandToProductCategory() {
+		
+		ProductCategory productCategory = this.productCategoryService.getProductCategoryDetail(4);
+		for (int i=17448;i<17548;i++) {
+			Brand brand = this.brandService.getBrand(i);
+			try {
+				this.brandService.appendBrandToProductCategory(productCategory, brand);
+			} catch (CategoryMustLeafNodeException e) {
+				e.printStackTrace();
+			} catch (ObjectDuplicateException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }
