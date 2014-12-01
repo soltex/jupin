@@ -19,7 +19,12 @@
 		<module>vanstone-jupin-productdefine</module>
 		
 		<module>vanstone-jupin-ebs-pm-module</module>
+		<module>vanstone-jupin-ecs-product-module</module>
 		
+
+		<module>vanstone-jupin-business-sdk-module</module>
+		
+		<module>vanstone-jupin-admin-webapp</module>
 	</modules>
 	<distributionManagement>
 		<repository>

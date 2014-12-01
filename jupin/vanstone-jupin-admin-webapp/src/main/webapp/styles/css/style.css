@@ -1,5 +1,6 @@
 * {
 	font-size: 12px;
+	font-family:"微软雅黑";
 }
 body {
 	background-color: #ffffff;
@@ -10,8 +11,6 @@ body {
     background-color: #222;
     border-color: #080808;
 }
-
-
 
 #data_loading {
     color: #fff;
@@ -43,3 +42,5 @@ body {
 form.required-validate {margin-top: 10px}
 form span.error {color:red}
 table.table > tbody > tr.selected >td {background-color:#7cc5e5;}
+
+

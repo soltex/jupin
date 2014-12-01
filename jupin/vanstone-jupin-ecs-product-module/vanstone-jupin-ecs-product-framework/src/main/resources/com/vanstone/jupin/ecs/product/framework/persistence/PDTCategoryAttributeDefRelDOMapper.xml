@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.vanstone.jupin.ecs.product.framework.persistence.PDTCategoryAttributeDefRelDOMapper">
+	<resultMap id="BaseResultMap" type="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryAttributeDefRelDO">
+		<id column="CATEGORY_ID" property="categoryId" jdbcType="INTEGER" />
+		<id column="ATTRIBUTE_DEF_ID" property="attributeDefId" jdbcType="INTEGER" />
+		<result column="SORT" property="sort" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		CATEGORY_ID, ATTRIBUTE_DEF_ID, SORT
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryAttributeDefRelDOKey">
+		select
+		<include refid="Base_Column_List" />
+		from pdt_category_attribute_def_rel
+		where CATEGORY_ID = #{categoryId,jdbcType=INTEGER}
+		and ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryAttributeDefRelDOKey">
+		delete from pdt_category_attribute_def_rel
+		where CATEGORY_ID = #{categoryId,jdbcType=INTEGER}
+		and ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryAttributeDefRelDO">
+		insert into pdt_category_attribute_def_rel (CATEGORY_ID,
+		ATTRIBUTE_DEF_ID, SORT
+		)
+		values (#{categoryId,jdbcType=INTEGER}, #{attributeDefId,jdbcType=INTEGER},
+		#{sort,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryAttributeDefRelDO">
+		insert into pdt_category_attribute_def_rel
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="categoryId != null">
+				CATEGORY_ID,
+			</if>
+			<if test="attributeDefId != null">
+				ATTRIBUTE_DEF_ID,
+			</if>
+			<if test="sort != null">
+				SORT,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="categoryId != null">
+				#{categoryId,jdbcType=INTEGER},
+			</if>
+			<if test="attributeDefId != null">
+				#{attributeDefId,jdbcType=INTEGER},
+			</if>
+			<if test="sort != null">
+				#{sort,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryAttributeDefRelDO">
+		update pdt_category_attribute_def_rel
+		<set>
+			<if test="sort != null">
+				SORT = #{sort,jdbcType=INTEGER},
+			</if>
+		</set>
+		where CATEGORY_ID = #{categoryId,jdbcType=INTEGER}
+		and ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryAttributeDefRelDO">
+		update pdt_category_attribute_def_rel
+		set SORT = #{sort,jdbcType=INTEGER}
+		where CATEGORY_ID = #{categoryId,jdbcType=INTEGER}
+		and ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER}
+	</update>
+	<delete id="deleteByProductCategoryID_AttributeID"
+		parameterType="map">
+		DELETE FROM
+		pdt_category_attribute_def_rel
+		where CATEGORY_ID = #{categoryId,jdbcType=INTEGER}
+		and
+		ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER}
+	</delete>
+	<select id="selectByCategoryID" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		pdt_category_attribute_def_rel
+		WHERE CATEGORY_ID = #{categoryId,jdbcType=INTEGER}
+		ORDER BY SORT DESC
+	</select>
+	<select id="selectByCategoryIDs" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		pdt_category_attribute_def_rel
+		WHERE
+		CATEGORY_ID IN
+		<foreach collection="categoryIds" open="(" close=")" separator="," item="categoryId" index="index">
+			${categoryId}
+		</foreach>
+		ORDER BY SORT DESC
+	</select>
+</mapper>

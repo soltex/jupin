@@ -56,3 +56,17 @@ mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-ebs-pm-p
 
 
 
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-ecs-product-define-api -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-ecs-product-item-api -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-ecs-product-search-api -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-ecs-product-framework -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-ecs-product-item -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-ecs-product-search -Dversion=1.0.0
+
+
+
+
+
+sdk
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-common-sdk -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-adminservice-sdk -Dversion=1.0.0

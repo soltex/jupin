@@ -186,22 +186,22 @@
 				} else {
 					$('#'+DWZ.conf.containerId).loadUrl(url);
 				}
-
+				
 				event.preventDefault();
 			});
 		});
-
+		
 		// Ajax链接
 		$("a[data-ajax]", $p).each(function(){
 			$(this).click(function(event){
 				var $this = $(this);
 				var rel = $this.attr('data-ajax') || 'container';
+				alert(rel);
 				$("#"+rel).loadUrl($this.attr("href"));
-
 				event.preventDefault();
 			});
 		});
-
+		
 		if ($.fn.pagination) {
 			$("div.pagination", $p).each(function(){
 				var $this = $(this);
