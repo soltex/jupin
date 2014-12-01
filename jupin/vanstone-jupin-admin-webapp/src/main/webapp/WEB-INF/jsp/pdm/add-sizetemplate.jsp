@@ -42,7 +42,7 @@
     				</label>
     				<input type="button" value="新建行" class="btn btn-default"/>
 				</div>
-				<table class="table table-hover">
+				<table class="table table-hover table-bordered">
 					<thead>
 						<tr>
 							<th>尺码名称</th>
@@ -56,7 +56,183 @@
 						</tr>
 					</thead>
 					<tbody>
+						<tr>
+							<td><input type="text" class="form-control" /></td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />	
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td><a href="" class="btn btn-default">删除</a></td>
+						</tr>
+						<tr>
+							<td><input type="text" class="form-control" /></td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />	
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td><a href="" class="btn btn-default">删除</a></td>
+						</tr>
+						<tr>
+							<td><input type="text" class="form-control" /></td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />	
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td><a href="" class="btn btn-default">删除</a></td>
+						</tr>
+						<tr>
+							<td><input type="text" class="form-control" /></td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />	
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td><a href="" class="btn btn-default">删除</a></td>
+						</tr>
+						<tr>
+							<td><input type="text" class="form-control" /></td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />	
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td><a href="" class="btn btn-default">删除</a></td>
+						</tr>
+						<tr>
+							<td><input type="text" class="form-control" /></td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />	
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td><a href="" class="btn btn-default">删除</a></td>
+						</tr>
+						<tr>
+							<td><input type="text" class="form-control" /></td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />	
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td><a href="" class="btn btn-default">删除</a></td>
+						</tr>
 						
+						<tr>
+							<td><input type="text" class="form-control" /></td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />	
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td>
+								<input type="text" class="form-control1" />~<input type="text" class="form-control1" />
+							</td>
+							<td><a href="" class="btn btn-default">删除</a></td>
+						</tr>
 					</tbody>
 				</table>
 			</div>

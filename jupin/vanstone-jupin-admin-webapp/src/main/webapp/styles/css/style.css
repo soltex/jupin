@@ -43,4 +43,17 @@ form.required-validate {margin-top: 10px}
 form span.error {color:red}
 table.table > tbody > tr.selected >td {background-color:#7cc5e5;}
 
-
+.form-control1 {
+	background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    color: #555;
+    font-size: 14px;
+    height: 34px;
+    line-height: 1.42857;
+    padding: 1px;
+    width:45%;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}

@@ -181,10 +181,11 @@
 
 			$(this).click(function(event){
 				var current_hash = location.hash.skipChar('#').replace(/\?.*$/, '');
+				var rel = $this.attr('data-ajax') || 'container';
 				if ($.History && current_hash != hash) {
 					$.History.loadHistory(hash);
 				} else {
-					$('#'+DWZ.conf.containerId).loadUrl(url);
+					$('#'+rel).loadUrl(url);
 				}
 				
 				event.preventDefault();
@@ -196,7 +197,7 @@
 			$(this).click(function(event){
 				var $this = $(this);
 				var rel = $this.attr('data-ajax') || 'container';
-				alert(rel);
+				//alert(rel);
 				$("#"+rel).loadUrl($this.attr("href"));
 				event.preventDefault();
 			});

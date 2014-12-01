@@ -18,7 +18,7 @@
 	</div>
 	<div class="col-md-9">
 		<h2>SKU尺码模板定义</h2>
-		<a href="/pdm/add-sizetemplate" class="btn btn-default" data-toggle="modal" data-target="#modal-dialog-lg">新建尺码模板</a>
+		<a href="/pdm/add-sizetemplate" class="btn btn-default" data-toggle="modal" data-target="#modal-dialog">新建尺码模板</a>
 		
 		<table class="table table-hover">
 			<thead>

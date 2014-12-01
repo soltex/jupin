@@ -9,7 +9,7 @@
 
 
 
-<jsp:include page="/index_sub.jhtml"></jsp:include>
+<jsp:include page="index_sub.jsp"></jsp:include>
 
 
 
