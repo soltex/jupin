@@ -19,8 +19,9 @@ import com.vanstone.jupin.ecs.product.define.attribute.sku.Color;
 import com.vanstone.jupin.ecs.product.define.services.ColorTableService;
 import com.vanstone.jupin.ecs.product.define.services.DefineCommonService;
 import com.vanstone.jupin.ecs.product.define.services.ExistProductsNotAllowWriteException;
-import com.vanstone.webframework.dwz.DWZDialogObject;
-import com.vanstone.webframework.dwz.DWZObject;
+import com.vanstone.webframework.dwz.DialogViewCommandObject;
+import com.vanstone.webframework.dwz.ViewCommandHelper;
+import com.vanstone.webframework.dwz.ViewCommandObject;
 
 /**
  * @author shipeng
@@ -46,7 +47,7 @@ public class ColorAction {
 	
 	@RequestMapping("/add-color-action")
 	@ResponseBody
-	public DWZObject addColorAction(ModelMap modelMap,@ModelAttribute("colorForm")ColorForm colorForm) {
+	public ViewCommandObject addColorAction(ModelMap modelMap,@ModelAttribute("colorForm")ColorForm colorForm) {
 		Color color = new Color();
 		color.setColorCSS(colorForm.getColorCSS());
 		color.setColorName(colorForm.getColorName());
@@ -54,9 +55,9 @@ public class ColorAction {
 		try {
 			this.colorTableService.addColor(color);
 		} catch (ObjectDuplicateException e) {
-			return DWZObject.createErrorObject("颜色值【" + colorForm.getColorName() + "】重复，请确认后重新填写！");
+			return ViewCommandHelper.createErrorObject("颜色值【" + colorForm.getColorName() + "】重复，请确认后重新填写！");
 		}
-		DWZObject object = DWZObject.createSuccessObject("添加颜色值成功！");
+		ViewCommandObject object = ViewCommandHelper.createSuccessObject("添加颜色值成功！");
 		object.setForwardUrl("/pdm/view-colors");
 		return object;
 	}
@@ -74,7 +75,7 @@ public class ColorAction {
 	
 	@RequestMapping("/update-color-action")
 	@ResponseBody
-	public DWZDialogObject updateColorAction(ModelMap modelMap, @ModelAttribute("colorForm")ColorForm colorForm) {
+	public DialogViewCommandObject updateColorAction(ModelMap modelMap, @ModelAttribute("colorForm")ColorForm colorForm) {
 		Color color = this.commonSDKManager.getAndValidateColor(colorForm.getId());
 		color.setColorCSS(colorForm.getColorCSS());
 		color.setColorName(colorForm.getColorName());
@@ -82,15 +83,15 @@ public class ColorAction {
 		try {
 			this.colorTableService.updateColor(color);
 		} catch (ExistProductsNotAllowWriteException e) {
-			DWZDialogObject object = DWZDialogObject.createErrorDialog(false);
+			DialogViewCommandObject object = ViewCommandHelper.createErrorDialog(false);
 			object.setMessage("当前颜色值已在产品中使用，如要强制修改，请联系管理员！");
 			return object;
 		} catch (ObjectDuplicateException e) {
-			DWZDialogObject object = DWZDialogObject.createErrorDialog(false);
+			DialogViewCommandObject object = ViewCommandHelper.createErrorDialog(false);
 			object.setMessage("颜色值【" + colorForm.getColorName() + "】重复，请确认后重新填写！");
 			return object;
 		}
-		DWZDialogObject object = DWZDialogObject.createSuccessDialog(true);
+		DialogViewCommandObject object = ViewCommandHelper.createSuccessDialog(true);
 		object.setMessage("修改颜色成功！");
 		object.setForwardUrl("/pdm/view-colors");
 		return object;
@@ -98,16 +99,16 @@ public class ColorAction {
 	
 	@RequestMapping("/delete-color-action/{id}")
 	@ResponseBody
-	public DWZObject deleteColorAction(@PathVariable("id")Integer id) {
+	public ViewCommandObject deleteColorAction(@PathVariable("id")Integer id) {
 		this.commonSDKManager.getAndValidateColor(id);
 		try {
 			this.colorTableService.deleteColor(id);
 		} catch (ExistProductsNotAllowWriteException e) {
-			DWZObject object = DWZObject.createErrorObject();
+			ViewCommandObject object = ViewCommandHelper.createErrorObject();
 			object.setMessage("当前颜色值已在产品中使用，如要强制修改，请联系管理员！");
 			return object;
 		}
-		DWZObject object = DWZObject.createSuccessObject("删除颜色表成功！");
+		ViewCommandObject object = ViewCommandHelper.createSuccessObject("删除颜色表成功！");
 		object.setForwardUrl("/pdm/view-colors");
 		return object;
 	}

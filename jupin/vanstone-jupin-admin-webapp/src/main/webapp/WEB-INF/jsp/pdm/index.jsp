@@ -14,7 +14,7 @@
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>品类定义管理</a>
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>商品属性定义管理</a>
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>品牌信息管理</a>
-			<a href="/pdm/view-colors" class="list-group-item active" data-history><span class="glyphicon glyphicon-arrow-right"></span>SKU颜色表</a>
+			<a href="/pdm/view-colors" class="list-group-item" data-history><span class="glyphicon glyphicon-arrow-right"></span>SKU颜色表</a>
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>SKU尺码模板管理</a>
 		</div>
 	</div>
@@ -22,6 +22,5 @@
 		
 	</div>
 </div>
-
 
 <%@ include file="/inc/footer.jsp"%>

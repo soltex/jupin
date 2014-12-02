@@ -11,7 +11,16 @@ public class QuerySizeTemplateDOWithSizeTableResultMap extends PDTSkuSizeTableDO
 	private String templateName;
 	private String templateContent;
 	private Integer systemable;
+	private Integer templateId;
 	
+	public Integer getTemplateId() {
+		return templateId;
+	}
+
+	public void setTemplateId(Integer templateId) {
+		this.templateId = templateId;
+	}
+
 	public Integer getSystemable() {
 		return systemable;
 	}

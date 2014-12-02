@@ -31,6 +31,7 @@
 		<result column="TEMPLATE_NAME" property="templateName" jdbcType="VARCHAR" />
 		<result column="TEMPLATE_CONTENT" property="templateContent" jdbcType="LONGVARCHAR" />
 		<result column="SYSTEMABLE" property="systemable" jdbcType="INTEGER"></result>
+		<result column="TEMPLATE_ID" property="templateId" jdbcType="INTEGER"></result>
 	</resultMap>
 	
 	<sql id="Base_Column_List">
@@ -370,7 +371,7 @@
 		ID &lt;&gt; #{id,jdbcType=INTEGER}
 	</select>
 	<select id="selectSizeTemplate_SizeTable_ResultMap" resultMap="QuerySizeTemplateDOWithSizeTableResultMap">
-		SELECT pdt_sku_size_table.*,pdt_sku_size_template.TEMPLATE_CONTENT,
+		SELECT pdt_sku_size_table.*,pdt_sku_size_template.TEMPLATE_CONTENT,pdt_sku_size_template.id AS TEMPLATE_ID,
 		pdt_sku_size_template.TEMPLATE_NAME
 		FROM
 		pdt_sku_size_template LEFT JOIN pdt_sku_size_table ON pdt_sku_size_template.ID =
@@ -378,5 +379,11 @@
 		ORDER BY
 		pdt_sku_size_template.ID DESC,
 		pdt_sku_size_table.SIZE_NAME DESC
+	</select>
+	<select id="selectBySizeTemplateId" parameterType="map" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List"/> FROM 
+		pdt_sku_size_table 
+		WHERE 
+		pdt_sku_size_table.SIZE_TEMPLATE_ID = #{sizeTemplateId,jdbcType=INTEGER}
 	</select>
 </mapper>

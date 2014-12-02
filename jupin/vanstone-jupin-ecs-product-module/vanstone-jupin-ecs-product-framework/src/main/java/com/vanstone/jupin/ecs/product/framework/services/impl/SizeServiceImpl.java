@@ -495,14 +495,21 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 	 */
 	@Override
 	public void deleteSize(final int sizeId) throws ExistProductsNotAllowWriteException {
-		PDTSkuSizeTableDO model = this.pdtSkuSizeTableDOMapper.selectByPrimaryKey(sizeId);
+		final PDTSkuSizeTableDO model = this.pdtSkuSizeTableDOMapper.selectByPrimaryKey(sizeId);
 		if (model == null) {
 			throw new IllegalArgumentException();
+		}
+		if (!defineCommonService.validateAllowUDOperateSizeTemplate(model.getSizeTemplateId())) {
+			throw new ExistProductsNotAllowWriteException();
 		}
 		this.execute(new TransactionCallbackWithoutResult() {
 			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
 				pdtSkuSizeTableDOMapper.deleteByPrimaryKey(sizeId);
+				List<PDTSkuSizeTableDO> sizeTableDOs = pdtSkuSizeTableDOMapper.selectBySizeTemplateId(model.getSizeTemplateId());
+				if (sizeTableDOs == null || sizeTableDOs.size() <=0) {
+					pdtSkuSizeTemplateDOMapper.deleteByPrimaryKey(model.getSizeTemplateId());
+				}
 			}
 		});
 		defineCommonService.clearSizeTableCache();
@@ -526,7 +533,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				sizeTemplate = sizeTemplateMap.get(rm.getSizeTemplateId());
 			}else{
 				sizeTemplate = new SizeTemplate();
-				sizeTemplate.setId(rm.getSizeTemplateId());
+				sizeTemplate.setId(rm.getTemplateId());
 				sizeTemplate.setTemplateName(rm.getTemplateName());
 				sizeTemplate.setTemplateContent(rm.getTemplateContent());
 				sizeTemplate.setSystemable(BoolUtil.parseInt(rm.getSystemable()));
@@ -542,36 +549,38 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				//SizeTemplateWrapBean初始化
 				SizeTemplateWrapBean bean = new SizeTemplateWrapBean();
 				bean.setSizeTemplate(sizeTemplate);
-				wrapBeanMap.put(rm.getSizeTemplateId(), bean);
+				wrapBeanMap.put(rm.getTemplateId(), bean);
 			}
-			Size size = new Size(sizeTemplate);
-			
-			size.setWaistlineable(BoolUtil.parseInt(rm.getWaistlineable()));
-			size.setWaistlineEnd(rm.getWaistlineEnd());
-			size.setWaistlineStart(rm.getWaistlineStart());
-			
-			size.setWeightable(BoolUtil.parseInt(rm.getWeightable()));
-			size.setWeightEnd(rm.getWeightEnd());
-			size.setWeightStart(rm.getWeightStart());
-			
-			size.setHipable(BoolUtil.parseInt(rm.getHipable()));
-			size.setHipEnd(rm.getHipEnd());
-			size.setHipStart(rm.getHipStart());
-			
-			size.setChestable(BoolUtil.parseInt(rm.getChestable()));
-			size.setChestEnd(rm.getChestEnd());
-			size.setChestStart(rm.getChestStart());
-			
-			size.setHeightable(BoolUtil.parseInt(rm.getHeightable()));
-			size.setHeightEnd(rm.getHeightEnd());
-			size.setHeightStart(rm.getHeightStart());
-			
-			size.setShoulderable(BoolUtil.parseInt(rm.getShoulderable()));
-			size.setShoulderEnd(rm.getShoulderEnd());
-			size.setShoulderStart(rm.getShoulderStart());
-			
-			size.setSizeName(rm.getSizeName());
-			wrapBeanMap.get(rm.getSizeTemplateId()).addSize(size);
+			if (rm.getId() != null) {
+				Size size = new Size(sizeTemplate);
+				size.setId(rm.getId());
+				size.setWaistlineable(BoolUtil.parseInt(rm.getWaistlineable()));
+				size.setWaistlineEnd(rm.getWaistlineEnd());
+				size.setWaistlineStart(rm.getWaistlineStart());
+				
+				size.setWeightable(BoolUtil.parseInt(rm.getWeightable()));
+				size.setWeightEnd(rm.getWeightEnd());
+				size.setWeightStart(rm.getWeightStart());
+				
+				size.setHipable(BoolUtil.parseInt(rm.getHipable()));
+				size.setHipEnd(rm.getHipEnd());
+				size.setHipStart(rm.getHipStart());
+				
+				size.setChestable(BoolUtil.parseInt(rm.getChestable()));
+				size.setChestEnd(rm.getChestEnd());
+				size.setChestStart(rm.getChestStart());
+				
+				size.setHeightable(BoolUtil.parseInt(rm.getHeightable()));
+				size.setHeightEnd(rm.getHeightEnd());
+				size.setHeightStart(rm.getHeightStart());
+				
+				size.setShoulderable(BoolUtil.parseInt(rm.getShoulderable()));
+				size.setShoulderEnd(rm.getShoulderEnd());
+				size.setShoulderStart(rm.getShoulderStart());
+				
+				size.setSizeName(rm.getSizeName());
+				wrapBeanMap.get(rm.getTemplateId()).addSize(size);
+			}
 		}
 		Collection<SizeTemplateWrapBean> sizeTemplateWrapBeans = wrapBeanMap.values();
 		for (SizeTemplateWrapBean bean : sizeTemplateWrapBeans) {

@@ -3,10 +3,13 @@
  */
 package com.vanstone.jupin.admin.webapp.pdm;
 
+import java.util.List;
+
 import com.vanstone.jupin.admin.webapp.AdminBaseForm;
 
 /**
  * 尺码表单
+ * 
  * @author shipeng
  */
 public class SizeForm extends AdminBaseForm {
@@ -17,41 +20,47 @@ public class SizeForm extends AdminBaseForm {
 	/** 模板内容 */
 	private String templateContent;
 	/** 尺码名称 */
+	private List<String> sizeNames;
 	private String sizeName;
 	/** 腰围 */
 	private boolean waistlineable = false;
-	private Integer[] waistlineStarts;
-	private Integer[] waistlineEnds;
+	private List<Integer> waistlineStarts;
+	private List<Integer> waistlineEnds;
+	private Integer waistlineStart;
+	private Integer waistlineEnd;
 	/** 体重 */
 	private boolean weightable = false;
-	private Integer[] weightStarts;
-	private Integer[] weightEnds;
+	private List<Integer> weightStarts;
+	private List<Integer> weightEnds;
+	private Integer weightStart;
+	private Integer weightEnd;
 	/** 臀围 */
 	private boolean hipable = false;
-	private Integer[] hipStarts;
-	private Integer[] hipEnds;
+	private List<Integer> hipStarts;
+	private List<Integer> hipEnds;
+	private Integer hipStart;
+	private Integer hipEnd;
 	/** 胸围 */
 	private boolean chestable;
-	private Integer[] chestStarts;
-	private Integer[] chestEnds;
+	private List<Integer> chestStarts;
+	private List<Integer> chestEnds;
+	private Integer chestStart;
+	private Integer chestEnd;
 	/** 身高 */
 	private boolean heightable;
-	private Integer[] heightStarts;
-	private Integer[] heightEnds;
+	private List<Integer> heightStarts;
+	private List<Integer> heightEnds;
+	private Integer heightStart;
+	private Integer heightEnd;
 	/** 肩宽 */
 	private boolean shoulderable = false;
-	private Integer[] shoulderStarts;
-	private Integer[] shoulderEnds;
+	private List<Integer> shoulderStarts;
+	private List<Integer> shoulderEnds;
+	private Integer shoulderStart;
+	private Integer shoulderEnd;
 
 	private Integer sizeId;
-
-	public Integer getSizeId() {
-		return sizeId;
-	}
-
-	public void setSizeId(Integer sizeId) {
-		this.sizeId = sizeId;
-	}
+	private List<Integer> sizeIds;
 
 	public Integer getSizeTemplateId() {
 		return sizeTemplateId;
@@ -77,12 +86,12 @@ public class SizeForm extends AdminBaseForm {
 		this.templateContent = templateContent;
 	}
 
-	public String getSizeName() {
-		return sizeName;
+	public List<String> getSizeNames() {
+		return sizeNames;
 	}
 
-	public void setSizeName(String sizeName) {
-		this.sizeName = sizeName;
+	public void setSizeNames(List<String> sizeNames) {
+		this.sizeNames = sizeNames;
 	}
 
 	public boolean isWaistlineable() {
@@ -93,19 +102,19 @@ public class SizeForm extends AdminBaseForm {
 		this.waistlineable = waistlineable;
 	}
 
-	public Integer[] getWaistlineStarts() {
+	public List<Integer> getWaistlineStarts() {
 		return waistlineStarts;
 	}
 
-	public void setWaistlineStarts(Integer[] waistlineStarts) {
+	public void setWaistlineStarts(List<Integer> waistlineStarts) {
 		this.waistlineStarts = waistlineStarts;
 	}
 
-	public Integer[] getWaistlineEnds() {
+	public List<Integer> getWaistlineEnds() {
 		return waistlineEnds;
 	}
 
-	public void setWaistlineEnds(Integer[] waistlineEnds) {
+	public void setWaistlineEnds(List<Integer> waistlineEnds) {
 		this.waistlineEnds = waistlineEnds;
 	}
 
@@ -117,19 +126,19 @@ public class SizeForm extends AdminBaseForm {
 		this.weightable = weightable;
 	}
 
-	public Integer[] getWeightStarts() {
+	public List<Integer> getWeightStarts() {
 		return weightStarts;
 	}
 
-	public void setWeightStarts(Integer[] weightStarts) {
+	public void setWeightStarts(List<Integer> weightStarts) {
 		this.weightStarts = weightStarts;
 	}
 
-	public Integer[] getWeightEnds() {
+	public List<Integer> getWeightEnds() {
 		return weightEnds;
 	}
 
-	public void setWeightEnds(Integer[] weightEnds) {
+	public void setWeightEnds(List<Integer> weightEnds) {
 		this.weightEnds = weightEnds;
 	}
 
@@ -141,19 +150,19 @@ public class SizeForm extends AdminBaseForm {
 		this.hipable = hipable;
 	}
 
-	public Integer[] getHipStarts() {
+	public List<Integer> getHipStarts() {
 		return hipStarts;
 	}
 
-	public void setHipStarts(Integer[] hipStarts) {
+	public void setHipStarts(List<Integer> hipStarts) {
 		this.hipStarts = hipStarts;
 	}
 
-	public Integer[] getHipEnds() {
+	public List<Integer> getHipEnds() {
 		return hipEnds;
 	}
 
-	public void setHipEnds(Integer[] hipEnds) {
+	public void setHipEnds(List<Integer> hipEnds) {
 		this.hipEnds = hipEnds;
 	}
 
@@ -165,19 +174,19 @@ public class SizeForm extends AdminBaseForm {
 		this.chestable = chestable;
 	}
 
-	public Integer[] getChestStarts() {
+	public List<Integer> getChestStarts() {
 		return chestStarts;
 	}
 
-	public void setChestStarts(Integer[] chestStarts) {
+	public void setChestStarts(List<Integer> chestStarts) {
 		this.chestStarts = chestStarts;
 	}
 
-	public Integer[] getChestEnds() {
+	public List<Integer> getChestEnds() {
 		return chestEnds;
 	}
 
-	public void setChestEnds(Integer[] chestEnds) {
+	public void setChestEnds(List<Integer> chestEnds) {
 		this.chestEnds = chestEnds;
 	}
 
@@ -189,19 +198,19 @@ public class SizeForm extends AdminBaseForm {
 		this.heightable = heightable;
 	}
 
-	public Integer[] getHeightStarts() {
+	public List<Integer> getHeightStarts() {
 		return heightStarts;
 	}
 
-	public void setHeightStarts(Integer[] heightStarts) {
+	public void setHeightStarts(List<Integer> heightStarts) {
 		this.heightStarts = heightStarts;
 	}
 
-	public Integer[] getHeightEnds() {
+	public List<Integer> getHeightEnds() {
 		return heightEnds;
 	}
 
-	public void setHeightEnds(Integer[] heightEnds) {
+	public void setHeightEnds(List<Integer> heightEnds) {
 		this.heightEnds = heightEnds;
 	}
 
@@ -213,20 +222,140 @@ public class SizeForm extends AdminBaseForm {
 		this.shoulderable = shoulderable;
 	}
 
-	public Integer[] getShoulderStarts() {
+	public List<Integer> getShoulderStarts() {
 		return shoulderStarts;
 	}
 
-	public void setShoulderStarts(Integer[] shoulderStarts) {
+	public void setShoulderStarts(List<Integer> shoulderStarts) {
 		this.shoulderStarts = shoulderStarts;
 	}
 
-	public Integer[] getShoulderEnds() {
+	public List<Integer> getShoulderEnds() {
 		return shoulderEnds;
 	}
 
-	public void setShoulderEnds(Integer[] shoulderEnds) {
+	public void setShoulderEnds(List<Integer> shoulderEnds) {
 		this.shoulderEnds = shoulderEnds;
+	}
+
+	public Integer getSizeId() {
+		return sizeId;
+	}
+
+	public void setSizeId(Integer sizeId) {
+		this.sizeId = sizeId;
+	}
+
+	public List<Integer> getSizeIds() {
+		return sizeIds;
+	}
+
+	public void setSizeIds(List<Integer> sizeIds) {
+		this.sizeIds = sizeIds;
+	}
+
+	public Integer getWaistlineStart() {
+		return waistlineStart;
+	}
+
+	public void setWaistlineStart(Integer waistlineStart) {
+		this.waistlineStart = waistlineStart;
+	}
+
+	public Integer getWaistlineEnd() {
+		return waistlineEnd;
+	}
+
+	public void setWaistlineEnd(Integer waistlineEnd) {
+		this.waistlineEnd = waistlineEnd;
+	}
+
+	public Integer getWeightStart() {
+		return weightStart;
+	}
+
+	public void setWeightStart(Integer weightStart) {
+		this.weightStart = weightStart;
+	}
+
+	public Integer getWeightEnd() {
+		return weightEnd;
+	}
+
+	public void setWeightEnd(Integer weightEnd) {
+		this.weightEnd = weightEnd;
+	}
+
+	public Integer getHipStart() {
+		return hipStart;
+	}
+
+	public void setHipStart(Integer hipStart) {
+		this.hipStart = hipStart;
+	}
+
+	public Integer getHipEnd() {
+		return hipEnd;
+	}
+
+	public void setHipEnd(Integer hipEnd) {
+		this.hipEnd = hipEnd;
+	}
+
+	public Integer getChestStart() {
+		return chestStart;
+	}
+
+	public void setChestStart(Integer chestStart) {
+		this.chestStart = chestStart;
+	}
+
+	public Integer getChestEnd() {
+		return chestEnd;
+	}
+
+	public void setChestEnd(Integer chestEnd) {
+		this.chestEnd = chestEnd;
+	}
+
+	public Integer getHeightStart() {
+		return heightStart;
+	}
+
+	public void setHeightStart(Integer heightStart) {
+		this.heightStart = heightStart;
+	}
+
+	public Integer getHeightEnd() {
+		return heightEnd;
+	}
+
+	public void setHeightEnd(Integer heightEnd) {
+		this.heightEnd = heightEnd;
+	}
+
+	public Integer getShoulderStart() {
+		return shoulderStart;
+	}
+
+	public void setShoulderStart(Integer shoulderStart) {
+		this.shoulderStart = shoulderStart;
+	}
+
+	public Integer getShoulderEnd() {
+		return shoulderEnd;
+	}
+
+	public void setShoulderEnd(Integer shoulderEnd) {
+		this.shoulderEnd = shoulderEnd;
+	}
+
+	public String getSizeName() {
+		return sizeName;
+	}
+
+	public void setSizeName(String sizeName) {
+		this.sizeName = sizeName;
 	}
 
 }

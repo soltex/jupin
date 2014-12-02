@@ -30,4 +30,6 @@ public interface PDTSkuSizeTableDOMapper {
     
     List<QuerySizeTemplateDOWithSizeTableResultMap> selectSizeTemplate_SizeTable_ResultMap();
     
+    List<PDTSkuSizeTableDO> selectBySizeTemplateId(@Param("sizeTemplateId")Integer sizeTemplateId);
+    
 }

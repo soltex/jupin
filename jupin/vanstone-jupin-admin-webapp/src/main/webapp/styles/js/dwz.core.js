@@ -157,10 +157,11 @@
 				 * 		if (json[DWZ.keys.statusCode] == DWZ.statusCode.ok){ ... }
 				 * });
 				 */
-				$(event.target).trigger(DWZ.eventType.ajaxDone, [json]);
+				if (event) {
+					$(event.target).trigger(DWZ.eventType.ajaxDone, [json]);
+				}
 				if (json.dialog) $(document).trigger(DWZ.eventType.dialogAjaxSuccess, [json]);
 			}
-			
 			
 		},
 		ajaxTodo: function(url, event){
