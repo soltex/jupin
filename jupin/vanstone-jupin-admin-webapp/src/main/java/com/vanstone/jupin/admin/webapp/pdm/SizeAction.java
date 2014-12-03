@@ -326,4 +326,117 @@ public class SizeAction extends AdminBaseAction {
 		return object;
 	}
 	
+	@RequestMapping("/update-all-sizeinfos/{sizeTemplateId}")
+	public String updateAllSizeinfos(@PathVariable("sizeTemplateId")Integer sizeTemplateId,@ModelAttribute("sizeForm")SizeForm sizeForm, ModelMap modelMap) {
+		SizeTemplate sizeTemplate = this.sizeService.getSizeTemplate(sizeTemplateId);
+		if (sizeTemplate == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		sizeForm.setWaistlineable(sizeTemplate.isWaistlineable());
+		sizeForm.setWeightable(sizeTemplate.isWeightable());
+		sizeForm.setHipable(sizeTemplate.isHipable());
+		sizeForm.setChestable(sizeTemplate.isChestable());
+		sizeForm.setHeightable(sizeTemplate.isHeightable());
+		sizeForm.setShoulderable(sizeTemplate.isShoulderable());
+		
+		Collection<Size> sizes = this.sizeService.getSizes(sizeTemplate);
+		if (sizes != null && sizes.size() > 0) {
+			for (Size size : sizes) {
+				//SizeID
+				sizeForm.getSizeIds().add(size.getId());
+				//尺码名称
+				sizeForm.getSizeNames().add(size.getSizeName());
+				//腰围
+				sizeForm.getWaistlineStarts().add(size.getWaistlineStart());
+				sizeForm.getWaistlineEnds().add(size.getWaistlineEnd());
+				//体重
+				sizeForm.getWeightStarts().add(size.getWeightStart());
+				sizeForm.getWeightEnds().add(size.getWeightEnd());
+				//臀围
+				sizeForm.getHipStarts().add(size.getHipStart());
+				sizeForm.getHipEnds().add(size.getHipEnd());
+				//胸围
+				sizeForm.getChestStarts().add(size.getChestStart());
+				sizeForm.getChestEnds().add(size.getChestEnd());
+				//身高
+				sizeForm.getHeightStarts().add(size.getHeightStart());
+				sizeForm.getHeightEnds().add(size.getHeightEnd());
+				//肩宽
+				sizeForm.getShoulderStarts().add(size.getShoulderStart());
+				sizeForm.getShoulderEnds().add(size.getShoulderEnd());
+			}
+		}
+		
+		modelMap.put("sizeTemplate", sizeTemplate);
+		modelMap.put("sizes", sizes);
+		
+		return "/pdm/update-all-sizeinfos";
+	}
+	
+	@RequestMapping("/update-all-sizeinfos-action")
+	@ResponseBody
+	public DialogViewCommandObject updateAllSizeinfosAction(@ModelAttribute("sizeForm")SizeForm sizeForm, ModelMap modelMap) {
+		if (sizeForm.getSizeNames() == null || sizeForm.getSizeNames().size() <=0) {
+			DialogViewCommandObject object =  ViewCommandHelper.createErrorDialog(false);
+			object.setMessage("请填写尺码标准");
+			return object;
+		}
+		
+		Collection<SizeBean> sizebeans = new ArrayList<SizeBean>();
+		for (int i=0;i<sizeForm.getSizeNames().size();i++) {
+			String sizeName = sizeForm.getSizeNames().get(i);
+			if (sizeName == null || sizeName.equals("")) {
+				DialogViewCommandObject object =  ViewCommandHelper.createErrorDialog(false);
+				object.setMessage("请填写尺码标准");
+				return object;
+			}
+			SizeBean sizeBean = new SizeBean();
+			sizeBean.setId(sizeForm.getSizeIds().get(i));
+			
+			sizeBean.setSizeName(sizeName);
+			
+			sizeBean.setWaistlineStart(sizeForm.getWaistlineStarts() != null && sizeForm.getWaistlineStarts().size() >0 ? sizeForm.getWaistlineStarts().get(i) : null);
+			sizeBean.setWaistlineEnd(sizeForm.getWaistlineEnds() != null && sizeForm.getWaistlineEnds().size() >0 ? sizeForm.getWaistlineEnds().get(i) : null);
+			/** 体重 */
+			sizeBean.setWeightStart(sizeForm.getWeightStarts() != null && sizeForm.getWeightStarts().size() >0 ? sizeForm.getWeightStarts().get(i) : null);
+			sizeBean.setWeightEnd(sizeForm.getWeightEnds() != null && sizeForm.getWeightEnds().size() >0 ? sizeForm.getWeightEnds().get(i) : null);
+			/** 臀围 */
+			sizeBean.setHipStart(sizeForm.getHipStarts() != null && sizeForm.getHipStarts().size() >0 ? sizeForm.getHipStarts().get(i) : null);
+			sizeBean.setHipEnd(sizeForm.getHipEnds() != null && sizeForm.getHipEnds().size() >0 ? sizeForm.getHipEnds().get(i) : null);
+			/** 胸围 */
+			sizeBean.setChestStart(sizeForm.getChestStarts() != null && sizeForm.getChestStarts().size() >0 ? sizeForm.getChestStarts().get(i) : null);
+			sizeBean.setChestEnd(sizeForm.getChestEnds() != null && sizeForm.getChestEnds().size() >0 ? sizeForm.getChestEnds().get(i) : null);
+			/** 身高 */
+			sizeBean.setHeightStart(sizeForm.getHeightStarts() != null && sizeForm.getHeightStarts().size() >0 ? sizeForm.getHeightStarts().get(i) : null);
+			sizeBean.setHeightEnd(sizeForm.getHeightEnds() != null && sizeForm.getHeightEnds().size() >0 ? sizeForm.getHeightEnds().get(i) : null);
+			/** 肩宽 */
+			sizeBean.setShoulderStart(sizeForm.getShoulderStarts() != null && sizeForm.getShoulderStarts().size() >0 ? sizeForm.getShoulderStarts().get(i) : null);
+			sizeBean.setShoulderEnd(sizeForm.getShoulderEnds() != null && sizeForm.getShoulderEnds().size() >0 ? sizeForm.getShoulderEnds().get(i) : null);
+			
+			if (!sizeBean.validateSizeInfo()) {
+				DialogViewCommandObject object =  ViewCommandHelper.createErrorDialog(false);
+				object.setMessage("请填写尺码标准");
+				return object;
+			}
+			
+			sizebeans.add(sizeBean);
+		}
+		try {
+			this.defineManager.updateSizes(sizeForm.getSizeTemplateId(), true, sizeForm.isWaistlineable(), sizeForm.isWeightable(), 
+					sizeForm.isHipable(), sizeForm.isChestable(), sizeForm.isHeightable(), sizeForm.isShoulderable(), sizebeans);
+		} catch (ObjectDuplicateException e) {
+			DialogViewCommandObject object =  ViewCommandHelper.createErrorDialog(false);
+			object.setMessage("尺码名称重复，请重新填写！");
+			return object;
+		} catch (ExistProductsNotAllowWriteException e) {
+			DialogViewCommandObject object =  ViewCommandHelper.createErrorDialog(false);
+			object.setMessage("当前尺码信息以存在商品信息，不允许修改，如强制修改，请联系管理员！");
+			return object;
+		}
+		DialogViewCommandObject object =  ViewCommandHelper.createSuccessDialog(true);
+		object.setMessage("修改尺码信息成功！");
+		object.setForwardUrl("/pdm/view-sizetemplates");
+		return object;
+	}
 }

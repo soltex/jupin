@@ -10,7 +10,9 @@ import javax.validation.constraints.NotNull;
 
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.jupin.common.entity.ImageBean;
-import com.vanstone.jupin.ecs.product.define.ProductCategory;
+import com.vanstone.jupin.ecs.product.define.BasicProductCategory;
+import com.vanstone.jupin.ecs.product.define.Brand;
+import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
 
 /**
@@ -28,7 +30,7 @@ public interface CategoryService {
 	 * @return
 	 * @throws ExistProductsNotAllowWriteException 当父品类信息中是叶子节点，并且当前叶子节点下已经存在商品，则不允许增加品类信息
 	 */
-	ProductCategory addProductCategory(@NotNull ProductCategory productCategory) throws ExistProductsNotAllowWriteException;
+	ProductCategoryDetail addProductCategory(@NotNull ProductCategoryDetail productCategory) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 添加品类信息
@@ -36,27 +38,27 @@ public interface CategoryService {
 	 * @param attributes
 	 * @return
 	 */
-	ProductCategory addProductCategory(@NotNull ProductCategory productCategory, Collection<AbstractAttribute> attributes) throws ExistProductsNotAllowWriteException;
+	ProductCategoryDetail addProductCategory(@NotNull ProductCategoryDetail productCategory, Collection<AbstractAttribute> attributes) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 获取品类信息（从缓冲中直接获取）
 	 * @param id
 	 * @return
 	 */
-	ProductCategory getProductCategoryDetail(int id);
+	ProductCategoryDetail getProductCategoryDetail(int id);
 	
 	/**
 	 * 获取品类信息并验证
 	 * @param id
 	 * @return
 	 */
-	ProductCategory getProductCategoryDetailAndValidate(int id);
+	ProductCategoryDetail getProductCategoryDetailAndValidate(int id);
 	
 	/**
 	 * 获取根节点信息,直接缓冲列表
 	 * @return
 	 */
-	Collection<ProductCategory> getProductCategoriesOfLevel1();
+	Collection<ProductCategoryDetail> getProductCategoriesOfLevel1();
 	
 	/**
 	 * 更新品类基本信息
@@ -68,7 +70,7 @@ public interface CategoryService {
 	 * @param sort
 	 * @return
 	 */
-	ProductCategory updateBaseProductCategoryInfo(int id, String categoryName, String description, String categoryBindPage, String formTemplate, Integer sort) throws ExistProductsNotAllowWriteException;
+	ProductCategoryDetail updateBaseProductCategoryInfo(int id, String categoryName, String description, String categoryBindPage, String formTemplate, Integer sort) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 更新品类父级信息
@@ -76,7 +78,7 @@ public interface CategoryService {
 	 * @param parentCategoryID
 	 * @return
 	 */
-	ProductCategory updateParentProductCategory(int id, Integer parentCategoryID) throws ExistProductsNotAllowWriteException;
+	ProductCategoryDetail updateParentProductCategory(int id, Integer parentCategoryID) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 更新品类封面图片
@@ -84,14 +86,14 @@ public interface CategoryService {
 	 * @param coverImage
 	 * @return
 	 */
-	ProductCategory updateProductCategoryCoverImage(int id, @NotNull ImageBean coverImage) throws ExistProductsNotAllowWriteException;
+	ProductCategoryDetail updateProductCategoryCoverImage(int id, @NotNull ImageBean coverImage) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 删除品类封面图片
 	 * @param id
 	 * @return
 	 */
-	ProductCategory deleteProductCategoryCoverImage(int id) throws ExistProductsNotAllowWriteException;
+	ProductCategoryDetail deleteProductCategoryCoverImage(int id) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 删除品类信息，错误码详见异常信息
@@ -122,7 +124,7 @@ public interface CategoryService {
 	 * @param attributeId
 	 * @throws ExistProductsNotAllowWriteException
 	 */
-	void deleteAttributeInProductCategory(ProductCategory productCategoryId, AbstractAttribute attribute) throws ExistProductsNotAllowWriteException;
+	void deleteAttributeInProductCategory(ProductCategoryDetail productCategoryId, AbstractAttribute attribute) throws ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 刷新品类信息
@@ -160,14 +162,14 @@ public interface CategoryService {
 	 * @param limit
 	 * @return
 	 */
-	Collection<ProductCategory> getProductCategories(String key, int offset, int limit);
+	Collection<ProductCategoryDetail> getProductCategories(String key, int offset, int limit);
 	
 	/**
 	 * 获取品类定义Map
 	 * @param ids
 	 * @return
 	 */
-	Map<Integer, ProductCategory> getProductCategoriesMap(Collection<Integer> ids);
+	Map<Integer, ProductCategoryDetail> getProductCategoriesMap(Collection<Integer> ids);
 	
 	/**
 	 * 检索品类信息
@@ -182,5 +184,39 @@ public interface CategoryService {
 	 * @return
 	 */
 	boolean validateAllowUDOperateCategory(int categoryID);
+	
+	/**
+	 * 追加品牌信息
+	 * @param baseProductCategory
+	 * @param brand
+	 * @return
+	 * @throws ObjectDuplicateException
+	 */
+	ProductCategoryDetail appendBrandToProductCategoryDetail(BasicProductCategory baseProductCategory, Brand brand) throws CategoryMustLeafNodeException, ObjectDuplicateException;
+	
+	/**
+	 * 追加一组品牌信息到品类信息中
+	 * @param baseProductCategory
+	 * @param brands
+	 * @return
+	 * @throws CategoryMustLeafNodeException
+	 * @throws ObjectDuplicateException
+	 */
+	ProductCategoryDetail appendBrandsToProductCategoryDetail(BasicProductCategory baseProductCategory, Collection<Brand> brands) throws CategoryMustLeafNodeException, ObjectDuplicateException;
+	
+	/**
+	 * 从ProductCategory清理Brand
+	 * @param productCategory
+	 * @param brand
+	 * @return
+	 */
+	void deleteBrandFromProductCategory(BasicProductCategory basicProductCategory, Brand brand) throws ExistProductsNotAllowWriteException;
+	
+	/**
+	 * 获取终端叶子节点下的品类列表
+	 * @param basicProductCategoryOfLeafNode
+	 * @return
+	 */
+	Collection<Brand> getBrandsByLeafProductCategory(BasicProductCategory basicProductCategoryOfLeafNode);
 	
 }

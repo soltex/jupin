@@ -12,7 +12,7 @@ import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.business.ObjectHasSubObjectException;
 import com.vanstone.jupin.common.entity.ImageBean;
 import com.vanstone.jupin.ecs.product.define.Brand;
-import com.vanstone.jupin.ecs.product.define.ProductCategory;
+import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 
 /**
  * 品牌业务API
@@ -30,14 +30,6 @@ public interface BrandService {
 	 * @throws ObjectDuplicateException
 	 */
 	Brand addBrand(@NotNull Brand brand) throws ObjectDuplicateException;
-	
-	/**
-	 * 添加品牌信息
-	 * @param brand
-	 * @param productCategories
-	 * @return
-	 */
-	Brand addBrand(@NotNull Brand brand, Collection<ProductCategory> productCategories) throws CategoryMustLeafNodeException, ObjectDuplicateException;
 	
 	/**
 	 * 通过ID获取品牌信息（放入到缓冲中）
@@ -100,7 +92,7 @@ public interface BrandService {
 	 * @param limit
 	 * @return
 	 */
-	Collection<Brand> getBrandsWithStat(ProductCategory productCategory, String key, int offset ,int limit);
+	Collection<Brand> getBrandsWithStat(ProductCategoryDetail productCategory, String key, int offset ,int limit);
 	
 	/**
 	 * 获取品牌数量
@@ -108,7 +100,7 @@ public interface BrandService {
 	 * @param key
 	 * @return
 	 */
-	int getTotalBrands(ProductCategory productCategory, String key);
+	int getTotalBrands(ProductCategoryDetail productCategory, String key);
 	
 	/**
 	 * 通过拼音前缀获Brand列表
@@ -118,19 +110,4 @@ public interface BrandService {
 	 */
 	Collection<Brand> getBrandsByPrefix(String prefixPinyin, int limit);
 	
-	/**
-	 * 增加Brand到ProductCategory中
-	 * @param productCategory
-	 * @param brand
-	 * @return
-	 */
-	void appendBrandToProductCategory(ProductCategory productCategory, Brand brand) throws ObjectDuplicateException, CategoryMustLeafNodeException ;
-	
-	/**
-	 * 从ProductCategory清理Brand
-	 * @param productCategory
-	 * @param brand
-	 * @return
-	 */
-	void deleteBrandFromProductCategory(ProductCategory productCategory, Brand brand) throws ExistProductsNotAllowWriteException;
 }

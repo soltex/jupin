@@ -4,7 +4,7 @@
 package com.vanstone.jupin.business.sdk.adminservice.pdm.productdefine;
 
 import com.vanstone.common.util.web.PageInfo;
-import com.vanstone.jupin.ecs.product.define.ProductCategory;
+import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 
 /**
  * 品类管理 
@@ -32,6 +32,6 @@ public interface ProductDefineManager {
 	 * @param pageno
 	 * @return
 	 */
-	PageInfo<ProductCategory> searchProductCategories(String key, int pageno);
+	PageInfo<ProductCategoryDetail> searchProductCategories(String key, int pageno);
 	
 }

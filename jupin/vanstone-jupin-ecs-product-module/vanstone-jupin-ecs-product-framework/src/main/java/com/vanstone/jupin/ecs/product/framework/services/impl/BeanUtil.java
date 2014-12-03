@@ -8,7 +8,7 @@ import com.vanstone.jupin.common.entity.ImageBean;
 import com.vanstone.jupin.common.util.BoolUtil;
 import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.CategoryState;
-import com.vanstone.jupin.ecs.product.define.ProductCategory;
+import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Color;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
@@ -92,7 +92,7 @@ public class BeanUtil {
 	public static PDTSkuSizeTableDO toPDTSkuSizeTableDO(Size size) {
 		PDTSkuSizeTableDO pDTSkuSizeTableDO = new PDTSkuSizeTableDO();
 		
-		pDTSkuSizeTableDO.setSizeTemplateId(size.getSizeTemplate().getId());
+		pDTSkuSizeTableDO.setSizeTemplateId(size.getSizeTemplate() != null ? size.getSizeTemplate().getId() : null);
 		pDTSkuSizeTableDO.setId(size.getId());
 		pDTSkuSizeTableDO.setSizeName(size.getSizeName());
 		
@@ -210,7 +210,7 @@ public class BeanUtil {
 		return pdtBrandDO;
 	}
 	
-	public static PDTCategoryDO toPdtCategoryDO(ProductCategory productCategory) {
+	public static PDTCategoryDO toPdtCategoryDO(ProductCategoryDetail productCategory) {
 		PDTCategoryDO model = new PDTCategoryDO();
 		model.setId(productCategory.getId());
 		model.setCategoryName(productCategory.getCategoryName());
@@ -236,8 +236,8 @@ public class BeanUtil {
 		return model;
 	}
 	
-	public static ProductCategory toProductCategory(PDTCategoryDO pdtCategoryDO, ProductCategory parentProductCategory, SizeTemplate sizeTemplate) {
-		ProductCategory category = new ProductCategory();
+	public static ProductCategoryDetail toProductCategory(PDTCategoryDO pdtCategoryDO, ProductCategoryDetail parentProductCategory, SizeTemplate sizeTemplate) {
+		ProductCategoryDetail category = new ProductCategoryDetail();
 		category.setId(pdtCategoryDO.getId());
 		category.setCategoryName(pdtCategoryDO.getCategoryName());
 		category.setDescription(pdtCategoryDO.getDescription());

@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.vanstone.business.MyAssert4Business;
 import com.vanstone.jupin.business.sdk.common.CommonSDKManager;
+import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Color;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
+import com.vanstone.jupin.ecs.product.define.services.BrandService;
 import com.vanstone.jupin.ecs.product.define.services.ColorTableService;
 import com.vanstone.jupin.ecs.product.define.services.SizeService;
 
@@ -24,6 +26,8 @@ public class CommonSDKManagerImpl implements CommonSDKManager {
 	private ColorTableService colorTableService;
 	@Autowired
 	private SizeService sizeService;
+	@Autowired
+	private BrandService brandService;
 	
 	/* (non-Javadoc)
 	 * @see com.vanstone.jupin.business.sdk.common.CommonSDKManager#getAndValidateColor(int)
@@ -47,6 +51,13 @@ public class CommonSDKManagerImpl implements CommonSDKManager {
 		Size size = this.sizeService.getSize(id);
 		MyAssert4Business.notNull(size);
 		return size;
+	}
+
+	@Override
+	public Brand getBrandAndValidate(int id) {
+		Brand brand = this.brandService.getBrand(id);
+		MyAssert4Business.notNull(brand);
+		return brand;
 	}
 	
 }

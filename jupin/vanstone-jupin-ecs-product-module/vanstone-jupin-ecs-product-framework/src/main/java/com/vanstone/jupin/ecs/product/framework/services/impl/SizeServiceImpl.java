@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.curator.framework.CuratorFramework;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,9 +85,9 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 		if (!_validateSizeCollectionData(waistlineable, weightable, hipable, chestable, heightable, shoulderable, sizes)) {
 			throw new IllegalArgumentException("waistlineable or weightable or hipable or chestable or heightable or shoulderable not illegal, please check");
 		}
-		return this.execute(new TransactionCallback<SizeTemplate>() {
+		Integer sizeTemplateId = this.execute(new TransactionCallback<Integer>() {
 			@Override
-			public SizeTemplate doInTransaction(TransactionStatus arg0) {
+			public Integer doInTransaction(TransactionStatus arg0) {
 				PDTSkuSizeTemplateDO templateDO = new PDTSkuSizeTemplateDO();
 				templateDO.setTemplateName(templateName);
 				templateDO.setTemplateContent(content);
@@ -138,19 +140,18 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 					//写入尺码数据
 					pdtSkuSizeTableDOMapper.insert(sizeTableDO);
 				}
-				defineCommonService.clearProductDefineCache();
-				return getSizeTemplate(templateDO.getId());
+				return templateDO.getId();
 			}
 		});
+		defineCommonService.clearProductDefineCache();
+		return this.getSizeTemplate(sizeTemplateId);
 	}
 	
 	@Override
-	public SizeTemplate updateSizeTemplate(final int id, final boolean systemable,
-			final boolean waistlineable, final boolean weightable, final boolean hipable,
-			final boolean chestable, final boolean heightable, final boolean shoulderable,
+	public void updateSizeTemplateInfo(@NotNull final SizeTemplate sizeTemplate,
 			final @NotEmpty Collection<Size> sizes)
 			throws ObjectDuplicateException, ExistProductsNotAllowWriteException {
-		SizeTemplate sizeTemplate = this.getSizeTemplate(id);
+		MyAssert4Business.objectInitialized(sizeTemplate);
 		if (sizeTemplate == null) {
 			throw new IllegalArgumentException();
 		}
@@ -161,68 +162,175 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				throw new ObjectDuplicateException();
 			}
 		}
-		if (!_validateSizeCollectionData(waistlineable, weightable, hipable, chestable, heightable, shoulderable, sizes)) {
+		//尺码DB验证
+		for (Size size : sizes) {
+			PDTSkuSizeTableDO model = null;
+			if (size.initialable()) {
+				//需要更新的Size
+				model = pdtSkuSizeTableDOMapper.selectBySizeTemplateId_SizeName_NotSelf(sizeTemplate.getId(), size.getSizeName(), size.getId());
+				if (model != null) {
+					throw new ObjectDuplicateException();
+				}
+			}else{
+				//最新写入的Size
+				model = pdtSkuSizeTableDOMapper.selectBySizeTemplateId_SizeName(sizeTemplate.getId(), size.getSizeName());
+				if (model != null) {
+					throw new ObjectDuplicateException();
+				}
+			}
+		}
+		if (!_validateSizeCollectionData(sizeTemplate.isWaistlineable(), sizeTemplate.isWeightable(), sizeTemplate.isHipable(), sizeTemplate.isChestable(), sizeTemplate.isHeightable(), sizeTemplate.isShoulderable(), sizes)) {
 			throw new IllegalArgumentException("waistlineable or weightable or hipable or chestable or heightable or shoulderable not illegal, please check");
 		}
-		return this.execute(new TransactionCallback<SizeTemplate>() {
+		this.execute(new TransactionCallbackWithoutResult() {
+			
 			@Override
-			public SizeTemplate doInTransaction(TransactionStatus arg0) {
-				PDTSkuSizeTemplateDO templateDO = new PDTSkuSizeTemplateDO();
-				templateDO.setId(id);
-				templateDO.setSystemable(BoolUtil.parseBoolean(systemable));
-				templateDO.setWaistlineable(BoolUtil.parseBoolean(waistlineable)); 
-				templateDO.setWeightable(BoolUtil.parseBoolean(weightable)); 
-				templateDO.setHipable(BoolUtil.parseBoolean(hipable)); 
-				templateDO.setChestable(BoolUtil.parseBoolean(chestable)); 
-				templateDO.setHeightable(BoolUtil.parseBoolean(heightable)); 
-				templateDO.setShoulderable(BoolUtil.parseBoolean(shoulderable));
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				PDTSkuSizeTemplateDO templateDO = BeanUtil.toPdtSkuSizeTemplateDO(sizeTemplate);
+				templateDO.setId(sizeTemplate.getId());
+				templateDO.setSystemable(BoolUtil.parseBoolean(sizeTemplate.isSystemable()));
+				templateDO.setWaistlineable(BoolUtil.parseBoolean(sizeTemplate.isWaistlineable())); 
+				templateDO.setWeightable(BoolUtil.parseBoolean(sizeTemplate.isWeightable())); 
+				templateDO.setHipable(BoolUtil.parseBoolean(sizeTemplate.isHipable())); 
+				templateDO.setChestable(BoolUtil.parseBoolean(sizeTemplate.isChestable())); 
+				templateDO.setHeightable(BoolUtil.parseBoolean(sizeTemplate.isHeightable())); 
+				templateDO.setShoulderable(BoolUtil.parseBoolean(sizeTemplate.isShoulderable()));
 				//修改模板数据
-				pdtSkuSizeTemplateDOMapper.updateByPrimaryKeySelective(templateDO);
-				pdtSkuSizeTableDOMapper.deleteBySizeTemplateId(templateDO.getId());
+				pdtSkuSizeTemplateDOMapper.updateByPrimaryKey(templateDO);
 				
 				//写入尺码数据
 				for (Size size : sizes) {
-					PDTSkuSizeTableDO sizeTableDO = new PDTSkuSizeTableDO();
-					
-					sizeTableDO.setSizeName(size.getSizeName());
-					
-					sizeTableDO.setSizeTemplateId(templateDO.getId());
-					sizeTableDO.setWaistlineable(BoolUtil.parseBoolean(waistlineable)); 
-					sizeTableDO.setWeightable(BoolUtil.parseBoolean(weightable)); 
-					sizeTableDO.setHipable(BoolUtil.parseBoolean(hipable)); 
-					sizeTableDO.setChestable(BoolUtil.parseBoolean(chestable));
-					sizeTableDO.setHeightable(BoolUtil.parseBoolean(heightable)) ;
-					sizeTableDO.setShoulderable(BoolUtil.parseBoolean(shoulderable));
-					if (waistlineable) {
-						sizeTableDO.setWaistlineEnd(size.getWaistlineEnd());
-						sizeTableDO.setWaistlineStart(size.getWaistlineStart());
+					if (size.initialable()) {
+						//更新数据
+						PDTSkuSizeTableDO sizeTableDO = BeanUtil.toPDTSkuSizeTableDO(size);
+						
+						sizeTableDO.setSizeName(size.getSizeName());
+						
+						sizeTableDO.setSizeTemplateId(templateDO.getId());
+						sizeTableDO.setWaistlineable(BoolUtil.parseBoolean(sizeTemplate.isWaistlineable())); 
+						sizeTableDO.setWeightable(BoolUtil.parseBoolean(sizeTemplate.isWeightable())); 
+						sizeTableDO.setHipable(BoolUtil.parseBoolean(sizeTemplate.isHipable())); 
+						sizeTableDO.setChestable(BoolUtil.parseBoolean(sizeTemplate.isChestable()));
+						sizeTableDO.setHeightable(BoolUtil.parseBoolean(sizeTemplate.isHeightable())) ;
+						sizeTableDO.setShoulderable(BoolUtil.parseBoolean(sizeTemplate.isShoulderable()));
+						
+						if (sizeTemplate.isWaistlineable()) {
+							sizeTableDO.setWaistlineEnd(size.getWaistlineEnd());
+							sizeTableDO.setWaistlineStart(size.getWaistlineStart());
+						}else {
+							sizeTableDO.setWaistlineEnd(null);
+							sizeTableDO.setWaistlineStart(null);
+						}
+						
+						if (sizeTemplate.isWeightable()) {
+							sizeTableDO.setWeightEnd(size.getWeightEnd());
+							sizeTableDO.setWeightStart(size.getWeightStart());
+						}else{
+							sizeTableDO.setWeightEnd(null);
+							sizeTableDO.setWeightStart(null);
+						}
+						
+						if (sizeTemplate.isHipable()) {
+							sizeTableDO.setHipEnd(size.getHipEnd());
+							sizeTableDO.setHipStart(size.getHipStart());
+						}else{
+							sizeTableDO.setHipEnd(null);
+							sizeTableDO.setHipStart(null);
+						}
+						
+						if (sizeTemplate.isChestable()) {
+							sizeTableDO.setChestEnd(size.getChestEnd());
+							sizeTableDO.setChestStart(size.getChestStart());
+						}else{
+							sizeTableDO.setChestEnd(null);
+							sizeTableDO.setChestStart(null);
+						}
+						
+						if (sizeTemplate.isHeightable()) {
+							sizeTableDO.setHeightEnd(size.getHeightEnd());
+							sizeTableDO.setHeightStart(size.getHeightStart());
+						}else {
+							sizeTableDO.setHeightEnd(null);
+							sizeTableDO.setHeightStart(null);
+						}
+						
+						if (sizeTemplate.isShoulderable()) {
+							sizeTableDO.setShoulderEnd(size.getShoulderEnd());
+							sizeTableDO.setShoulderStart(size.getShoulderStart());
+						}else {
+							sizeTableDO.setShoulderEnd(null);
+							sizeTableDO.setShoulderStart(null);
+						}
+						//写入尺码数据
+						pdtSkuSizeTableDOMapper.updateByPrimaryKey(sizeTableDO);
+					}else{
+						//写入新数据
+						PDTSkuSizeTableDO sizeTableDO = new PDTSkuSizeTableDO();
+						
+						sizeTableDO.setSizeName(size.getSizeName());
+						
+						sizeTableDO.setSizeTemplateId(templateDO.getId());
+						sizeTableDO.setWaistlineable(BoolUtil.parseBoolean(sizeTemplate.isWaistlineable())); 
+						sizeTableDO.setWeightable(BoolUtil.parseBoolean(sizeTemplate.isWeightable())); 
+						sizeTableDO.setHipable(BoolUtil.parseBoolean(sizeTemplate.isHipable())); 
+						sizeTableDO.setChestable(BoolUtil.parseBoolean(sizeTemplate.isChestable()));
+						sizeTableDO.setHeightable(BoolUtil.parseBoolean(sizeTemplate.isHeightable())) ;
+						sizeTableDO.setShoulderable(BoolUtil.parseBoolean(sizeTemplate.isShoulderable()));
+						
+						if (sizeTemplate.isWaistlineable()) {
+							sizeTableDO.setWaistlineEnd(size.getWaistlineEnd());
+							sizeTableDO.setWaistlineStart(size.getWaistlineStart());
+						}else {
+							sizeTableDO.setWaistlineEnd(null);
+							sizeTableDO.setWaistlineStart(null);
+						}
+						
+						if (sizeTemplate.isWeightable()) {
+							sizeTableDO.setWeightEnd(size.getWeightEnd());
+							sizeTableDO.setWeightStart(size.getWeightStart());
+						}else{
+							sizeTableDO.setWeightEnd(null);
+							sizeTableDO.setWeightStart(null);
+						}
+						
+						if (sizeTemplate.isHipable()) {
+							sizeTableDO.setHipEnd(size.getHipEnd());
+							sizeTableDO.setHipStart(size.getHipStart());
+						}else{
+							sizeTableDO.setHipEnd(null);
+							sizeTableDO.setHipStart(null);
+						}
+						
+						if (sizeTemplate.isChestable()) {
+							sizeTableDO.setChestEnd(size.getChestEnd());
+							sizeTableDO.setChestStart(size.getChestStart());
+						}else{
+							sizeTableDO.setChestEnd(null);
+							sizeTableDO.setChestStart(null);
+						}
+						
+						if (sizeTemplate.isHeightable()) {
+							sizeTableDO.setHeightEnd(size.getHeightEnd());
+							sizeTableDO.setHeightStart(size.getHeightStart());
+						}else {
+							sizeTableDO.setHeightEnd(null);
+							sizeTableDO.setHeightStart(null);
+						}
+						
+						if (sizeTemplate.isShoulderable()) {
+							sizeTableDO.setShoulderEnd(size.getShoulderEnd());
+							sizeTableDO.setShoulderStart(size.getShoulderStart());
+						}else {
+							sizeTableDO.setShoulderEnd(null);
+							sizeTableDO.setShoulderStart(null);
+						}
+						//写入尺码数据
+						pdtSkuSizeTableDOMapper.insert(sizeTableDO);
 					}
-					if (weightable) {
-						sizeTableDO.setWeightEnd(size.getWeightEnd());
-						sizeTableDO.setWeightStart(size.getWeightStart());
-					}
-					if (hipable) {
-						sizeTableDO.setHipEnd(size.getHipEnd());
-						sizeTableDO.setHipStart(size.getHipStart());
-					}
-					if (chestable) {
-						sizeTableDO.setChestEnd(size.getChestEnd());
-						sizeTableDO.setChestStart(size.getChestStart());
-					}
-					if (heightable) {
-						sizeTableDO.setHeightEnd(size.getHeightEnd());
-						sizeTableDO.setHeightStart(size.getHeightStart());
-					}
-					if (shoulderable) {
-						sizeTableDO.setShoulderEnd(size.getShoulderEnd());
-						sizeTableDO.setShoulderStart(size.getShoulderStart());
-					}
-					//写入尺码数据
-					pdtSkuSizeTableDOMapper.insert(sizeTableDO);
 				}
-				return getSizeTemplate(templateDO.getId());
 			}
 		});
+		this.defineCommonService.clearProductDefineCache();
 	}
 	
 	/**
@@ -331,7 +439,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				pdtSkuSizeTemplateDOMapper.updateByPrimaryKeyWithBLOBs(model);
 			}
 		});
-		defineCommonService.clearSizeTableCache();
+		defineCommonService.clearProductDefineCache();
 		return getSizeTemplate(id);
 	}
 	
@@ -426,7 +534,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				size.setId(model.getId());
 			}
 		});
-		defineCommonService.clearSizeTableCache();
+		defineCommonService.clearProductDefineCache();
 		return size;
 	}
 	
@@ -486,7 +594,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				pdtSkuSizeTableDOMapper.updateByPrimaryKey(model);
 			}
 		});
-		defineCommonService.clearSizeTableCache();
+		defineCommonService.clearProductDefineCache();
 		return size;
 	}
 	
@@ -512,7 +620,7 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 				}
 			}
 		});
-		defineCommonService.clearSizeTableCache();
+		defineCommonService.clearProductDefineCache();
 	}
 	
 	/* (non-Javadoc)
@@ -602,43 +710,6 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 		return BeanUtil.toSizeTemplate(model);                                                             
 	}               
 	
-//	private SizeTemplate _getSizeTemplateFromRedis(RedisTemplate redisTemplate, final int id) {
-//		MyAssert4Business.notNull(redisTemplate);
-//		final String key = ProductDefineCacheKey.getSizeTemplateKey(id);
-//		redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallback<SizeTemplate>() {
-//			@Override
-//			public SizeTemplate doInRedis(Jedis jedis) {
-//				if (!jedis.exists(key)) {
-//					return null;
-//				}
-//				//load from redis
-//				String[] templateTableDefine = new String[] {
-//					"id",
-//					"templateName",
-//					"templateContent",
-//					"systemable",
-//					"waistlineable",
-//					"weightable",
-//					"chestable",
-//					"heightable",
-//					"shoulderable"
-//				};
-//				List<String> values = jedis.hmget(key, templateTableDefine);
-//				SizeTemplate sizeTemplate = new SizeTemplate();
-//				sizeTemplate.setId(Integer.parseInt(values.get(0)));
-//				sizeTemplate.setTemplateName(values.get(1));
-//				sizeTemplate.setTemplateContent(values.get(2));
-//				sizeTemplate.setSystemable(Boolean.parseBoolean(values.get(3)));
-//				sizeTemplate.setWaistlineable(Boolean.parseBoolean(values.get(4)));
-//				sizeTemplate.setWeightable(Boolean.parseBoolean(values.get(5)));
-//				sizeTemplate.setChestable(Boolean.parseBoolean(values.get(6)));
-//				sizeTemplate.setHeightable(Boolean.parseBoolean(values.get(7)));
-//				sizeTemplate.setShoulderable(Boolean.parseBoolean(values.get(8)));
-//				return null;
-//			}
-//		});
-//	}
-	
 	@Override
 	public Size getSize(final int sizeId) {
 		final String key = PDCache.getSizeKey(sizeId);
@@ -679,6 +750,32 @@ public class SizeServiceImpl extends DefaultBusinessService implements SizeServi
 			throw new IllegalArgumentException();
 		}
 		return loadSizeTemplate;
+	}
+
+	@Override
+	public Collection<Size> getSizes(SizeTemplate sizeTemplate) {
+		MyAssert4Business.objectInitialized(sizeTemplate);
+		List<PDTSkuSizeTableDO> tableDOs = pdtSkuSizeTableDOMapper.selectBySizeTemplateId(sizeTemplate.getId());
+		if (tableDOs == null || tableDOs.size() <=0) {
+			return null;
+		}
+		Collection<Size> sizes = new ArrayList<Size>();
+		for (PDTSkuSizeTableDO model : tableDOs) {
+			Size size = BeanUtil.toSize(model, sizeTemplate);
+			sizes.add(size);
+		}
+		return sizes;
+	}
+
+	@Override
+	public boolean existSizeName(SizeTemplate sizeTemplate, String sizeName) {
+		MyAssert4Business.objectInitialized(sizeTemplate);
+		MyAssert4Business.hasText(sizeName);
+		PDTSkuSizeTableDO model = this.pdtSkuSizeTableDOMapper.selectBySizeTemplateId_SizeName(sizeTemplate.getId(), sizeName);
+		if (model != null) {
+			return true;
+		}
+		return false;
 	}
 	
 }

@@ -65,7 +65,7 @@ public interface SizeService {
 	 * @return
 	 * @throws ObjectDuplicateException
 	 */
-	SizeTemplate updateSizeTemplate(int id, boolean systemable, boolean waistlineable,boolean weightable,boolean hipable,boolean chestable, boolean heightable,boolean shoulderable,@NotEmpty Collection<Size> sizes) throws ObjectDuplicateException, ExistProductsNotAllowWriteException;
+	void updateSizeTemplateInfo(@NotNull SizeTemplate sizeTemplate,@NotEmpty Collection<Size> sizes) throws ObjectDuplicateException, ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 删除尺码模板
@@ -124,10 +124,25 @@ public interface SizeService {
 	Size getSize(int sizeId);
 	
 	/**
+	 * 通过SizeName获取尺码名称
+	 * @param sizeTemplate
+	 * @param sizeName
+	 * @return
+	 */
+	boolean existSizeName(SizeTemplate sizeTemplate, String sizeName);
+	
+	/**
 	 * 获取并验证
 	 * @param id
 	 * @return
 	 */
 	SizeTemplate getSizeTemplateAndValidate(int id);
+	
+	/**
+	 * 获取模板下的Size集合
+	 * @param sizeTemplate
+	 * @return
+	 */
+	Collection<Size> getSizes(SizeTemplate sizeTemplate);
 	
 }

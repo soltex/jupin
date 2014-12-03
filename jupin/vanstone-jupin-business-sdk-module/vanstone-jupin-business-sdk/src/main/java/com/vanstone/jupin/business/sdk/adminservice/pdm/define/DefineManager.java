@@ -6,6 +6,7 @@ package com.vanstone.jupin.business.sdk.adminservice.pdm.define;
 import java.util.Collection;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -56,5 +57,21 @@ public interface DefineManager {
 	 * @throws ExistProductsNotAllowWriteException
 	 */
 	Size updateSize(SizeBean sizeBean) throws ObjectDuplicateException, ExistProductsNotAllowWriteException;
+	
+	/**
+	 * 批量更新尺码信息
+	 * @param sizeTemplateId
+	 * @param systemable
+	 * @param waistlineable
+	 * @param weightable
+	 * @param hipable
+	 * @param chestable
+	 * @param heightable
+	 * @param shoulderable
+	 * @param sizeBeans
+	 * @throws ObjectDuplicateException
+	 * @throws ExistProductsNotAllowWriteException
+	 */
+	void updateSizes(int sizeTemplateId, boolean systemable,boolean waistlineable,boolean weightable,boolean hipable,boolean chestable,boolean heightable,boolean shoulderable,@Null Collection<SizeBean> sizeBeans) throws ObjectDuplicateException, ExistProductsNotAllowWriteException;
 	
 }

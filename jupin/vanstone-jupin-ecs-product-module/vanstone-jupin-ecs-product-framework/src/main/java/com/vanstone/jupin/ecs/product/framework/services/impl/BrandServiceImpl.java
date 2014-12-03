@@ -20,14 +20,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.validation.annotation.Validated;
 
 import redis.clients.jedis.Jedis;
 
 import com.google.gson.Gson;
-import com.vanstone.business.MyAssert4Business;
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.common.util.PinyinUtil;
 import com.vanstone.framework.business.services.DefaultBusinessService;
@@ -39,7 +37,7 @@ import com.vanstone.jupin.common.util.ZKUtil;
 import com.vanstone.jupin.ecs.product.GsonCreatorOfPD;
 import com.vanstone.jupin.ecs.product.PDCache;
 import com.vanstone.jupin.ecs.product.define.Brand;
-import com.vanstone.jupin.ecs.product.define.ProductCategory;
+import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 import com.vanstone.jupin.ecs.product.define.services.BrandService;
 import com.vanstone.jupin.ecs.product.define.services.CategoryMustLeafNodeException;
 import com.vanstone.jupin.ecs.product.define.services.DefineCommonService;
@@ -47,7 +45,6 @@ import com.vanstone.jupin.ecs.product.define.services.ExistProductsNotAllowWrite
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTBrandDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTCategoryBrandRelDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTBrandDO;
-import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryBrandRelDOKey;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.QueryBrandStatResultMap;
 import com.vanstone.jupin.framework.cache.JupinRedisRef;
 import com.vanstone.redis.RedisCallback;
@@ -99,30 +96,30 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 		return brand;
 	}
 	
-	@Override
-	public Brand addBrand(final Brand brand, final Collection<ProductCategory> productCategories) throws CategoryMustLeafNodeException, ObjectDuplicateException {
-		PDTBrandDO tempModel = this.pdtBrandDOMapper.selectByBrandName(brand.getBrandName());
-		if (tempModel != null) {
-			throw new ObjectDuplicateException();
-		}
-		_validateProdudctCategories(productCategories);
-		return this.execute(new TransactionCallback<Brand>() {
-			@Override
-			public Brand doInTransaction(TransactionStatus arg0) {
-				PDTBrandDO model  = BeanUtil.toPDTBrandDO(brand);
-				pdtBrandDOMapper.insert(model);
-				brand.setId(model.getId());
-				for (ProductCategory category : productCategories) {
-					PDTCategoryBrandRelDOKey key = new PDTCategoryBrandRelDOKey();
-					key.setBrandId(brand.getId());
-					key.setCategoryId(category.getId());
-					pdtCategoryBrandRelDOMapper.insert(key);
-				}
-				defineCommonService.clearProductDefineCache();
-				return brand;
-			}
-		});
-	}
+//	@Override
+//	public Brand addBrand(final Brand brand, final Collection<ProductCategoryDetail> productCategories) throws CategoryMustLeafNodeException, ObjectDuplicateException {
+//		PDTBrandDO tempModel = this.pdtBrandDOMapper.selectByBrandName(brand.getBrandName());
+//		if (tempModel != null) {
+//			throw new ObjectDuplicateException();
+//		}
+//		_validateProdudctCategories(productCategories);
+//		return this.execute(new TransactionCallback<Brand>() {
+//			@Override
+//			public Brand doInTransaction(TransactionStatus arg0) {
+//				PDTBrandDO model  = BeanUtil.toPDTBrandDO(brand);
+//				pdtBrandDOMapper.insert(model);
+//				brand.setId(model.getId());
+//				for (ProductCategoryDetail category : productCategories) {
+//					PDTCategoryBrandRelDOKey key = new PDTCategoryBrandRelDOKey();
+//					key.setBrandId(brand.getId());
+//					key.setCategoryId(category.getId());
+//					pdtCategoryBrandRelDOMapper.insert(key);
+//				}
+//				defineCommonService.clearProductDefineCache();
+//				return brand;
+//			}
+//		});
+//	}
 	
 	/**
 	 * 验证节点 
@@ -130,22 +127,22 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	 * @return
 	 * @throws CategoryMustLeafNodeException
 	 */
-	private void _validateProdudctCategories(Collection<ProductCategory> productCategories) throws CategoryMustLeafNodeException {
-		if (productCategories == null || productCategories.size() <=0) {
-			return;
-		}
-		Collection<Integer> productCategoryIds = new ArrayList<Integer>();
-		for (ProductCategory category : productCategories) {
-			if (!category.isLeafable()) {
-				throw new CategoryMustLeafNodeException();
-			}
-			if (productCategoryIds.contains(category.getId())) {
-				LOG.error("Duplicate category id has been contain, {}" , category.getId());
-				throw new IllegalArgumentException("Duplicate category id has been contain");
-			}
-			productCategoryIds.add(category.getId());
-		}
-	}
+//	private void _validateProdudctCategories(Collection<ProductCategoryDetail> productCategories) throws CategoryMustLeafNodeException {
+//		if (productCategories == null || productCategories.size() <=0) {
+//			return;
+//		}
+//		Collection<Integer> productCategoryIds = new ArrayList<Integer>();
+//		for (ProductCategoryDetail category : productCategories) {
+//			if (!category.isLeafable()) {
+//				throw new CategoryMustLeafNodeException();
+//			}
+//			if (productCategoryIds.contains(category.getId())) {
+//				LOG.error("Duplicate category id has been contain, {}" , category.getId());
+//				throw new IllegalArgumentException("Duplicate category id has been contain");
+//			}
+//			productCategoryIds.add(category.getId());
+//		}
+//	}
 	
 	@Override
 	public Brand getBrand(final int id) {
@@ -302,12 +299,12 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	}
 	
 	@Override
-	public Collection<Brand> getBrandsWithStat(ProductCategory productCategory, String key, int offset, int limit) {
+	public Collection<Brand> getBrandsWithStat(ProductCategoryDetail productCategory, String key, int offset, int limit) {
 		Integer[] categoryIDs = null;
 		if (productCategory != null) {
 			Set<Integer> tempIDs = new LinkedHashSet<Integer>();
 			if (productCategory.getAllChildProductCategories() != null && productCategory.getAllChildProductCategories().size() >0) {
-				for (ProductCategory pc : productCategory.getAllChildProductCategories()) {
+				for (ProductCategoryDetail pc : productCategory.getAllChildProductCategories()) {
 					tempIDs.add(pc.getId());
 				}
 			}
@@ -327,12 +324,12 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 	}
 	
 	@Override
-	public int getTotalBrands(ProductCategory productCategory, String key) {
+	public int getTotalBrands(ProductCategoryDetail productCategory, String key) {
 		Integer[] categoryIDs = null;
 		if (productCategory != null) {
 			Set<Integer> tempIDs = new LinkedHashSet<Integer>();
 			if (productCategory.getAllChildProductCategories() != null && productCategory.getAllChildProductCategories().size() >0) {
-				for (ProductCategory pc : productCategory.getAllChildProductCategories()) {
+				for (ProductCategoryDetail pc : productCategory.getAllChildProductCategories()) {
 					tempIDs.add(pc.getId());
 				}
 			}
@@ -353,49 +350,6 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 			brands.add(BeanUtil.toBrand(model));
 		}
 		return brands;
-	}
-	
-	@Override
-	public void appendBrandToProductCategory(final ProductCategory productCategory, final Brand brand) throws ObjectDuplicateException, CategoryMustLeafNodeException {
-		MyAssert4Business.objectInitialized(productCategory);
-		MyAssert4Business.objectInitialized(brand);
-		if (!productCategory.isLeafable()) {
-			throw new CategoryMustLeafNodeException();
-		}
-		PDTCategoryBrandRelDOKey relDOKey = this.pdtCategoryBrandRelDOMapper.selectByPrimaryKey(productCategory.getId(), brand.getId());
-		if (relDOKey != null) {
-			throw new ObjectDuplicateException();
-		}
-		this.execute(new TransactionCallbackWithoutResult() {
-			@Override
-			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
-				PDTCategoryBrandRelDOKey model = new PDTCategoryBrandRelDOKey();
-				model.setBrandId(brand.getId());
-				model.setCategoryId(productCategory.getId());
-				pdtCategoryBrandRelDOMapper.insert(model);
-			}
-		});
-		this.defineCommonService.clearProductDefineCache();
-	}
-	
-	@Override
-	public void deleteBrandFromProductCategory(final ProductCategory productCategory, final Brand brand) throws ExistProductsNotAllowWriteException {
-		MyAssert4Business.objectInitialized(productCategory);
-		MyAssert4Business.objectInitialized(brand);
-		PDTCategoryBrandRelDOKey relDOKey = this.pdtCategoryBrandRelDOMapper.selectByPrimaryKey(productCategory.getId(), brand.getId());
-		if (relDOKey != null) {
-			throw new IllegalArgumentException();
-		}
-		this.execute(new TransactionCallbackWithoutResult() {
-			@Override
-			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
-				PDTCategoryBrandRelDOKey key = new PDTCategoryBrandRelDOKey();
-				key.setCategoryId(productCategory.getId());
-				key.setBrandId(brand.getId());
-				pdtCategoryBrandRelDOMapper.deleteByPrimaryKey(key);
-			}
-		});
-		this.defineCommonService.clearProductDefineCache();
 	}
 	
 }

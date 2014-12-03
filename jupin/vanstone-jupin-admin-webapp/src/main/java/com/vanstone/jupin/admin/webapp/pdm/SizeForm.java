@@ -3,6 +3,7 @@
  */
 package com.vanstone.jupin.admin.webapp.pdm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vanstone.jupin.admin.webapp.AdminBaseForm;
@@ -20,47 +21,47 @@ public class SizeForm extends AdminBaseForm {
 	/** 模板内容 */
 	private String templateContent;
 	/** 尺码名称 */
-	private List<String> sizeNames;
+	private List<String> sizeNames = new ArrayList<String>();
 	private String sizeName;
 	/** 腰围 */
 	private boolean waistlineable = false;
-	private List<Integer> waistlineStarts;
-	private List<Integer> waistlineEnds;
+	private List<Integer> waistlineStarts = new ArrayList<Integer>();
+	private List<Integer> waistlineEnds = new ArrayList<Integer>();
 	private Integer waistlineStart;
 	private Integer waistlineEnd;
 	/** 体重 */
 	private boolean weightable = false;
-	private List<Integer> weightStarts;
-	private List<Integer> weightEnds;
+	private List<Integer> weightStarts = new ArrayList<Integer>();
+	private List<Integer> weightEnds = new ArrayList<Integer>();
 	private Integer weightStart;
 	private Integer weightEnd;
 	/** 臀围 */
 	private boolean hipable = false;
-	private List<Integer> hipStarts;
-	private List<Integer> hipEnds;
+	private List<Integer> hipStarts = new ArrayList<Integer>();
+	private List<Integer> hipEnds = new ArrayList<Integer>();
 	private Integer hipStart;
 	private Integer hipEnd;
 	/** 胸围 */
 	private boolean chestable;
-	private List<Integer> chestStarts;
-	private List<Integer> chestEnds;
+	private List<Integer> chestStarts = new ArrayList<Integer>();
+	private List<Integer> chestEnds = new ArrayList<Integer>();
 	private Integer chestStart;
 	private Integer chestEnd;
 	/** 身高 */
 	private boolean heightable;
-	private List<Integer> heightStarts;
-	private List<Integer> heightEnds;
+	private List<Integer> heightStarts = new ArrayList<Integer>();
+	private List<Integer> heightEnds = new ArrayList<Integer>();
 	private Integer heightStart;
 	private Integer heightEnd;
 	/** 肩宽 */
 	private boolean shoulderable = false;
-	private List<Integer> shoulderStarts;
-	private List<Integer> shoulderEnds;
+	private List<Integer> shoulderStarts = new ArrayList<Integer>();
+	private List<Integer> shoulderEnds = new ArrayList<Integer>();
 	private Integer shoulderStart;
 	private Integer shoulderEnd;
 
 	private Integer sizeId;
-	private List<Integer> sizeIds;
+	private List<Integer> sizeIds = new ArrayList<Integer>();
 
 	public Integer getSizeTemplateId() {
 		return sizeTemplateId;

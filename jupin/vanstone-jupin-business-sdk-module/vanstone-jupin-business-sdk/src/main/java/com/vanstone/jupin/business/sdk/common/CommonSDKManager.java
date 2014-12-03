@@ -3,6 +3,7 @@
  */
 package com.vanstone.jupin.business.sdk.common;
 
+import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Color;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
@@ -33,5 +34,12 @@ public interface CommonSDKManager {
 	 * @return
 	 */
 	Size getSizeAndValidate(int id);
+	
+	/**
+	 * 获取品牌信息并验证
+	 * @param id
+	 * @return
+	 */
+	Brand getBrandAndValidate(int id);
 	
 }

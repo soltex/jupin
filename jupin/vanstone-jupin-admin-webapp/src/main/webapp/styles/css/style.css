@@ -17,11 +17,12 @@ body {
     font-size: 12px;
     left: 50%;
     margin-left: -45%;
-    position: absolute;
+    position: fixed;
     text-align: center;
     top: 57px;
     width: 90%;
-    z-index: 10;
+    z-index: 100000;
+    
 }
 
 #data_loading .inner {

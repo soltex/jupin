@@ -117,5 +117,56 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 		size.setId(sizeBean.getId());
 		return this.sizeService.updateSize(size);
 	}
-	
+
+	@Override
+	public void updateSizes(int sizeTemplateId, boolean systemable,boolean waistlineable, boolean weightable, boolean hipable, boolean chestable, boolean heightable, boolean shoulderable,
+			Collection<SizeBean> sizeBeans) throws ObjectDuplicateException, ExistProductsNotAllowWriteException {
+		SizeTemplate sizeTemplate = this.sizeService.getSizeTemplate(sizeTemplateId);
+		if (sizeTemplate == null) {
+			throw new IllegalArgumentException();
+		}
+		for (SizeBean sizeBean : sizeBeans) {
+			if (sizeBean.getId() != null) {
+				Size size = this.sizeService.getSize(sizeBean.getId());
+				if (size == null) {
+					throw new IllegalArgumentException();
+				}
+			}
+		}
+		sizeTemplate.setSystemable(systemable);
+		sizeTemplate.setWaistlineable(waistlineable);
+		sizeTemplate.setWeightable(weightable);
+		sizeTemplate.setHipable(hipable);
+		sizeTemplate.setChestable(chestable);
+		sizeTemplate.setHeightable(heightable);
+		sizeTemplate.setShoulderable(shoulderable);
+		Collection<Size> sizes = new ArrayList<Size>();
+		for (SizeBean bean : sizeBeans) {
+			Size size = new Size();
+			size.setId(bean.getId());
+			size.setSizeName(bean.getSizeName());
+			
+			size.setWaistlineStart(bean.getWaistlineStart());
+			size.setWaistlineEnd(bean.getWaistlineEnd());
+			
+			size.setWeightStart(bean.getWeightStart());
+			size.setWeightEnd(bean.getWeightEnd());
+			
+			size.setHipStart(bean.getHipStart());
+			size.setHipEnd(bean.getHipEnd());
+			
+			size.setChestStart(bean.getChestStart());
+			size.setChestEnd(bean.getChestEnd());
+			
+			size.setHeightStart(bean.getHeightStart());
+			size.setHeightEnd(bean.getHeightEnd());
+			
+			size.setShoulderStart(bean.getShoulderStart());
+			size.setShoulderEnd(bean.getShoulderEnd());
+			
+			sizes.add(size);
+		}
+		this.sizeService.updateSizeTemplateInfo(sizeTemplate, sizes);
+	}
+
 }

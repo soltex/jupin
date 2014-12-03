@@ -107,18 +107,23 @@
 
 	function save(form) {
 		var $form = $(form);
+		var isok = true;
 		$(".required").each(function(i) {
 			if (!$(this).attr('disabled')) {
 				if ($(this).val() == '' || $(this).val() == null) {
-					alert('请填写全部选项');
-					return false;
+					isok = false;
+					return ;
 				}
 			}
 		});
-		var action = $form.attr("action");
-		$.post(action,$form.serialize(),function(data) {
-			DWZ.ajaxDone(data);
-		}, 'json');
+		if (isok) {
+			var action = $form.attr("action");
+			$.post(action,$form.serialize(),function(data) {
+				DWZ.ajaxDone(data);
+			}, 'json');
+		} else {
+			alert('请填写全部选项');
+		}
 		return false;
 	}
 </script>

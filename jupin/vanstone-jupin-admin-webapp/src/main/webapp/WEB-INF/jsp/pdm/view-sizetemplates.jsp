@@ -7,8 +7,8 @@
 
 
 <div class="row">
-	<div class="col-md-3">
-		<div class="list-group">
+	<div class="col-md-2">
+		<div class="list-group" style="position: fixed;">
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>品类定义管理</a>
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>商品属性定义管理</a>
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>品牌信息管理</a>
@@ -16,10 +16,9 @@
 			<a href="/pdm/view-sizetemplates" class="list-group-item active"><span class="glyphicon glyphicon-arrow-right"></span>SKU尺码模板管理</a>
 		</div>
 	</div>
-	<div class="col-md-9">
+	<div class="col-md-10">
 		<h2>SKU尺码模板定义</h2>
 		<a href="/pdm/add-sizetemplate" class="btn btn-default" data-toggle="modal" data-target="#modal-dialog">新建尺码模板</a>
-		
 		<p></p>
 		
 		
@@ -28,7 +27,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<span class="badge">${bean.sizeTemplate.id}</span>
-					${bean.sizeTemplate.templateName }
+					<span class="badge">${bean.sizeTemplate.templateName }</span>
 					<a href="/pdm/delete-sizetemplate-action/${bean.sizeTemplate.id }" class="btn btn-default" data-todo="ajaxTodo" title="确认删除当前项？">删除</a>
 					<a href="/pdm/update-base-sizetemplate/${bean.sizeTemplate.id }" class="btn btn-default" data-toggle="modal" data-target="#modal-dialog">编辑基本信息</a>
 					<a href="/pdm/add-size/${bean.sizeTemplate.id }" class="btn btn-default" data-toggle="modal" data-target="#modal-dialog">新建尺码</a>
@@ -69,7 +68,7 @@
 						</c:forEach>
 					</tbody>
 				</table>
-				<div class="panel-footer"><a href="" class="btn btn-default" data-toggle="modal" data-target="#modal-dialog">批量修改尺码信息</a></div>
+				<div class="panel-footer"><a href="/pdm/update-all-sizeinfos/${bean.sizeTemplate.id }" class="btn btn-default" data-toggle="modal" data-target="#modal-dialog">批量修改尺码信息</a></div>
 			</div>
 		</c:forEach>
 	</div>

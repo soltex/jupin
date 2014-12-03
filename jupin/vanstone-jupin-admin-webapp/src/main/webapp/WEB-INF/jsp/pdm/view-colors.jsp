@@ -7,8 +7,8 @@
 
 
 <div class="row">
-	<div class="col-md-3">
-		<div class="list-group">
+	<div class="col-md-2">
+		<div class="list-group" style="position: fixed;">
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>品类定义管理</a>
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>商品属性定义管理</a>
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>品牌信息管理</a>
@@ -16,7 +16,7 @@
 			<a href="/pdm/view-sizetemplates" class="list-group-item" data-ajax data-history><span class="glyphicon glyphicon-arrow-right"></span>SKU尺码模板管理</a>
 		</div>
 	</div>
-	<div class="col-md-9">
+	<div class="col-md-10">
 		<h2>SKU颜色库定义</h2>
 		<form:form action="/pdm/add-color-action" method="post" commandName="colorForm" cssClass="required-validate">
 			<div class="form-group">

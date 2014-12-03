@@ -37,13 +37,15 @@ import com.vanstone.jupin.common.util.InterProcessMutexCallback;
 import com.vanstone.jupin.common.util.ZKUtil;
 import com.vanstone.jupin.ecs.product.GsonCreatorOfPD;
 import com.vanstone.jupin.ecs.product.PDCache;
+import com.vanstone.jupin.ecs.product.define.BasicProductCategory;
 import com.vanstone.jupin.ecs.product.define.Brand;
-import com.vanstone.jupin.ecs.product.define.ProductCategory;
+import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
 import com.vanstone.jupin.ecs.product.define.attribute.Attr4Enum;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
 import com.vanstone.jupin.ecs.product.define.services.AttributeService;
 import com.vanstone.jupin.ecs.product.define.services.CategoryHasChildCategoriesException;
+import com.vanstone.jupin.ecs.product.define.services.CategoryMustLeafNodeException;
 import com.vanstone.jupin.ecs.product.define.services.CategoryService;
 import com.vanstone.jupin.ecs.product.define.services.DefineCommonService;
 import com.vanstone.jupin.ecs.product.define.services.ExistProductsNotAllowWriteException;
@@ -52,9 +54,11 @@ import com.vanstone.jupin.ecs.product.framework.persistence.PDTAttributeDefDOMap
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTAttributeEnumvalueDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTBrandDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTCategoryAttributeDefRelDOMapper;
+import com.vanstone.jupin.ecs.product.framework.persistence.PDTCategoryBrandRelDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTCategoryDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTBrandDO;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryAttributeDefRelDO;
+import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryBrandRelDOKey;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryDO;
 import com.vanstone.jupin.ecs.product.framework.serializer.PDAttributeSerializer;
 import com.vanstone.jupin.framework.cache.JupinRedisRef;
@@ -90,6 +94,9 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	private PDTAttributeDefDOMapper pdtAttributeDefDOMapper;
 	@Autowired
 	private PDTAttributeEnumvalueDOMapper pdtAttributeEnumvalueDOMapper;
+	@Autowired
+	private PDTCategoryBrandRelDOMapper pdtCategoryBrandRelDOMapper;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -97,7 +104,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	 * addProductCategory(com.vanstone.jupin.productdefine.ProductCategory)
 	 */
 	@Override
-	public ProductCategory addProductCategory(@NotNull final ProductCategory productCategory)
+	public ProductCategoryDetail addProductCategory(@NotNull final ProductCategoryDetail productCategory)
 			throws ExistProductsNotAllowWriteException {
 		if (productCategory.getParentProductCategory() != null && productCategory.getParentProductCategory().isExistProduct()) {
 			throw new ExistProductsNotAllowWriteException();
@@ -129,7 +136,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	 * java.util.Collection)
 	 */
 	@Override
-	public ProductCategory addProductCategory(@NotNull final ProductCategory productCategory,
+	public ProductCategoryDetail addProductCategory(@NotNull final ProductCategoryDetail productCategory,
 			final Collection<AbstractAttribute> attributes) throws ExistProductsNotAllowWriteException {
 		if (productCategory.getParentProductCategory() != null
 				&& productCategory.getParentProductCategory().isExistProduct()) {
@@ -172,18 +179,18 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	 * getProductCategoryDetail(int)
 	 */
 	@Override
-	public ProductCategory getProductCategoryDetail(final int id) {
+	public ProductCategoryDetail getProductCategoryDetail(final int id) {
 		final String key = PDCache.getCategoryKey(id);
 		
-		ProductCategory loadProductCategory = this.redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallback<ProductCategory>() {
+		ProductCategoryDetail loadProductCategory = this.redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallback<ProductCategoryDetail>() {
 			@Override
-			public ProductCategory doInRedis(Jedis jedis) {
+			public ProductCategoryDetail doInRedis(Jedis jedis) {
 				String value = jedis.get(key);
 				if (value == null || value.equals("")) {
 					return null;
 				}
 				Gson gson = new GsonBuilder().registerTypeAdapter(AbstractAttribute.class	, new PDAttributeSerializer()).disableHtmlEscaping().create();
-				ProductCategory pc = gson.fromJson(value, ProductCategory.class);
+				ProductCategoryDetail pc = gson.fromJson(value, ProductCategoryDetail.class);
 				return pc;
 			}
 		});
@@ -192,10 +199,10 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 			return loadProductCategory;
 		}
 		
-		return ZKUtil.executeMutex(key, new InterProcessMutexCallback<ProductCategory>() {
+		return ZKUtil.executeMutex(key, new InterProcessMutexCallback<ProductCategoryDetail>() {
 
 			@Override
-			public ProductCategory doInAcquireMutex(CuratorFramework curatorFramework) {
+			public ProductCategoryDetail doInAcquireMutex(CuratorFramework curatorFramework) {
 				PDTCategoryDO model = pdtCategoryDOMapper.selectByPrimaryKey(id);
 				if (model == null) {
 					return null;
@@ -204,31 +211,31 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 				if (model.getSizeTemplateId() != null) {
 					sizeTemplate = sizeService.getSizeTemplate(model.getSizeTemplateId());
 				}
-				ProductCategory parentProductCategory = null;
+				ProductCategoryDetail parentProductCategory = null;
 				if (model.getParentId() != null) {
 					PDTCategoryDO parentCategoryDO = pdtCategoryDOMapper.selectByPrimaryKey(model.getParentId());
 					parentProductCategory = BeanUtil.toProductCategory(parentCategoryDO, null, null);
 				}
 				
-				final ProductCategory productCategory = BeanUtil.toProductCategory(model, parentProductCategory, sizeTemplate);
+				final ProductCategoryDetail productCategory = BeanUtil.toProductCategory(model, parentProductCategory, sizeTemplate);
 				
 				//leaf categories , child categories , all child categories
-				Collection<ProductCategory> leafProductCategories = _loadLeafProductCategoriesFromDB(id);
+				Collection<ProductCategoryDetail> leafProductCategories = _loadLeafProductCategoriesFromDB(id);
 				productCategory.addLeafProductCategories(leafProductCategories);
 				
-				Collection<ProductCategory> childProductCategories = _loadChildProductCategoriesFromDB(id);
+				Collection<ProductCategoryDetail> childProductCategories = _loadChildProductCategoriesFromDB(id);
 				productCategory.addChildProductCategories(childProductCategories);
 				
-				Collection<ProductCategory> allChildProductCategories = _loadAllChildProductCategoriesFromDB(id);
+				Collection<ProductCategoryDetail> allChildProductCategories = _loadAllChildProductCategoriesFromDB(id);
 				productCategory.addAllChildProductCategories(allChildProductCategories);
 				
-				Collection<ProductCategory> productCategoriesNodePath = _loadProductCategoryNodePathFromDB(id);
+				Collection<ProductCategoryDetail> productCategoriesNodePath = _loadProductCategoryNodePathFromDB(id);
 				productCategory.addProductCategoriesNodePath(productCategoriesNodePath);
 				
 				//allCategoryIDs
 				Collection<Integer> allCategoryIDs = new ArrayList<Integer>();
 				if (allChildProductCategories != null && allChildProductCategories.size() >0) {
-					for (ProductCategory pc : allChildProductCategories) {
+					for (ProductCategoryDetail pc : allChildProductCategories) {
 						allCategoryIDs.add(pc.getId());
 					}
 				}
@@ -266,7 +273,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 			}
 			
 			@Override
-			public ProductCategory doInNotAcquireMutex(CuratorFramework curatorFramework) {
+			public ProductCategoryDetail doInNotAcquireMutex(CuratorFramework curatorFramework) {
 				try {
 					TimeUnit.SECONDS.sleep(Constants.ZK_BUSINESS_EXECUTE_WAITING_TIME);
 				} catch (InterruptedException e) {
@@ -278,18 +285,18 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 		});
 	}
 	
-	private Collection<ProductCategory> _loadLeafProductCategoriesFromDB(int categoryID) {
+	private Collection<ProductCategoryDetail> _loadLeafProductCategoriesFromDB(int categoryID) {
 		List<PDTCategoryDO> models = this.pdtCategoryDOMapper.selectByParentID(categoryID);
 		if (models == null || models.size() <=0) {
 			return null;
 		}
-		Collection<ProductCategory> leafCategories = new ArrayList<ProductCategory>();
+		Collection<ProductCategoryDetail> leafCategories = new ArrayList<ProductCategoryDetail>();
 		for (PDTCategoryDO m : models) {
 			if (m.getLeafable().equals(BoolUtil.parseBoolean(true))) {
 				leafCategories.add(BeanUtil.toProductCategory(m, null, null));
 				continue;
 			}
-			Collection<ProductCategory> temp_pcs = _loadLeafProductCategoriesFromDB(m.getId());
+			Collection<ProductCategoryDetail> temp_pcs = _loadLeafProductCategoriesFromDB(m.getId());
 			if (temp_pcs != null && temp_pcs.size() >0) {
 				leafCategories.addAll(temp_pcs);
 			}
@@ -297,30 +304,30 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 		return leafCategories;
 	}
 	
-	private Collection<ProductCategory> _loadChildProductCategoriesFromDB(int categoryID) {
+	private Collection<ProductCategoryDetail> _loadChildProductCategoriesFromDB(int categoryID) {
 		List<PDTCategoryDO> models = this.pdtCategoryDOMapper.selectByParentID(categoryID);
 		if (models == null || models.size() <=0) {
 			return null;
 		}
-		Collection<ProductCategory> pcs = new ArrayList<ProductCategory>();
+		Collection<ProductCategoryDetail> pcs = new ArrayList<ProductCategoryDetail>();
 		for (PDTCategoryDO m : models) {
 			pcs.add(BeanUtil.toProductCategory(m, null, null));
 		}
 		return pcs;
 	}
 	
-	private Collection<ProductCategory> _loadAllChildProductCategoriesFromDB(int categoryID) {
+	private Collection<ProductCategoryDetail> _loadAllChildProductCategoriesFromDB(int categoryID) {
 		List<PDTCategoryDO> models = this.pdtCategoryDOMapper.selectByParentID(categoryID);
 		if (models == null || models.size() <=0) {
 			return null;
 		}
-		Collection<ProductCategory> childCategories = new ArrayList<ProductCategory>();
+		Collection<ProductCategoryDetail> childCategories = new ArrayList<ProductCategoryDetail>();
 		for (PDTCategoryDO m : models) {
 			childCategories.add(BeanUtil.toProductCategory(m, null, null));
 			if (m.getLeafable().equals(BoolUtil.parseBoolean(true))) {
 				continue;
 			}
-			Collection<ProductCategory> temp_pcs = _loadAllChildProductCategoriesFromDB(m.getId());
+			Collection<ProductCategoryDetail> temp_pcs = _loadAllChildProductCategoriesFromDB(m.getId());
 			if (temp_pcs != null && temp_pcs.size() >0) {
 				childCategories.addAll(temp_pcs);
 			}
@@ -328,12 +335,12 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 		return childCategories;
 	}
 	
-	private Collection<ProductCategory> _loadProductCategoryNodePathFromDB(int categoryID) {
+	private Collection<ProductCategoryDetail> _loadProductCategoryNodePathFromDB(int categoryID) {
 		PDTCategoryDO categoryDO = this.pdtCategoryDOMapper.selectByPrimaryKey(categoryID);
 		if (categoryDO == null) {
 			throw new IllegalArgumentException();
 		}
-		Collection<ProductCategory> pcs = new ArrayList<ProductCategory>();
+		Collection<ProductCategoryDetail> pcs = new ArrayList<ProductCategoryDetail>();
 		pcs.add(BeanUtil.toProductCategory(categoryDO, null, null));
 		Integer parentID = categoryDO.getParentId();
 		while (parentID != null) {
@@ -344,7 +351,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 			pcs.add(BeanUtil.toProductCategory(tempModel, null, null));
 			parentID = tempModel.getParentId();
 		}
-		ProductCategory[] tempArray = pcs.toArray(new ProductCategory[pcs.size()]);
+		ProductCategoryDetail[] tempArray = pcs.toArray(new ProductCategoryDetail[pcs.size()]);
 		CollectionUtils.reverseArray(tempArray);
 		pcs.clear();
 		Collections.addAll(pcs, tempArray);
@@ -414,36 +421,36 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	}
 	
 	@Override
-	public ProductCategory getProductCategoryDetailAndValidate(int id) {
-		ProductCategory productCategory = this.getProductCategoryDetail(id);
+	public ProductCategoryDetail getProductCategoryDetailAndValidate(int id) {
+		ProductCategoryDetail productCategory = this.getProductCategoryDetail(id);
 		MyAssert4Business.notNull(productCategory);
 		return productCategory;
 	}
 	
 	@Override
-	public Collection<ProductCategory> getProductCategoriesOfLevel1() {
+	public Collection<ProductCategoryDetail> getProductCategoriesOfLevel1() {
 		final String key = PDCache.PRODUCT_CATEGORY_ROOT_NODE;
-		Collection<ProductCategory> loadProductCategories = this.redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallback<Collection<ProductCategory>>() {
+		Collection<ProductCategoryDetail> loadProductCategories = this.redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallback<Collection<ProductCategoryDetail>>() {
 			@Override
-			public Collection<ProductCategory> doInRedis(Jedis jedis) {
+			public Collection<ProductCategoryDetail> doInRedis(Jedis jedis) {
 				String value = jedis.get(key);
 				if (value == null || value.equals("")) {
 					return null;
 				}
 				Gson gson = GsonCreatorOfPD.create();
-				return gson.fromJson(value, new TypeToken<List<ProductCategory>>(){private static final long serialVersionUID = 5637975477897724892L;}.getType());}
+				return gson.fromJson(value, new TypeToken<List<ProductCategoryDetail>>(){private static final long serialVersionUID = 5637975477897724892L;}.getType());}
 		});
 		if (loadProductCategories != null) {
 			return loadProductCategories;
 		}
-		final Collection<ProductCategory> loadProductCategories1 = ZKUtil.executeMutex(key, new InterProcessMutexCallback<Collection<ProductCategory>>() {
+		final Collection<ProductCategoryDetail> loadProductCategories1 = ZKUtil.executeMutex(key, new InterProcessMutexCallback<Collection<ProductCategoryDetail>>() {
 			@Override
-			public Collection<ProductCategory> doInAcquireMutex(CuratorFramework curatorFramework) {
+			public Collection<ProductCategoryDetail> doInAcquireMutex(CuratorFramework curatorFramework) {
 				List<Integer> ids = pdtCategoryDOMapper.selectLevel1Category();
 				if (ids == null || ids.size() <=0) {
 					return null;
 				}
-				Collection<ProductCategory> pcs = new ArrayList<ProductCategory>();
+				Collection<ProductCategoryDetail> pcs = new ArrayList<ProductCategoryDetail>();
 				for (Integer id : ids) {
 					pcs.add(getProductCategoryDetail(id));
 				}
@@ -451,7 +458,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 			}
 			
 			@Override
-			public Collection<ProductCategory> doInNotAcquireMutex(CuratorFramework curatorFramework) {
+			public Collection<ProductCategoryDetail> doInNotAcquireMutex(CuratorFramework curatorFramework) {
 				try {
 					TimeUnit.SECONDS.sleep(Constants.ZK_BUSINESS_EXECUTE_WAITING_TIME);
 				} catch (InterruptedException e) {
@@ -479,8 +486,8 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	 * java.lang.String, java.lang.String, java.lang.Integer)
 	 */
 	@Override
-	public ProductCategory updateBaseProductCategoryInfo(final int id, final String categoryName, final String description, final String categoryBindPage, final String formTemplate, final Integer sort) throws ExistProductsNotAllowWriteException {
-		ProductCategory loadProductCategory = this.getProductCategoryDetailAndValidate(id);
+	public ProductCategoryDetail updateBaseProductCategoryInfo(final int id, final String categoryName, final String description, final String categoryBindPage, final String formTemplate, final Integer sort) throws ExistProductsNotAllowWriteException {
+		ProductCategoryDetail loadProductCategory = this.getProductCategoryDetailAndValidate(id);
 		if (loadProductCategory.isExistProduct()) {
 			throw new ExistProductsNotAllowWriteException();
 		}
@@ -495,10 +502,10 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	}
 	
 	@Override
-	public ProductCategory updateParentProductCategory(final int id, final Integer parentCategoryID) throws ExistProductsNotAllowWriteException{
-		final ProductCategory loadProductCategory = this.getProductCategoryDetailAndValidate(id);
-		final ProductCategory oldParentProductCategory = loadProductCategory.getParentProductCategory();
-		final ProductCategory loadParentProductCategory = parentCategoryID != null ? this.getProductCategoryDetailAndValidate(parentCategoryID) : null;
+	public ProductCategoryDetail updateParentProductCategory(final int id, final Integer parentCategoryID) throws ExistProductsNotAllowWriteException{
+		final ProductCategoryDetail loadProductCategory = this.getProductCategoryDetailAndValidate(id);
+		final ProductCategoryDetail oldParentProductCategory = loadProductCategory.getParentProductCategory();
+		final ProductCategoryDetail loadParentProductCategory = parentCategoryID != null ? this.getProductCategoryDetailAndValidate(parentCategoryID) : null;
 		if (loadProductCategory.isExistProduct()) {
 			throw new ExistProductsNotAllowWriteException();
 		}
@@ -532,8 +539,8 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	 * com.vanstone.jupin.common.entity.ImageBean)
 	 */
 	@Override
-	public ProductCategory updateProductCategoryCoverImage(final int id, final ImageBean coverImage) throws ExistProductsNotAllowWriteException {
-		ProductCategory productCategory = this.getProductCategoryDetailAndValidate(id);
+	public ProductCategoryDetail updateProductCategoryCoverImage(final int id, final ImageBean coverImage) throws ExistProductsNotAllowWriteException {
+		ProductCategoryDetail productCategory = this.getProductCategoryDetailAndValidate(id);
 		if (productCategory.isExistProduct()) {
 			throw new ExistProductsNotAllowWriteException();
 		}
@@ -548,8 +555,8 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	}
 
 	@Override
-	public ProductCategory deleteProductCategoryCoverImage(final int id) throws ExistProductsNotAllowWriteException {
-		ProductCategory productCategory = this.getProductCategoryDetailAndValidate(id);
+	public ProductCategoryDetail deleteProductCategoryCoverImage(final int id) throws ExistProductsNotAllowWriteException {
+		ProductCategoryDetail productCategory = this.getProductCategoryDetailAndValidate(id);
 		if (productCategory.isExistProduct()) {
 			throw new ExistProductsNotAllowWriteException();
 		}
@@ -571,7 +578,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	 */
 	@Override
 	public void deleteProductCategory(final int id) throws ExistProductsNotAllowWriteException, CategoryHasChildCategoriesException {
-		ProductCategory loadProductCategory = this.getProductCategoryDetailAndValidate(id);
+		ProductCategoryDetail loadProductCategory = this.getProductCategoryDetailAndValidate(id);
 		if (loadProductCategory.isExistProduct()) {
 			throw new ExistProductsNotAllowWriteException();
 		}
@@ -631,7 +638,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	
 	@Override
 	public boolean attributeExistInProductCategory(int productCategoryID, AbstractAttribute attribute) {
-		ProductCategory productCategory = this.getProductCategoryDetailAndValidate(productCategoryID);
+		ProductCategoryDetail productCategory = this.getProductCategoryDetailAndValidate(productCategoryID);
 		Collection<AbstractAttribute> targetAttributes = productCategory.getAttributes();
 		if (targetAttributes == null || targetAttributes.size() <=0) {
 			return false;
@@ -646,7 +653,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	
 	@Override
 	public boolean attributesExistInProductCategory(int productCategoryID, Collection<AbstractAttribute> attributes) {
-		ProductCategory productCategory = this.getProductCategoryDetailAndValidate(productCategoryID);
+		ProductCategoryDetail productCategory = this.getProductCategoryDetailAndValidate(productCategoryID);
 		Collection<AbstractAttribute> targetAttributes = productCategory.getAttributes();
 		if (targetAttributes == null || targetAttributes.size() <=0) {
 			return false;
@@ -668,7 +675,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	 * deleteAttributeInProductCategory(int, int)
 	 */
 	@Override
-	public void deleteAttributeInProductCategory(final ProductCategory productCategory, final AbstractAttribute attribute) throws ExistProductsNotAllowWriteException {
+	public void deleteAttributeInProductCategory(final ProductCategoryDetail productCategory, final AbstractAttribute attribute) throws ExistProductsNotAllowWriteException {
 		if (!attributeExistInProductCategory(productCategory.getId(), attribute)) {
 			throw new IllegalArgumentException();
 		}
@@ -709,7 +716,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	 */
 	@Override
 	public void updateExistProductState(final int productCategoryID, final boolean existProduct) {
-		ProductCategory loadProductCategory = this.getProductCategoryDetailAndValidate(productCategoryID);
+		ProductCategoryDetail loadProductCategory = this.getProductCategoryDetailAndValidate(productCategoryID);
 		if (!loadProductCategory.isExistProduct()) {
 			this.execute(new TransactionCallbackWithoutResult() {
 				@Override
@@ -725,12 +732,12 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	}
 	
 	@Override
-	public Collection<ProductCategory> getProductCategories(String key, int offset, int limit) {
+	public Collection<ProductCategoryDetail> getProductCategories(String key, int offset, int limit) {
 		List<Integer> ids = this.pdtCategoryDOMapper.selectByKey(key, new RowBounds(offset, limit));
 		if (ids == null || ids.size() <=0) {
 			return null;
 		}
-		Collection<ProductCategory> pcs = new ArrayList<ProductCategory>();
+		Collection<ProductCategoryDetail> pcs = new ArrayList<ProductCategoryDetail>();
 		for (Integer id : ids) {
 			pcs.add(getProductCategoryDetail(id));
 		}
@@ -744,10 +751,10 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	
 	@Override
 	public boolean validateAllowUDOperateCategory(int categoryID) {
-		ProductCategory loadProductCategory = this.getProductCategoryDetailAndValidate(categoryID);
-		Collection<ProductCategory> allChildProductCategories = loadProductCategory.getAllChildProductCategories();
+		ProductCategoryDetail loadProductCategory = this.getProductCategoryDetailAndValidate(categoryID);
+		Collection<ProductCategoryDetail> allChildProductCategories = loadProductCategory.getAllChildProductCategories();
 		if (allChildProductCategories !=null && allChildProductCategories.size() >0) {
-			for (ProductCategory pc : allChildProductCategories) {
+			for (ProductCategoryDetail pc : allChildProductCategories) {
 				if (pc.isExistProduct()) {
 					return false;
 				}
@@ -757,20 +764,20 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 	}
 
 	@Override
-	public Map<Integer, ProductCategory> getProductCategoriesMap(final Collection<Integer> ids) {
+	public Map<Integer, ProductCategoryDetail> getProductCategoriesMap(final Collection<Integer> ids) {
 		if (ids == null || ids.size() <=0) {
 			return null;
 		}
-		return this.redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallback<Map<Integer, ProductCategory>>() {
+		return this.redisTemplate.executeInRedis(JupinRedisRef.Jupin_Core, new RedisCallback<Map<Integer, ProductCategoryDetail>>() {
 			@Override
-			public Map<Integer, ProductCategory> doInRedis(Jedis jedis) {
+			public Map<Integer, ProductCategoryDetail> doInRedis(Jedis jedis) {
 				List<String> keies = new ArrayList<String>();
 				for (Integer id : ids) {
 					keies.add(PDCache.getCategoryKey(id));
 				}
 				List<String> values = jedis.mget(keies.toArray(new String[keies.size()]));
 				int index = 0;
-				Map<Integer, ProductCategory> dataMap = new LinkedHashMap<Integer, ProductCategory>();
+				Map<Integer, ProductCategoryDetail> dataMap = new LinkedHashMap<Integer, ProductCategoryDetail>();
 				for (Integer id : ids) {
 					String value = values.get(index);
 					index++;
@@ -778,7 +785,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 						continue;
 					}
 					Gson gson = GsonCreatorOfPD.create();
-					ProductCategory pc = gson.fromJson(value, ProductCategory.class);
+					ProductCategoryDetail pc = gson.fromJson(value, ProductCategoryDetail.class);
 					dataMap.put(id, pc);
 				}
 				if (dataMap.size() <=0) {
@@ -788,4 +795,98 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 			}
 		});
 	}
+
+	@Override
+	public ProductCategoryDetail appendBrandToProductCategoryDetail(final BasicProductCategory basicProductCategory, final Brand brand) throws CategoryMustLeafNodeException, ObjectDuplicateException {
+		MyAssert4Business.objectInitialized(basicProductCategory);
+		MyAssert4Business.notNull(brand);
+		if (!basicProductCategory.isLeafable()) {
+			throw new CategoryMustLeafNodeException();
+		}
+		PDTCategoryBrandRelDOKey key = this.pdtCategoryBrandRelDOMapper.selectByPrimaryKey(basicProductCategory.getId(), brand.getId());
+		if (key != null) {
+			throw new ObjectDuplicateException();
+		}
+		this.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				PDTCategoryBrandRelDOKey key = new PDTCategoryBrandRelDOKey();
+				key.setBrandId(brand.getId());
+				key.setCategoryId(basicProductCategory.getId());
+				pdtCategoryBrandRelDOMapper.insert(key);
+			}
+		});
+		this.defineCommonService.clearProductDefineCache();
+		return this.getProductCategoryDetail(basicProductCategory.getId());
+	}
+	
+	@Override
+	public ProductCategoryDetail appendBrandsToProductCategoryDetail(final BasicProductCategory basicProductCategory, final Collection<Brand> brands) throws CategoryMustLeafNodeException, ObjectDuplicateException {
+		MyAssert4Business.objectInitialized(basicProductCategory);
+		MyAssert4Business.notNull(brands);
+		if (!basicProductCategory.isLeafable()) {
+			throw new CategoryMustLeafNodeException();
+		}
+		for (Brand brand : brands) {
+			PDTCategoryBrandRelDOKey key = this.pdtCategoryBrandRelDOMapper.selectByPrimaryKey(basicProductCategory.getId(), brand.getId());
+			if (key != null) {
+				throw new ObjectDuplicateException();
+			}
+		}
+		this.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				for (Brand brand : brands) {
+					PDTCategoryBrandRelDOKey key = new PDTCategoryBrandRelDOKey();
+					key.setBrandId(brand.getId());
+					key.setCategoryId(basicProductCategory.getId());
+					pdtCategoryBrandRelDOMapper.insert(key);
+				}
+			}
+		});
+		this.defineCommonService.clearProductDefineCache();
+		return this.getProductCategoryDetail(basicProductCategory.getId());
+	}
+	
+	@Override
+	public void deleteBrandFromProductCategory(final BasicProductCategory productCategory, final Brand brand) throws ExistProductsNotAllowWriteException {
+		MyAssert4Business.objectInitialized(productCategory);
+		MyAssert4Business.objectInitialized(brand);
+		if (productCategory.isExistProduct()) {
+			throw new ExistProductsNotAllowWriteException();
+		}
+		PDTCategoryBrandRelDOKey relDOKey = this.pdtCategoryBrandRelDOMapper.selectByPrimaryKey(productCategory.getId(), brand.getId());
+		if (relDOKey != null) {
+			throw new IllegalArgumentException();
+		}
+		this.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				PDTCategoryBrandRelDOKey key = new PDTCategoryBrandRelDOKey();
+				key.setCategoryId(productCategory.getId());
+				key.setBrandId(brand.getId());
+				pdtCategoryBrandRelDOMapper.deleteByPrimaryKey(key);
+			}
+		});
+		this.defineCommonService.clearProductDefineCache();
+	}
+
+	@Override
+	public Collection<Brand> getBrandsByLeafProductCategory(BasicProductCategory basicProductCategoryOfLeafNode) {
+		if (!basicProductCategoryOfLeafNode.isLeafable()) {
+			throw new IllegalArgumentException();
+		}
+		Integer[] categoryIDs = new Integer[]{basicProductCategoryOfLeafNode.getId()};
+		List<PDTBrandDO> pdtBrandDOs = this.pdtBrandDOMapper.selectByCategoryIDs(categoryIDs);
+		if (pdtBrandDOs == null || pdtBrandDOs.size() <=0) {
+			return null;
+		}
+		Collection<Brand> brands = new ArrayList<Brand>();
+		for (PDTBrandDO model : pdtBrandDOs) {
+			Brand brand = BeanUtil.toBrand(model);
+			brands.add(brand);
+		}
+		return brands;
+	}
+	
 }

@@ -211,7 +211,7 @@
 		WHERE
 		TEMPLATE_NAME = #{templateName,jdbcType=VARCHAR}
 		AND
-		ID = #{id,jdbcType=INTEGER}
+		ID &lt;&gt; #{id,jdbcType=INTEGER}
 	</select>
 	<select id="selectAll" resultMap="ResultMapWithBLOBs">
 		SELECT
