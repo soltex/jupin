@@ -68,4 +68,11 @@
 	<bean id="springContextHolder" class="com.vanstone.framework.context.SpringContextHolder" />
 	<bean id="redisTemplate" class="com.vanstone.redis.impl.RedisTemplateImpl" />
 	<bean id="elasticsearchTemplate" class="com.vanstone.elasticsearch.impl.ElasticsearchTemplateImpl" />
+	
+	<bean id="globalProperties"  class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+          <property name="locations" value="classpath*:/jupin-resource-**.properties"/>
+    </bean>
+    
+    <!-- common scan package -->
+    <context:component-scan base-package="com.vanstone.jupin.common"></context:component-scan>
 </beans> 
