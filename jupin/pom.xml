@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.vanstone</groupId>
@@ -9,22 +10,14 @@
 
 	<name>jupin</name>
 	<url>http://maven.apache.org</url>
-	
+
 	<modules>
 		<module>vanstone-jupin-common</module>
 		<module>vanstone-jupin-framework</module>
-		<module>vanstone-jupin-business-sdk</module>
-		<module>vanstone-jupin-productdefine-api</module>
+		<module>vanstone-jupin-messagebox</module>
 		<module>vanstone-jupin-admin-webapp</module>
-		<module>vanstone-jupin-productdefine</module>
-		
-		<module>vanstone-jupin-ebs-pm-module</module>
 		<module>vanstone-jupin-ecs-product-module</module>
-		
-
 		<module>vanstone-jupin-business-sdk-module</module>
-		
-		<module>vanstone-jupin-admin-webapp</module>
 	</modules>
 	<distributionManagement>
 		<repository>
@@ -39,7 +32,7 @@
 		<jupin.version>1.0.0</jupin.version>
 	</properties>
 	<dependencies>
-		
+
 	</dependencies>
 	<build>
 		<pluginManagement>

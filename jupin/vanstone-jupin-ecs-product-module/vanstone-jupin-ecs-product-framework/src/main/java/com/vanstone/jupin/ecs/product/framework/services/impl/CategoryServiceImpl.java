@@ -31,6 +31,7 @@ import com.vanstone.business.MyAssert4Business;
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.framework.business.services.DefaultBusinessService;
 import com.vanstone.jupin.common.Constants;
+import com.vanstone.jupin.common.cache.JupinRedisRef;
 import com.vanstone.jupin.common.entity.ImageBean;
 import com.vanstone.jupin.common.util.BoolUtil;
 import com.vanstone.jupin.common.util.InterProcessMutexCallback;
@@ -61,7 +62,6 @@ import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryAt
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryBrandRelDOKey;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryDO;
 import com.vanstone.jupin.ecs.product.framework.serializer.PDAttributeSerializer;
-import com.vanstone.jupin.framework.cache.JupinRedisRef;
 import com.vanstone.redis.RedisCallback;
 import com.vanstone.redis.RedisCallbackWithoutResult;
 import com.vanstone.redis.RedisTemplate;

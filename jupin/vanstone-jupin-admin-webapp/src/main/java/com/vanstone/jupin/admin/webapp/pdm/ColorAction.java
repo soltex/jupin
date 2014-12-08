@@ -64,7 +64,7 @@ public class ColorAction {
 	
 	@RequestMapping("/update-color/{id}")
 	public String updateColor(ModelMap modelMap,@PathVariable("id")Integer id, @ModelAttribute("colorForm")ColorForm colorForm) {
-		Color color = commonSDKManager.getAndValidateColor(colorForm.getId());
+		Color color = commonSDKManager.getColorAndValidate(colorForm.getId());
 		colorForm.setId(color.getId());
 		colorForm.setColorName(color.getColorName());
 		colorForm.setColorCSS(color.getColorCSS());
@@ -76,7 +76,7 @@ public class ColorAction {
 	@RequestMapping("/update-color-action")
 	@ResponseBody
 	public DialogViewCommandObject updateColorAction(ModelMap modelMap, @ModelAttribute("colorForm")ColorForm colorForm) {
-		Color color = this.commonSDKManager.getAndValidateColor(colorForm.getId());
+		Color color = this.commonSDKManager.getColorAndValidate(colorForm.getId());
 		color.setColorCSS(colorForm.getColorCSS());
 		color.setColorName(colorForm.getColorName());
 		color.setColorRGB(colorForm.getColorRGB());
@@ -100,7 +100,7 @@ public class ColorAction {
 	@RequestMapping("/delete-color-action/{id}")
 	@ResponseBody
 	public ViewCommandObject deleteColorAction(@PathVariable("id")Integer id) {
-		this.commonSDKManager.getAndValidateColor(id);
+		this.commonSDKManager.getColorAndValidate(id);
 		try {
 			this.colorTableService.deleteColor(id);
 		} catch (ExistProductsNotAllowWriteException e) {

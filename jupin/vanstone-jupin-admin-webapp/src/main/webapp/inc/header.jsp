@@ -58,7 +58,7 @@
 	<script src="/styles/js/dwz.pagination.js"></script>
 	
 	<script src="/styles/js/vanstone.pnotify.js"></script>
-
+	<script src="/styles/js/vanstone.messagebox.js"></script>
 </head>
 
 

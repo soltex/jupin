@@ -38,6 +38,11 @@
 			</artifactId>
 			<version>${jupin.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.vanstone</groupId>
+			<artifactId>vanstone-jupin-messagebox</artifactId>
+			<version>${jupin.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>

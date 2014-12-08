@@ -109,10 +109,11 @@
 		},
 		ajaxError:function(xhr, ajaxOptions, thrownError){
 
-			DWZ.alert.error("<div>Http status: " + xhr.status + " " + xhr.statusText + "</div>"
-				+ "<div>ajaxOptions: "+ajaxOptions + "</div>"
-				+ "<div>thrownError: "+thrownError + "</div>"
-				+ "<div>"+xhr.responseText+"</div>");
+//			DWZ.alert.error("<div>Http status: " + xhr.status + " " + xhr.statusText + "</div>"
+//				+ "<div>ajaxOptions: "+ajaxOptions + "</div>"
+//				+ "<div>thrownError: "+thrownError + "</div>"
+//				+ "<div>"+xhr.responseText+"</div>");
+			alert("error");
 
 		},
 		ajaxDone:function(json, event){
@@ -188,7 +189,7 @@
 			}
 		}
 	};
-
+	
 	/**
 	 * 扩展String方法
 	 */

@@ -211,8 +211,7 @@
 		SYSTEMABLE =#{systemable,jdbcType=INTEGER}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
-	<select id="selectByBrandName" parameterType="map"
-		resultMap="ResultMapWithBLOBs">
+	<select id="selectByBrandName" parameterType="map" resultMap="ResultMapWithBLOBs">
 		SELECT
 		<include refid="Base_Column_List" />
 		,
@@ -321,8 +320,6 @@
 			)
 		</if>
 		</where> 
-		GROUP BY 
-		pdt_brand.ID 
 	</select>
 	<select id="selectByPinyinKey" parameterType="map" resultMap="ResultMapWithBLOBs">
 		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/>

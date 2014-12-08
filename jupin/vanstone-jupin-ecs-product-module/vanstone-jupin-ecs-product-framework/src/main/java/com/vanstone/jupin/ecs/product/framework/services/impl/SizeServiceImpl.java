@@ -29,6 +29,7 @@ import com.vanstone.business.ObjectHasSubObjectException;
 import com.vanstone.framework.business.services.DefaultBusinessService;
 import com.vanstone.framework.business.services.ServiceUtil;
 import com.vanstone.jupin.common.Constants;
+import com.vanstone.jupin.common.cache.JupinRedisRef;
 import com.vanstone.jupin.common.util.BoolUtil;
 import com.vanstone.jupin.common.util.InterProcessMutexCallback;
 import com.vanstone.jupin.common.util.ZKUtil;
@@ -44,7 +45,6 @@ import com.vanstone.jupin.ecs.product.framework.persistence.PDTSkuSizeTemplateDO
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTSkuSizeTableDO;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTSkuSizeTemplateDO;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.QuerySizeTemplateDOWithSizeTableResultMap;
-import com.vanstone.jupin.framework.cache.JupinRedisRef;
 import com.vanstone.redis.RedisTemplate;
 
 /**

@@ -13,7 +13,7 @@ public interface PDTCategoryBrandRelDOMapper {
 
     int insertSelective(PDTCategoryBrandRelDOKey record);
     
-    int deleteByBrandId(@Param("id")Integer brandId);
+    int deleteByBrandId(@Param("brandId")Integer brandId);
     
     PDTCategoryBrandRelDOKey selectByPrimaryKey(@Param("categoryId")Integer categoryID,@Param("brandId")Integer brandId);
     

@@ -12,9 +12,12 @@ public class AdminBaseForm {
 	private String rel = "container";
 
 	public Integer getP() {
+		if (p == null) {
+			return 1;
+		}
 		return p;
 	}
-
+	
 	public void setP(Integer p) {
 		this.p = p;
 	}

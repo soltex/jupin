@@ -28,7 +28,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vanstone</groupId>
-			<artifactId>vanstone-jupin-framework</artifactId>
+			<artifactId>vanstone-jupin-common</artifactId>
 			<version>${jupin.version}</version>
 		</dependency>
 	</dependencies>

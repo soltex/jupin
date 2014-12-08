@@ -33,7 +33,7 @@
 					<property name="supportedMediaTypes">    
 				        <list>    
 				            <value>application/json</value>
-				            <value>text/json</value>   
+				            <value>text/json</value>
 				       </list>    
 				   	</property>
 				</bean>

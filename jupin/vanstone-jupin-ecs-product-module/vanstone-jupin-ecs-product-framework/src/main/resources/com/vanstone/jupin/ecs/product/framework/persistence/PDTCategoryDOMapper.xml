@@ -335,11 +335,11 @@
 	<select id="selectByBrandId_ExistProduct" parameterType="map" resultMap="ResultMapWithBLOBs">
 		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/>
 		FROM 
-		pdt_category INNER JOIN PDT_PRODUCT_BRAND_REL 
+		pdt_category INNER JOIN PDT_CATEGORY_BRAND_REL 
 		ON 
-		pdt_category.ID = PDT_PRODUCT_BRAND_REL.CATEGORY_ID 
+		pdt_category.ID = PDT_CATEGORY_BRAND_REL.CATEGORY_ID 
 		WHERE 
-		PDT_PRODUCT_BRAND_REL.BRAND_ID = #{brandId,jdbcType=INTEGER} 
+		PDT_CATEGORY_BRAND_REL.BRAND_ID = #{brandId,jdbcType=INTEGER} 
 		AND 
 		pdt_category.EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER}
 	</select>

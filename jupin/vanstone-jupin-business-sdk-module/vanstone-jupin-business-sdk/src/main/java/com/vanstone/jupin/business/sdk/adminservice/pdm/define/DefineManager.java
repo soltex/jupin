@@ -9,8 +9,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.vanstone.business.ObjectDuplicateException;
+import com.vanstone.common.util.web.PageInfo;
+import com.vanstone.fs.FSFile;
+import com.vanstone.jupin.common.ImageFormatException;
+import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
 import com.vanstone.jupin.ecs.product.define.services.ExistProductsNotAllowWriteException;
@@ -73,5 +78,35 @@ public interface DefineManager {
 	 * @throws ExistProductsNotAllowWriteException
 	 */
 	void updateSizes(int sizeTemplateId, boolean systemable,boolean waistlineable,boolean weightable,boolean hipable,boolean chestable,boolean heightable,boolean shoulderable,@Null Collection<SizeBean> sizeBeans) throws ObjectDuplicateException, ExistProductsNotAllowWriteException;
+	
+	/**
+	 * 检索Brand列表
+	 * @param productCategoryID
+	 * @param key
+	 * @param pageno
+	 * @param size
+	 * @return
+	 */
+	PageInfo<Brand> searchBrands(Integer productCategoryID, String key, int pageno, int size);
+	
+	/**
+	 * 添加品牌信息
+	 * @param brandName
+	 * @param brandNameEN
+	 * @param logoMultipartFile
+	 * @param content
+	 * @return
+	 * @throws ImageFormatException
+	 * @throws ObjectDuplicateException
+	 */
+	Brand addBrand(String brandName, String brandNameEN, MultipartFile logoMultipartFile, String content) throws ImageFormatException, ObjectDuplicateException;
+	
+	/**
+	 * 批量导出品牌信息
+	 * @param fsFile 数据文件
+	 * @param asyn 是否异步执行
+	 * @return
+	 */
+	ImportBrandResultBean batchImportBrands(@NotNull FSFile fsFile,boolean asyn) throws ImportBrandFileFormatException;
 	
 }

@@ -29,6 +29,7 @@ import com.vanstone.business.serialize.GsonCreator;
 import com.vanstone.framework.business.services.DefaultBusinessService;
 import com.vanstone.framework.business.services.ServiceUtil;
 import com.vanstone.jupin.common.Constants;
+import com.vanstone.jupin.common.cache.JupinRedisRef;
 import com.vanstone.jupin.common.util.BoolUtil;
 import com.vanstone.jupin.common.util.InterProcessMutexCallback;
 import com.vanstone.jupin.common.util.ZKUtil;
@@ -45,7 +46,6 @@ import com.vanstone.jupin.ecs.product.framework.persistence.PDTAttributeDefDOMap
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTAttributeEnumvalueDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTAttributeDefDO;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTAttributeEnumvalueDO;
-import com.vanstone.jupin.framework.cache.JupinRedisRef;
 import com.vanstone.redis.RedisCallback;
 import com.vanstone.redis.RedisCallbackWithoutResult;
 import com.vanstone.redis.RedisTemplate;

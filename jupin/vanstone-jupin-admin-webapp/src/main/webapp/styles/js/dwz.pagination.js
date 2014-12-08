@@ -18,10 +18,9 @@
 			if (args["orderField"]) form[DWZ.pageInfo.orderField].value = args["orderField"];
 			if (args["orderDirection"] && form[DWZ.pageInfo.orderDirection]) form[DWZ.pageInfo.orderDirection].value = args["orderDirection"];
 		}
-
+		
 		return form;
 	}
-
 
 	/**
 	 * 处理分页和排序
@@ -45,6 +44,7 @@
 			});
 		}
 	}
+	 
 	/**
 	 * 处理div上的局部查询, 会重新载入指定div
 	 * @param {Object} form

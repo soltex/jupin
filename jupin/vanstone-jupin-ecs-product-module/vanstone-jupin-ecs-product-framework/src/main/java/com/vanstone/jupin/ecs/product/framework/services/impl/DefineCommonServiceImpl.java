@@ -15,12 +15,12 @@ import org.springframework.validation.annotation.Validated;
 import redis.clients.jedis.Jedis;
 
 import com.vanstone.framework.business.services.DefaultBusinessService;
+import com.vanstone.jupin.common.cache.JupinRedisRef;
 import com.vanstone.jupin.common.util.BoolUtil;
 import com.vanstone.jupin.ecs.product.PDCache;
 import com.vanstone.jupin.ecs.product.define.services.DefineCommonService;
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTCategoryDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTCategoryDO;
-import com.vanstone.jupin.framework.cache.JupinRedisRef;
 import com.vanstone.redis.RedisCallbackWithoutResult;
 import com.vanstone.redis.RedisTemplate;
 

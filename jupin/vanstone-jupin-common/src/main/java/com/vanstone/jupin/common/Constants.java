@@ -30,4 +30,7 @@ public class Constants {
 	/**品牌名称中的特殊字符进行替换*/
 	public static final String BRAND_NAME_CHARS = " ，,#'~!@#$%^&*(){}|.。/?-　";
 	
+	/**管理员默认页面大小*/
+	public static final int ADMIN_DEFAULT_PAGESIZE = 20;
+	
 }

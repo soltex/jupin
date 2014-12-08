@@ -31,6 +31,7 @@ import com.vanstone.common.util.PinyinUtil;
 import com.vanstone.framework.business.services.DefaultBusinessService;
 import com.vanstone.framework.business.services.ServiceUtil;
 import com.vanstone.jupin.common.Constants;
+import com.vanstone.jupin.common.cache.JupinRedisRef;
 import com.vanstone.jupin.common.entity.ImageBean;
 import com.vanstone.jupin.common.util.InterProcessMutexCallback;
 import com.vanstone.jupin.common.util.ZKUtil;
@@ -46,7 +47,6 @@ import com.vanstone.jupin.ecs.product.framework.persistence.PDTBrandDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTCategoryBrandRelDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTBrandDO;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.QueryBrandStatResultMap;
-import com.vanstone.jupin.framework.cache.JupinRedisRef;
 import com.vanstone.redis.RedisCallback;
 import com.vanstone.redis.RedisTemplate;
 import com.vanstone.weedfs.client.impl.WeedFSClient;
@@ -78,22 +78,27 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 		if (tempModel != null) {
 			throw new ObjectDuplicateException();
 		}
-		this.execute(new TransactionCallbackWithoutResult() {
-			@Override
-			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
-				brand.setBrandNamefirstLetter(PinyinUtil.firstLetterOfString(brand.getBrandName()) != null ? PinyinUtil.firstLetterOfString(brand.getBrandName()).charAt(0) : null);
-				String pinyin = PinyinUtil.cnstr2pinyinstr(brand.getBrandName());
-				if (pinyin != null && !pinyin.equals("")) {
-					pinyin = StringUtils.replaceChars(pinyin, Constants.BRAND_NAME_CHARS, "");
-					brand.setBrandNamePinyin(pinyin);
+		try {
+			this.execute(new TransactionCallbackWithoutResult() {
+				@Override
+				protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+					brand.setBrandNamefirstLetter(PinyinUtil.firstLetterOfString(brand.getBrandName()) != null ? PinyinUtil.firstLetterOfString(brand.getBrandName()).charAt(0) : null);
+					String pinyin = PinyinUtil.cnstr2pinyinstr(brand.getBrandName());
+					if (pinyin != null && !pinyin.equals("")) {
+						pinyin = StringUtils.replaceChars(pinyin, Constants.BRAND_NAME_CHARS, "");
+						brand.setBrandNamePinyin(pinyin);
+					}
+					PDTBrandDO model  = BeanUtil.toPDTBrandDO(brand);
+					pdtBrandDOMapper.insert(model);
+					brand.setId(model.getId());
 				}
-				PDTBrandDO model  = BeanUtil.toPDTBrandDO(brand);
-				pdtBrandDOMapper.insert(model);
-				brand.setId(model.getId());
-			}
-		});
-		defineCommonService.clearProductDefineCache();
-		return brand;
+			});
+			defineCommonService.clearProductDefineCache();
+			return brand;
+		} catch (Exception e) {
+			LOG.error("BrandName Duplication");
+			throw new ObjectDuplicateException();
+		}
 	}
 	
 //	@Override
@@ -245,19 +250,24 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 		if (!defineCommonService.validateAllowUDOperateBrand(brandId)) {
 			throw new ExistProductsNotAllowWriteException();
 		}
-		this.execute(new TransactionCallbackWithoutResult() {
-			@Override
-			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
-				loadBrand.setBrandName(brandName);
-				loadBrand.setBrandNameEN(brandNameEN);
-				loadBrand.setContent(content);
-				loadBrand.setSystemable(systemable);
-				PDTBrandDO model = BeanUtil.toPDTBrandDO(loadBrand);
-				pdtBrandDOMapper.updateByPrimaryKeyWithBLOBs(model);
-			}
-		});
-		defineCommonService.clearProductDefineCache();
-		return loadBrand;
+		try {
+			this.execute(new TransactionCallbackWithoutResult() {
+				@Override
+				protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+					loadBrand.setBrandName(brandName);
+					loadBrand.setBrandNameEN(brandNameEN);
+					loadBrand.setContent(content);
+					loadBrand.setSystemable(systemable);
+					PDTBrandDO model = BeanUtil.toPDTBrandDO(loadBrand);
+					pdtBrandDOMapper.updateByPrimaryKeyWithBLOBs(model);
+				}
+			});
+			defineCommonService.clearProductDefineCache();
+			return loadBrand;
+		} catch (Exception e) {
+			LOG.error("Update Brand Name Duplication");
+			throw new ObjectDuplicateException(e);
+		}
 	}
 	
 	@Override
