@@ -26,5 +26,6 @@
     http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
     
 	<context:component-scan base-package="com.vanstone.jupin.adminservice.sdk.pdm.define.impl"></context:component-scan>
+	<context:component-scan base-package="com.vanstone.jupin.business.sdk.adminservice.messagebox.impl"></context:component-scan>
 	
 </beans> 

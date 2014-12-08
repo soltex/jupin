@@ -3,9 +3,6 @@
  */
 package com.vanstone.jupin.common.sdk.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +17,6 @@ import com.vanstone.jupin.ecs.product.define.services.BrandService;
 import com.vanstone.jupin.ecs.product.define.services.CategoryService;
 import com.vanstone.jupin.ecs.product.define.services.ColorTableService;
 import com.vanstone.jupin.ecs.product.define.services.SizeService;
-import com.vanstone.jupin.messagebox.Constants;
-import com.vanstone.jupin.messagebox.Message;
-import com.vanstone.jupin.messagebox.MessageBox;
-import com.vanstone.jupin.messagebox.MessageBoxManager;
 
 /**
  * @author shipeng
@@ -78,55 +71,4 @@ public class CommonSDKManagerImpl implements CommonSDKManager {
 		return productCategoryDetail;
 	}
 
-	@Override
-	public Message readMessage() {
-		return readMessage(null, null);
-	}
-	
-	@Override
-	public Collection<Message> readAllMessages() {
-		return readAllMessages(null, null);
-	}
-	
-	@Override
-	public Message readMessage(String messageBoxGroup, String messageBoxName) {
-		if (messageBoxGroup == null) {
-			messageBoxGroup = Constants.DEFAULT_MESSGEBOX_GROUP;
-		}
-		if (messageBoxName == null || messageBoxName.equals("")) {
-			messageBoxName = Constants.DEFAULT_MESSGEBOX_NAME;
-		}
-		MessageBox messageBox = MessageBoxManager.getInstance().getMessageBox(messageBoxGroup, messageBoxName);
-		if (messageBox == null) {
-			return null;
-		}
-		return messageBox.read();
-	}
-
-	@Override
-	public Collection<Message> readAllMessages(String messageBoxGroup, String messageBoxName) {
-		if (messageBoxGroup == null) {
-			messageBoxGroup = Constants.DEFAULT_MESSGEBOX_GROUP;
-		}
-		if (messageBoxName == null || messageBoxName.equals("")) {
-			messageBoxName = Constants.DEFAULT_MESSGEBOX_NAME;
-		}
-		MessageBox messageBox = MessageBoxManager.getInstance().getMessageBox(messageBoxGroup, Constants.DEFAULT_MESSGEBOX_NAME);
-		if (messageBox == null) {
-			return null;
-		}
-		Collection<Message> messages = new ArrayList<Message>();
-		while (true) {
-			Message message = messageBox.read();
-			if (message == null) {
-				break;
-			}
-			messages.add(message);
-		}
-		if (messages == null || messages.size() <= 0) {
-			return null;
-		}
-		return messages;
-	}
-	
 }

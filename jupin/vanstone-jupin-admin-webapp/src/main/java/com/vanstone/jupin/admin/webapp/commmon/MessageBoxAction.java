@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vanstone.jupin.admin.webapp.AdminBaseAction;
-import com.vanstone.jupin.business.sdk.common.CommonSDKManager;
+import com.vanstone.jupin.business.sdk.adminservice.messagebox.MessageNotificationManager;
 import com.vanstone.jupin.messagebox.Message;
 
 /**
@@ -20,12 +20,12 @@ import com.vanstone.jupin.messagebox.Message;
 public class MessageBoxAction extends AdminBaseAction {
 	
 	@Autowired
-	private CommonSDKManager commonSDKManager;
+	private MessageNotificationManager messageNotificationManager;
 	
 	@RequestMapping(value="/read-messages",produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String readAllMessage() {
-		Message message = commonSDKManager.readMessage();
+		Message message = messageNotificationManager.readMessage();
 		if (message != null) {
 			return message.toJson();
 		}

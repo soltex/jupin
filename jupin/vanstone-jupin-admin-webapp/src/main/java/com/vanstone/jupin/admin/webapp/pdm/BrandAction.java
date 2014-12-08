@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.common.util.web.PageInfo;
+import com.vanstone.framework.context.SpringContextHolder;
 import com.vanstone.fs.FSException;
 import com.vanstone.fs.FSFile;
 import com.vanstone.fs.FSType;
@@ -142,4 +143,12 @@ public class BrandAction extends AdminBaseAction {
 		return null;
 	}
 	
+	@RequestMapping("/view-resource")
+	public String viewResource() {
+//		System.out.println(this.resourceBundleMessageSource.getMessage("aa", null, null,null));
+//		System.out.println(this.resourceBundleMessageSource.getMessage("bb", null, null,null));
+		SpringContextHolder.getApplicationContext().getMessage("aa", null, null);
+		SpringContextHolder.getApplicationContext().getMessage("bb", null, null);
+		return null;
+	}
 }

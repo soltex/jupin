@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.vanstone.jupin.messagebox;
+
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +12,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.google.gson.Gson;
 import com.vanstone.business.serialize.GsonCreator;
+import com.vanstone.jupin.messagebox.Constants;
+import com.vanstone.jupin.messagebox.Message;
+import com.vanstone.jupin.messagebox.MessageBox;
+import com.vanstone.jupin.messagebox.MessageBoxImpl;
+import com.vanstone.jupin.messagebox.MessageHelper;
 
 /**
  * @author shipeng
