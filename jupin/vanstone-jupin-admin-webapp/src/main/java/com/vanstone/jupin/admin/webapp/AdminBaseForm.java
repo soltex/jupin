@@ -8,20 +8,20 @@ package com.vanstone.jupin.admin.webapp;
  * 
  */
 public class AdminBaseForm {
-	private Integer p = 1;
+	private Integer pageNum = 1;
 	private String rel = "container";
 
-	public Integer getP() {
-		if (p == null) {
+	public Integer getPageNum() {
+		if (pageNum == null) {
 			return 1;
 		}
-		return p;
+		return pageNum;
 	}
 	
-	public void setP(Integer p) {
-		this.p = p;
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
 	}
-
+	
 	public String getRel() {
 		return rel;
 	}

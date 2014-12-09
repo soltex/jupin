@@ -7,10 +7,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import redis.clients.jedis.Jedis;
 
 import com.vanstone.common.MyAssert;
 import com.vanstone.framework.business.ServiceManagerFactory;
+import com.vanstone.jupin.common.Constants;
 import com.vanstone.jupin.common.cache.JupinRedisRef;
 import com.vanstone.redis.RedisCallback;
 import com.vanstone.redis.RedisCallbackWithoutResult;
@@ -21,6 +25,8 @@ import com.vanstone.redis.RedisTemplate;
  * @author shipeng
  */
 public class PersistenceManager {
+	
+	private static Logger LOG = LoggerFactory.getLogger(PersistenceManager.class);
 	
 	public static final class PersistenceManagerInstance {
 		private static final PersistenceManager instance = new PersistenceManager();
@@ -45,6 +51,7 @@ public class PersistenceManager {
 			@Override
 			public void doInRedisWithoutResult(Jedis jedis) {
 				jedis.lpush(key, messageJson);
+				LOG.info("push message : " + messageJson);
 			}
 		});
 	}
@@ -63,6 +70,7 @@ public class PersistenceManager {
 				if (value == null || value.equals("")) {
 					return null;
 				}
+				LOG.info("pop message : " + value);
 				return MessageHelper.parseMessageByJson(value);
 			}
 		});

@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.vanstone.common.MyAssert;
+import com.vanstone.jupin.common.Constants;
 
 /**
  * 消息实体

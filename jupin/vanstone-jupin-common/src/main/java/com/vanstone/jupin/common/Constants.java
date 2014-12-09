@@ -16,6 +16,7 @@ public class Constants {
 	/**默认根节点值*/
 	public static final String ROOT_PRODUCT_CATEGORY_NODE_ID = null;
 	
+	/**信号量节点前缀路径*/
 	public static final String ZK_LOCK_MUTEXT_NODE_PATH_PREFIX  = "/vanstone/jupin/mutex";
 	
 	/**锁等待时间*/
@@ -32,5 +33,21 @@ public class Constants {
 	
 	/**管理员默认页面大小*/
 	public static final int ADMIN_DEFAULT_PAGESIZE = 20;
+	
+	/*===========================================MessageBox===========================================*/
+	/**默认信箱名称*/
+	public static final String DEFAULT_MESSGEBOX_NAME = "DEFAULT_NAME";
+	
+	/**默认信箱组名称*/
+	public static final String DEFAULT_MESSGEBOX_GROUP = "DEFAULT_GROUP";
+	
+	/**信箱前缀*/
+	public static final String MESSAGE_BOX_PREFIX = "MB:";
+	
+	/**信箱分组前缀*/
+	public static final String GROUP_NAME_PREFIX = "G:";
+	
+	/**信箱名称前缀*/
+	public static final String NAME_PREFIX = "NAME:";
 	
 }

@@ -79,9 +79,8 @@
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">  
         <property name="basenames">
         	<list>
-        		<value>jupin-sdk-resource</value>
+        		<value>resource.adminservice_</value>
         	</list>
         </property>
     </bean>
-    
 </beans> 

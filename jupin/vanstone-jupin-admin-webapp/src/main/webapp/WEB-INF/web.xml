@@ -41,6 +41,14 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>spring-dispatcher-servlet</servlet-name>
+		<url-pattern>/index</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>spring-dispatcher-servlet</servlet-name>
+		<url-pattern>/pdm/index</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>spring-dispatcher-servlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
@@ -53,6 +61,5 @@
 	</listener>
 	<welcome-file-list>
 		<welcome-file>index</welcome-file>
-		<welcome-file>login</welcome-file>
 	</welcome-file-list>
 </web-app>

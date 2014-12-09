@@ -12,6 +12,7 @@ import com.vanstone.business.CommonDateUtil;
 import com.vanstone.business.lang.EnumUtils;
 import com.vanstone.business.serialize.GsonCreator;
 import com.vanstone.common.MyAssert;
+import com.vanstone.jupin.common.Constants;
 
 /**
  * 消息帮助类

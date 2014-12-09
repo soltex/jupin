@@ -3,6 +3,8 @@
  */
 package com.vanstone.jupin.messagebox;
 
+import com.vanstone.jupin.common.Constants;
+
 /**
  * 信箱名称实现
  * @author shipeng

@@ -14,6 +14,8 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceAware;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,7 +55,7 @@ import com.vanstone.jupin.messagebox.MessageLevel;
  */
 @Service("sizeManager")
 @Validated
-public class DefineManagerImpl extends DefaultBusinessService implements DefineManager {
+public class DefineManagerImpl extends DefaultBusinessService implements DefineManager , MessageSourceAware {
 	
 	/***/
 	private static final long serialVersionUID = -4899067001770580354L;
@@ -66,6 +68,13 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 	private CommonSDKManager commonSDKManager;
 	@Autowired
 	private BrandService brandService;
+	
+	private MessageSource messageSource;
+	
+	@Override
+	public void setMessageSource(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
 	
 	/* (non-Javadoc)
 	 * @see com.vanstone.jupin.business.sdk.adminservice.pdm.define.SizeManager#addSizeTemplate(java.lang.String, java.lang.String, boolean, boolean, boolean, boolean, boolean, boolean, boolean, java.util.Collection)
@@ -270,18 +279,18 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 				ImportBrandResultBean resultBean = _importBrandsByPOI(workbook);
 				if (resultBean.isSuccess()) {
 					StringBuffer sb = new StringBuffer();
-					sb.append("品牌信息导入成功，成功数量 : ").append(resultBean.getSuccessCount());
+					sb.append(messageSource.getMessage("jupin.adminservice.sdk.pdm.importbrand_success", new Integer[]{resultBean.getSuccessCount()}, null));
 					Message message = MessageHelper.createNewMessage(MessageLevel.Info, sb.toString());
 					message.send();
+					System.out.println(messageSource.getMessage("jupin.adminservice.sdk.pdm.importbrand_success", new Integer[]{resultBean.getSuccessCount()}, null));
 				} else {
 					StringBuffer sb = new StringBuffer();
-					sb.append("品牌信息导入部分失败，请检查原始数据文件，出错信息如下：").append("<br/>");
 					for (String brandName : resultBean.getFailBrandNames()) {
 						sb.append(brandName).append("，");
 					}
-					sb.append("总计 ： 成功 ").append(resultBean.getSuccessCount()).append(" 失败 ").append(resultBean.getFailCount());
-					Message message = MessageHelper.createNewMessage(MessageLevel.Error, sb.toString());
+					Message message = MessageHelper.createNewMessage(MessageLevel.Error, messageSource.getMessage("jupin.adminservice.sdk.pdm.importbrand_fail", new Object[]{sb.toString(), resultBean.getSuccessCount(),resultBean.getFailCount() }, null));
 					message.send();
+					System.out.println(messageSource.getMessage("jupin.adminservice.sdk.pdm.importbrand_fail", new Object[]{sb.toString(), resultBean.getSuccessCount(),resultBean.getFailCount() }, null));
 				}
 				return null;
 			}

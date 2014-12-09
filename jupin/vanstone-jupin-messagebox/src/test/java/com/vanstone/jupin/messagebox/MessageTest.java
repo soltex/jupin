@@ -3,6 +3,8 @@
  */
 package com.vanstone.jupin.messagebox;
 
+import java.util.Locale;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.google.gson.Gson;
 import com.vanstone.business.serialize.GsonCreator;
+import com.vanstone.jupin.common.Constants;
 
 /**
  * @author shipeng
@@ -47,7 +50,7 @@ public class MessageTest {
 	
 	@Test
 	public void testi18n() {
-		System.out.println(resourceBundleMessageSource.getMessage("aa", null, null));
-		System.out.println(resourceBundleMessageSource.getMessage("vv", null, null));
+		//System.out.println(resourceBundleMessageSource.getMessage("aa", null, Locale.CHINA));
+		System.out.println(resourceBundleMessageSource.getMessage("bb", null, Locale.CHINA));
 	}
 }

@@ -108,7 +108,8 @@
 			}
 		},
 		ajaxError:function(xhr, ajaxOptions, thrownError){
-
+			alert(xhr);
+			alert(thrownError);
 //			DWZ.alert.error("<div>Http status: " + xhr.status + " " + xhr.statusText + "</div>"
 //				+ "<div>ajaxOptions: "+ajaxOptions + "</div>"
 //				+ "<div>thrownError: "+thrownError + "</div>"

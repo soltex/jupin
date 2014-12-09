@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.vanstone.framework.business.services.DefaultBusinessService;
 import com.vanstone.jupin.business.sdk.adminservice.messagebox.MessageNotificationManager;
-import com.vanstone.jupin.messagebox.Constants;
+import com.vanstone.jupin.common.Constants;
 import com.vanstone.jupin.messagebox.Message;
 import com.vanstone.jupin.messagebox.MessageBox;
 import com.vanstone.jupin.messagebox.MessageBoxManager;
@@ -74,5 +74,5 @@ public class MessageNotificationManagerImpl extends DefaultBusinessService imple
 		}
 		return messages;
 	}
-
+	
 }

@@ -6,7 +6,7 @@ var MESSAGEBOX_CONSTANTS = {
 }
 
 $(document).ready(function() {
-	var timerid = setInterval(retrievalAllMessage, 5000);
+	var timerid = setInterval(retrievalAllMessage, 1000000);
 });
 
 function retrievalAllMessage() {
@@ -18,10 +18,11 @@ function retrievalAllMessage() {
 			cache : false,
 			global : false,
 			success : function(data) {
+				var messageLevel = data.messageLevel;
+				console.log(messageLevel);
 				if (!data) {
 					return;
 				}
-				var messageLevel = data.messageLevel;
 				if (messageLevel == MESSAGEBOX_CONSTANTS.Error) {
 					error(data.content);
 				}else {

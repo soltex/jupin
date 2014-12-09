@@ -8,7 +8,7 @@
 
 <div class="row">
 	<div class="col-md-2">
-		<div class="list-group" style="position: fixed;">
+		<div class="list-group">
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>品类定义管理</a>
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>商品属性定义管理</a>
 			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>品牌信息管理</a>
@@ -22,7 +22,7 @@
 		<a href="/pdm/batch-add-brands" class="btn btn-default" data-history>批量导入品牌</a>
 		<a href="/styles/templates/import-brands-template.xls" class="btn btn-default" target="_blank">文件下载</a>
 		<p></p>
-			<form:form action="/pdm/search-brands" method="post" commandName="brandForm"  onsubmit="return DWZ.dwzSearch(this, 'search_brands_id')" id="pagerForm">
+			<form:form action="/pdm/search-brands" method="post" commandName="brandForm"  onsubmit="return DWZ.dwzSearch(this, 'container')" id="pagerForm">
 				<div class="form-group">
 					<form:input path="key" cssClass="form-control input-sm" placeholder="品牌关键字"   />
 					
@@ -33,6 +33,7 @@
 					
 				</div>
 				<button type="submit" class="btn btn-default">检索</button>
+				<input type="reset" class="btn btn-default" value="清除条件" />
 			</form:form>
 			<div id="search_brands_id">
 				<table class="table table-hover" >
@@ -72,7 +73,7 @@
 					</tbody>
 				</table>
 				
-				<div currentpage="${pageInfo.pageNo }" pagenumshown="10" numperpage="${pageInfo.pages }" totalcount="${pageInfo.rows }" class="pagination"></div>
+				<div rel="container" currentpage="${pageInfo.pageNo }" pagenumshown='<c:choose><c:when test="${pageInfo.pages >= 20}">20</c:when><c:otherwise>${pageInfo.pages}</c:otherwise></c:choose>' numperpage="${pageInfo.pageSize}" totalcount="${pageInfo.rows }" class="pagination"></div>
 			</div>
 		
 	</div>

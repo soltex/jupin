@@ -3,7 +3,10 @@
  */
 package com.vanstone.jupin.admin.webapp.pdm;
 
+import java.util.Locale;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.common.util.web.PageInfo;
-import com.vanstone.framework.context.SpringContextHolder;
 import com.vanstone.fs.FSException;
 import com.vanstone.fs.FSFile;
 import com.vanstone.fs.FSType;
@@ -48,7 +50,7 @@ public class BrandAction extends AdminBaseAction {
 	
 	@RequestMapping("/search-brands")
 	public String searchBrands(@ModelAttribute("brandForm")BrandForm brandForm, ModelMap modelMap) {
-		PageInfo<Brand> pageInfo = this.defineManager.searchBrands(brandForm.getCategoryID(), brandForm.getKey(), brandForm.getP(), Constants.ADMIN_DEFAULT_PAGESIZE);
+		PageInfo<Brand> pageInfo = this.defineManager.searchBrands(brandForm.getCategoryID(), brandForm.getKey(), brandForm.getPageNum(), Constants.ADMIN_DEFAULT_PAGESIZE);
 		modelMap.put("pageInfo", pageInfo);
 		return "/pdm/search-brands";
 	}
@@ -143,12 +145,16 @@ public class BrandAction extends AdminBaseAction {
 		return null;
 	}
 	
+	@Autowired
+	private ResourceBundleMessageSource resourceBundleMessageSource;
+	
 	@RequestMapping("/view-resource")
 	public String viewResource() {
 //		System.out.println(this.resourceBundleMessageSource.getMessage("aa", null, null,null));
 //		System.out.println(this.resourceBundleMessageSource.getMessage("bb", null, null,null));
-		SpringContextHolder.getApplicationContext().getMessage("aa", null, null);
-		SpringContextHolder.getApplicationContext().getMessage("bb", null, null);
+		resourceBundleMessageSource.getMessage("aa", null, Locale.CHINA);
+		resourceBundleMessageSource.getMessage("bb", null, Locale.CHINA);
 		return null;
 	}
+	
 }

@@ -10,8 +10,8 @@
 	 * @param String formId 分页表单选择器，非必填项默认值是 "pagerForm"
 	 */
 	function _getPagerForm($parent, args) {
-		var form = $("#pagerForm", $parent).get(0);
-
+		//var form = $("#pagerForm", $parent).get(0);
+		var form = $("#pagerForm").get(0);
 		if (form) {
 			if (args["pageNum"]) form[DWZ.pageInfo.pageNum].value = args["pageNum"];
 			if (args["numPerPage"]) form[DWZ.pageInfo.numPerPage].value = args["numPerPage"];
@@ -44,7 +44,7 @@
 			});
 		}
 	}
-	 
+	
 	/**
 	 * 处理div上的局部查询, 会重新载入指定div
 	 * @param {Object} form
