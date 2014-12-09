@@ -13,12 +13,13 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.common.MyAssert;
@@ -26,7 +27,6 @@ import com.vanstone.common.component.task.TaskManagerFactory;
 import com.vanstone.common.util.web.PageInfo;
 import com.vanstone.common.util.web.PageUtil;
 import com.vanstone.framework.business.services.DefaultBusinessService;
-import com.vanstone.fs.FSException;
 import com.vanstone.fs.FSFile;
 import com.vanstone.jupin.business.sdk.adminservice.pdm.define.DefineManager;
 import com.vanstone.jupin.business.sdk.adminservice.pdm.define.ImportBrandFileFormatException;
@@ -37,7 +37,6 @@ import com.vanstone.jupin.common.ImageFormatException;
 import com.vanstone.jupin.common.WeedFSException;
 import com.vanstone.jupin.common.entity.ImageBean;
 import com.vanstone.jupin.common.util.ExcelUtil;
-import com.vanstone.jupin.common.util.UploadUtil;
 import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
@@ -59,6 +58,8 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 	
 	/***/
 	private static final long serialVersionUID = -4899067001770580354L;
+	
+	private static Logger LOG = LoggerFactory.getLogger(DefineManagerImpl.class);
 	
 	@Autowired
 	private SizeService sizeService;
@@ -219,7 +220,7 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 		
 		ProductCategoryDetail productCategoryDetail = null;
 		if (categoryID != null) {
-			productCategoryDetail = this.commonSDKManager.getAndValidateProductCategoryDetail(categoryID);
+			productCategoryDetail = this.commonSDKManager.getProductCategoryDetailAndValidate(categoryID);
 		}
 		int allrows = this.brandService.getTotalBrands(productCategoryDetail, key);
 		if (allrows == 0) {
@@ -233,30 +234,41 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 	}
 
 	@Override
-	public Brand addBrand(String brandName, String brandNameEN, MultipartFile logoMultipartFile, String content) throws ImageFormatException, ObjectDuplicateException {
+	public Brand addBrand(String brandName, String brandNameEN, FSFile logoFSFile, String content) throws ImageFormatException, ObjectDuplicateException {
 		MyAssert.hasText(brandName);
+		MyAssert.notNull(logoFSFile);
 		Brand brand = new Brand();
 		brand.setBrandName(brandName);
 		brand.setBrandNameEN(brandNameEN);
 		brand.setContent(content);
-		if (UploadUtil.multipartFileExist(logoMultipartFile)) {
-			try {
-				ImageBean imageBean = UploadUtil.uploadImageFileThenWeedFS(logoMultipartFile);
-				brand.setLogoImage(imageBean);
-			} catch (WeedFSException e) {
-				e.printStackTrace();
-				throw new ImageFormatException(e);
-			} catch (FSException e) {
-				e.printStackTrace();
-				throw new ImageFormatException(e);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				throw new ImageFormatException(e);
-			}
+		try {
+			ImageBean imageBean = ImageBean.create(logoFSFile.getFile());
+			brand.setLogoImage(imageBean);
+		} catch (WeedFSException e) {
+			throw new ImageFormatException(e);
+		} catch (FileNotFoundException e) {
+			throw new ImageFormatException(e);
 		}
 		return this.brandService.addBrand(brand);
 	}
 
+	@Override
+	public Brand updateBrandLogoInfo(int brandId, FSFile logoFsFile) throws ImageFormatException, ObjectDuplicateException, ExistProductsNotAllowWriteException {
+		MyAssert.notNull(logoFsFile);
+		this.commonSDKManager.getBrandAndValidate(brandId);
+		try {
+			ImageBean imageBean = ImageBean.create(logoFsFile.getFile());
+			this.brandService.updateBrandLogoInfo(brandId, imageBean);
+		} catch (WeedFSException e) {
+			e.printStackTrace();
+			throw new ImageFormatException(e);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			throw new ImageFormatException(e);
+		}
+		return this.commonSDKManager.getBrandAndValidate(brandId);
+	}
+	
 	@Override
 	public ImportBrandResultBean batchImportBrands(FSFile fsFile, boolean asyn) throws ImportBrandFileFormatException {
 		final HSSFWorkbook workbook;
@@ -282,7 +294,6 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 					sb.append(messageSource.getMessage("jupin.adminservice.sdk.pdm.importbrand_success", new Integer[]{resultBean.getSuccessCount()}, null));
 					Message message = MessageHelper.createNewMessage(MessageLevel.Info, sb.toString());
 					message.send();
-					System.out.println(messageSource.getMessage("jupin.adminservice.sdk.pdm.importbrand_success", new Integer[]{resultBean.getSuccessCount()}, null));
 				} else {
 					StringBuffer sb = new StringBuffer();
 					for (String brandName : resultBean.getFailBrandNames()) {
@@ -290,7 +301,6 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 					}
 					Message message = MessageHelper.createNewMessage(MessageLevel.Error, messageSource.getMessage("jupin.adminservice.sdk.pdm.importbrand_fail", new Object[]{sb.toString(), resultBean.getSuccessCount(),resultBean.getFailCount() }, null));
 					message.send();
-					System.out.println(messageSource.getMessage("jupin.adminservice.sdk.pdm.importbrand_fail", new Object[]{sb.toString(), resultBean.getSuccessCount(),resultBean.getFailCount() }, null));
 				}
 				return null;
 			}
@@ -305,7 +315,6 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 		if (rowNo <= 0) {
 			return result;
 		}
-		System.out.println(rowNo);
 		for (int i=1;i<rowNo;i++) {
 			HSSFRow hssfRow = sheet.getRow(i);
 			HSSFCell brandNameHssfCell = hssfRow.getCell(0);
@@ -313,7 +322,7 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 			if (brandName == null || brandName.equals("")) {
 				continue;
 			}
-			System.out.println(rowNo + " -- " + i + " -- " + brandName);
+			LOG.debug("Current Excel Total Rows {}, RowNO {}, BrandName {}", rowNo, i, brandName);
 			HSSFCell brandNameENHssfCell = hssfRow.getCell(1);
 			String brandNameEN = brandNameENHssfCell != null ? ExcelUtil.getCellValueAsString(brandNameENHssfCell) : null;
 			

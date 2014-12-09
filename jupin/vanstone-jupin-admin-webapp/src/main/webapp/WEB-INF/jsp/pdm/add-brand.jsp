@@ -32,7 +32,7 @@
 				<input type="file" name="logoMultipartFile" class="form-control input-sm" />
 			</div>
 			<div class="form-group">
-				<label for="content">LOGO文件</label>
+				<label for="content">品牌介绍</label>
 				<form:textarea path="content" cssClass="form-control input-sm" rows="5" />
 			</div>
 			<button type="submit" class="btn btn-default">保存品牌信息</button>

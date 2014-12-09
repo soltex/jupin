@@ -11,7 +11,7 @@ import com.vanstone.jupin.admin.webapp.AdminBaseForm;
  * @author shipeng
  */
 public class BrandForm extends AdminBaseForm {
-	private Integer id;
+	private Integer brandId;
 	private String brandName;
 	private String brandNameEN;
 	private String content;
@@ -27,12 +27,12 @@ public class BrandForm extends AdminBaseForm {
 		this.batchImportFile = batchImportFile;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getBrandId() {
+		return brandId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setBrandId(Integer brandId) {
+		this.brandId = brandId;
 	}
 
 	public String getBrandName() {

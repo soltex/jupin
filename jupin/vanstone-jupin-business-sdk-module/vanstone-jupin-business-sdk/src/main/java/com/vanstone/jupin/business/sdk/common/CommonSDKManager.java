@@ -48,6 +48,6 @@ public interface CommonSDKManager {
 	 * @param id
 	 * @return
 	 */
-	ProductCategoryDetail getAndValidateProductCategoryDetail(int id);
+	ProductCategoryDetail getProductCategoryDetailAndValidate(int id);
 	
 }

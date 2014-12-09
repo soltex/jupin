@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.vanstone.business.ObjectDuplicateException;
 import com.vanstone.common.util.web.PageInfo;
@@ -99,7 +98,16 @@ public interface DefineManager {
 	 * @throws ImageFormatException
 	 * @throws ObjectDuplicateException
 	 */
-	Brand addBrand(String brandName, String brandNameEN, MultipartFile logoMultipartFile, String content) throws ImageFormatException, ObjectDuplicateException;
+	Brand addBrand(String brandName, String brandNameEN, FSFile logoFSFile, String content) throws ImageFormatException, ObjectDuplicateException;
+	
+	/**
+	 * @param brandId
+	 * @param logoMultipartFile
+	 * @return
+	 * @throws ImageFormatException
+	 * @throws ObjectDuplicateException
+	 */
+	Brand updateBrandLogoInfo(int brandId, FSFile logoFsFile) throws ImageFormatException, ObjectDuplicateException, ExistProductsNotAllowWriteException;
 	
 	/**
 	 * 批量导出品牌信息

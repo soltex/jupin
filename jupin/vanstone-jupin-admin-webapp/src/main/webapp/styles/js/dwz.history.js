@@ -53,7 +53,7 @@
 			reload: function(){
 				$(window).trigger('hashchange');
 			},
-
+			
 			_loadHistory: function(hash){
 				var hashItem = $.History._hash[hash] || {url:hash};
 				$('#'+$.History._setting.containerId).loadUrl(hashItem.url, hashItem.data);

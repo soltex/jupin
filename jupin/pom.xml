@@ -30,6 +30,7 @@
 		<centralserver.version>1.0.13</centralserver.version>
 		<vanstone.commons.version>1.2.10</vanstone.commons.version>
 		<jupin.version>1.0.0</jupin.version>
+		<vanstone.img.server.version>1.0.1</vanstone.img.server.version>
 	</properties>
 	<dependencies>
 

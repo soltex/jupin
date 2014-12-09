@@ -56,6 +56,11 @@
 			<artifactId>poi</artifactId>
 			<version>3.10.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.vanstone</groupId>
+			<artifactId>vanstone-img-server-sdk</artifactId>
+			<version>${vanstone.img.server.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>

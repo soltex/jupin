@@ -150,6 +150,12 @@
 					} else {
 						$('#' + (json.rel || DWZ.conf.containerId)).loadUrl(json.forwardUrl);
 					}
+					var url = json.forwardUrl,
+					hash = url;
+					
+					if ($.History) $.History.addHistory(hash, url);
+					var current_hash = hash.skipChar('#').replace(/\?.*$/, '');
+					location.hash=current_hash;
 				}
 				
 				/*

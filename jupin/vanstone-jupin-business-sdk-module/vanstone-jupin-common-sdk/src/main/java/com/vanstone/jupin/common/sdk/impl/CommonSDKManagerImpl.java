@@ -65,7 +65,7 @@ public class CommonSDKManagerImpl implements CommonSDKManager {
 	}
 
 	@Override
-	public ProductCategoryDetail getAndValidateProductCategoryDetail(int id) {
+	public ProductCategoryDetail getProductCategoryDetailAndValidate(int id) {
 		ProductCategoryDetail productCategoryDetail = this.categoryService.getProductCategoryDetail(id);
 		MyAssert4Business.notNull(productCategoryDetail);
 		return productCategoryDetail;

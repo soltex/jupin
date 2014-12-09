@@ -3,10 +3,7 @@
  */
 package com.vanstone.jupin.admin.webapp.pdm;
 
-import java.util.Locale;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -63,8 +60,18 @@ public class BrandAction extends AdminBaseAction {
 	@RequestMapping("/add-brand-action")
 	@ResponseBody
 	public ViewCommandObject addBrandAction(@ModelAttribute("brandForm")BrandForm brandForm, ModelMap modelMap){
+		FSFile logoFsFile = null;
+		if (UploadUtil.multipartFileExist(brandForm.getLogoMultipartFile())) {
+			try {
+				logoFsFile = FSManagerExt.getInstance().uploadBySpring(brandForm.getLogoMultipartFile(), FSType.Temporary);
+			} catch (FSException e) {
+				e.printStackTrace();
+				ViewCommandObject viewCommandObject = ViewCommandHelper.createErrorObject("图片文件格式错误，请联系管理员！");
+				return viewCommandObject;
+			}
+		}
 		try {
-			defineManager.addBrand(brandForm.getBrandName(), brandForm.getBrandNameEN(), brandForm.getLogoMultipartFile(), brandForm.getContent());
+			defineManager.addBrand(brandForm.getBrandName(), brandForm.getBrandNameEN(), logoFsFile, brandForm.getContent());
 		} catch (ImageFormatException e) {
 			e.printStackTrace();
 			ViewCommandObject viewCommandObject = ViewCommandHelper.createErrorObject("图片文件格式错误，请联系管理员！");
@@ -121,40 +128,69 @@ public class BrandAction extends AdminBaseAction {
 	}
 	
 	@RequestMapping("/view-base-brand/{brandId}")
-	public String viewBaseBrand(@PathVariable("brandId")Integer brandId, @ModelAttribute("brandForm")BrandForm brandForm) {
+	public String viewBaseBrand(@PathVariable("brandId")Integer brandId, @ModelAttribute("brandForm")BrandForm brandForm, ModelMap modelMap) {
+		Brand brand = this.commonSDKManager.getBrandAndValidate(brandId);
+		brandForm.setBrandName(brand.getBrandName());
+		brandForm.setBrandNameEN(brand.getBrandNameEN());
+		brandForm.setContent(brand.getContent());
+		brandForm.setBrandId(brand.getId());
 		
-		return null;
+		modelMap.put("brand", brand);
+		return "/pdm/view-base-brand";
 	}
 	
 	@RequestMapping("/update-base-brand-action")
 	@ResponseBody
 	public ViewCommandObject updateBaseBrandAction(@ModelAttribute("brandForm")BrandForm brandForm, ModelMap modelMap) {
-		
-		return null;
+		try {
+			this.brandService.updateBrandBaseInfo(brandForm.getBrandId(), brandForm.getBrandName(), brandForm.getBrandNameEN(), brandForm.getContent(), false);
+		} catch (ExistProductsNotAllowWriteException e) {
+			ViewCommandObject viewCommandObject = ViewCommandHelper.createErrorObject("当前品牌信息不允许修改，如需修改，请联系管理员！");
+			return viewCommandObject;
+		} catch (ObjectDuplicateException e) {
+			ViewCommandObject viewCommandObject = ViewCommandHelper.createErrorObject("品牌信息以及存在，请在列表中直接查找！");
+			return viewCommandObject;
+		}
+		ViewCommandObject object = ViewCommandHelper.createSuccessObject("品牌信息增加成功");
+		object.setForwardUrl("/pdm/search-brands");
+		return object;
 	}
 	
 	@RequestMapping("/view-brand-logo/{brandId}")
-	public String viewBrandLogo(@PathVariable("brandId")Integer brandId, @ModelAttribute("brandForm")BrandForm brandForm) {
+	public String viewBrandLogo(@PathVariable("brandId")Integer brandId, @ModelAttribute("brandForm")BrandForm brandForm, ModelMap modelMap) {
+		Brand brand = this.commonSDKManager.getBrandAndValidate(brandId);
+		brandForm.setBrandId(brand.getId());
 		
-		return null;
+		modelMap.put("brand", brand);
+		
+		return "/pdm/view-brand-logo";
 	}
+	
 	@RequestMapping("/update-brand-logo-action")
 	@ResponseBody
 	public ViewCommandObject updateBrandLogoAction(@ModelAttribute("brandForm")BrandForm brandForm, ModelMap modelMap) {
-		
-		return null;
-	}
-	
-	@Autowired
-	private ResourceBundleMessageSource resourceBundleMessageSource;
-	
-	@RequestMapping("/view-resource")
-	public String viewResource() {
-//		System.out.println(this.resourceBundleMessageSource.getMessage("aa", null, null,null));
-//		System.out.println(this.resourceBundleMessageSource.getMessage("bb", null, null,null));
-		resourceBundleMessageSource.getMessage("aa", null, Locale.CHINA);
-		resourceBundleMessageSource.getMessage("bb", null, Locale.CHINA);
-		return null;
+		FSFile logoFsFile = null;
+		if (UploadUtil.multipartFileExist(brandForm.getLogoMultipartFile())) {
+			try {
+				logoFsFile = FSManagerExt.getInstance().uploadBySpring(brandForm.getLogoMultipartFile(), FSType.Temporary);
+			} catch (FSException e) {
+				e.printStackTrace();
+				ViewCommandObject viewCommandObject = ViewCommandHelper.createErrorObject("图片文件格式错误，请联系管理员！");
+				return viewCommandObject;
+			}
+		}
+		try {
+			this.defineManager.updateBrandLogoInfo(brandForm.getBrandId(), logoFsFile);
+		} catch (ImageFormatException e) {
+			e.printStackTrace();
+		} catch (ExistProductsNotAllowWriteException e) {
+			e.printStackTrace();
+		} catch (ObjectDuplicateException e) {
+			e.printStackTrace();
+		}
+		ViewCommandObject object = ViewCommandHelper.createSuccessObject("品牌信息增加成功");
+		object.setForwardUrl("/pdm/search-brands");
+		return object;
 	}
 	
 }

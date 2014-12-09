@@ -6,7 +6,7 @@ var MESSAGEBOX_CONSTANTS = {
 }
 
 $(document).ready(function() {
-	var timerid = setInterval(retrievalAllMessage, 1000000);
+	var timerid = setInterval(retrievalAllMessage, 10000);
 });
 
 function retrievalAllMessage() {
