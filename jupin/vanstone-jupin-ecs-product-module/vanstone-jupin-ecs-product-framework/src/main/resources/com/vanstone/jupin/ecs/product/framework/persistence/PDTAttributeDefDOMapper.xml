@@ -9,7 +9,6 @@
 		<result column="SEARCHABLE" property="searchable" jdbcType="INTEGER" />
 		<result column="LISTSHOWABLE" property="listshowable" jdbcType="INTEGER" />
 		<result column="MULTISELECTABLE" property="multiselectable" jdbcType="INTEGER" />
-		<result column="EXIST_PRODUCT" property="existProduct" jdbcType="INTEGER" />
 		<result column="REQUIREDABLE" property="requiredable" jdbcType="INTEGER" />
 	</resultMap>
 	<resultMap id="ResultMapWithBLOBs" type="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTAttributeDefDO" extends="BaseResultMap">
@@ -17,7 +16,7 @@
 	</resultMap>
 	<sql id="Base_Column_List">
 		ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE, SEARCHABLE, LISTSHOWABLE,
-		MULTISELECTABLE, EXIST_PRODUCT,
+		MULTISELECTABLE ,
 		REQUIREDABLE
 	</sql>
 	<sql id="Blob_Column_List">
@@ -44,13 +43,13 @@
 		</selectKey>
 		insert into pdt_attribute_def (ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE,
 		SEARCHABLE, LISTSHOWABLE, MULTISELECTABLE,
-		EXIST_PRODUCT, REQUIREDABLE, ATTRIBUTE_DESCRIPTION
+		REQUIREDABLE, ATTRIBUTE_DESCRIPTION
 		)
 		values (#{id,jdbcType=INTEGER}, #{attributeName,jdbcType=VARCHAR},
 		#{attributeType,jdbcType=INTEGER},
 		#{searchable,jdbcType=INTEGER}, #{listshowable,jdbcType=INTEGER},
 		#{multiselectable,jdbcType=INTEGER},
-		#{existProduct,jdbcType=INTEGER}, #{requiredable,jdbcType=INTEGER},
+		#{requiredable,jdbcType=INTEGER},
 		#{attributeDescription,jdbcType=LONGVARCHAR}
 		)
 	</insert>
@@ -80,9 +79,6 @@
 			<if test="multiselectable != null">
 				MULTISELECTABLE,
 			</if>
-			<if test="existProduct != null">
-				EXIST_PRODUCT,
-			</if>
 			<if test="requiredable != null">
 				REQUIREDABLE,
 			</if>
@@ -108,9 +104,6 @@
 			</if>
 			<if test="multiselectable != null">
 				#{multiselectable,jdbcType=INTEGER},
-			</if>
-			<if test="existProduct != null">
-				#{existProduct,jdbcType=INTEGER},
 			</if>
 			<if test="requiredable != null">
 				#{requiredable,jdbcType=INTEGER},
@@ -139,9 +132,6 @@
 			<if test="multiselectable != null">
 				MULTISELECTABLE = #{multiselectable,jdbcType=INTEGER},
 			</if>
-			<if test="existProduct != null">
-				EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER},
-			</if>
 			<if test="requiredable != null">
 				REQUIREDABLE = #{requiredable,jdbcType=INTEGER},
 			</if>
@@ -159,7 +149,6 @@
 		SEARCHABLE = #{searchable,jdbcType=INTEGER},
 		LISTSHOWABLE = #{listshowable,jdbcType=INTEGER},
 		MULTISELECTABLE = #{multiselectable,jdbcType=INTEGER},
-		EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER},
 		REQUIREDABLE = #{requiredable,jdbcType=INTEGER},
 		ATTRIBUTE_DESCRIPTION = #{attributeDescription,jdbcType=LONGVARCHAR}
 		where ID = #{id,jdbcType=INTEGER}
@@ -172,11 +161,9 @@
 		SEARCHABLE = #{searchable,jdbcType=INTEGER},
 		LISTSHOWABLE = #{listshowable,jdbcType=INTEGER},
 		MULTISELECTABLE = #{multiselectable,jdbcType=INTEGER},
-		EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER},
 		REQUIREDABLE = #{requiredable,jdbcType=INTEGER}
 		where ID = #{id,jdbcType=INTEGER}
 	</update>
-
 	<select id="selectIDsByCategoryIDs_Searchable" parameterType="map" resultType="integer">
 		SELECT pdt_attribute_def.ID FROM 
 		pdt_attribute_def INNER JOIN PDT_CATEGORY_ATTRIBUTE_DEF_REL 
@@ -185,4 +172,42 @@
 		pdt_attribute_def.SEARCHABLE = #{searchable,jdbcType=INTEGER}
 		ORDER BY PDT_CATEGORY_ATTRIBUTE_DEF_REL.SORT DESC 
 	</select>
+	<select id="selectIDsByCondition" parameterType="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTAttributeDefDO" resultType="integer">
+		SELECT pdt_attribute_def.ID FROM 
+		pdt_attribute_def 
+		<include refid="SELECT_BY_CONDITION_SQL"/>
+		ORDER BY ID DESC 
+	</select>
+	<select id="selectCountByCondition" parameterType="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTAttributeDefDO" resultType="integer">
+		SELECT COUNT(pdt_attribute_def.ID) AS C FROM 
+		pdt_attribute_def 
+		<include refid="SELECT_BY_CONDITION_SQL"/>
+	</select>
+	<sql id="SELECT_BY_CONDITION_SQL">
+		<where>
+			<if test="attributeType != null">
+				AND ATTRIBUTE_TYPE = #{attributeType,jdbcType=INTEGER} 
+			</if>
+			<if test="key != null and key != ''">
+				AND 
+				(
+				ATTRIBUTE_NAME LIKE "%"#{attributeName, jdbcType=VARCHAR}"%" 
+				OR 
+				ATTRIBUTE_DESCRIPTION LIKE "%"#{attributeName, jdbcType=VARCHAR}"%" 
+				)
+			</if>
+			<if test="listshowable != null">
+				AND LISTSHOWABLE = #{listshowable,jdbcType=INTEGER} 
+			</if>
+			<if test="requiredable != null">
+				AND REQUIREDABLE = #{requiredable,jdbcType=INTEGER} 
+			</if>
+			<if test="multiselectable != null">
+				AND MULTISELECTABLE = #{multiselectable,jdbcType=INTEGER} 
+			</if>
+			<if test="searchable != null">
+				AND SEARCHABLE = #{searchable,jdbcType=INTEGER} 
+			</if>
+		</where>
+	</sql>
 </mapper>

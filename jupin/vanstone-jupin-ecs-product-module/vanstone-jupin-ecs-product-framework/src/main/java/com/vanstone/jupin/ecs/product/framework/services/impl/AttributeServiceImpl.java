@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import com.vanstone.jupin.ecs.product.define.attribute.Attr4EnumValue;
 import com.vanstone.jupin.ecs.product.define.attribute.Attr4Text;
 import com.vanstone.jupin.ecs.product.define.attribute.AttributeState;
 import com.vanstone.jupin.ecs.product.define.attribute.AttributeType;
+import com.vanstone.jupin.ecs.product.define.services.AttributeCondition;
 import com.vanstone.jupin.ecs.product.define.services.AttributeService;
 import com.vanstone.jupin.ecs.product.define.services.DefineCommonService;
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTAttributeDefDOMapper;
@@ -112,12 +114,11 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 					valueDo.setSort(index);
 					valueDo.setValueState(AttributeState.Active.getCode());
 					pdtAttributeEnumvalueDOMapper.insert(valueDo);
-					attr4Enum.putValue(valueDo.getId(), value);
 					index++;
 				}
 			}
 		});
-		return attr4Enum;
+		return (Attr4Enum)this.getAttribute(attr4Enum.getId());
 	}
 	
 	/*
@@ -441,5 +442,37 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 		});
 		return dataMap;
 	}
+
+	@Override
+	public Collection<AbstractAttribute> getAttributesByCondition(AttributeCondition condition, int offset, int limit) {
+		PDTAttributeDefDO model = parseByAttributeCondition(condition);
+		List<Integer> ids = this.pdtAttributeDefDOMapper.selectIDsByCondition(model, new RowBounds(offset, limit));
+		if (ids == null || ids.size() <=0) {
+			return null;
+		}
+		Map<Integer, AbstractAttribute> dataMap = this.getAttributesByIDsMap(ids);
+		if (dataMap == null || dataMap.size() <= 0) {
+			return null;
+		}
+		return dataMap.values();
+	}
 	
+	@Override
+	public int getTotalAttributesByCondition(AttributeCondition condition) {
+		PDTAttributeDefDO model = parseByAttributeCondition(condition);
+		return this.pdtAttributeDefDOMapper.selectCountByCondition(model);
+	}
+	
+	private PDTAttributeDefDO parseByAttributeCondition(AttributeCondition condition) {
+		boolean empty = condition != null ? condition.isEmpty() : true;
+		PDTAttributeDefDO model = new PDTAttributeDefDO();
+		if (!empty) {
+			model.setAttributeName(condition.getKey());
+			model.setListshowable(condition.getListshowable() != null ? BoolUtil.parseBoolean(condition.getListshowable()) : null);
+			model.setRequiredable(condition.getRequiredable() != null ? BoolUtil.parseBoolean(condition.getRequiredable()) : null);
+			model.setMultiselectable(condition.getMultiselectable() != null ? BoolUtil.parseBoolean(condition.getMultiselectable()) : null);
+			model.setSearchable(condition.getSearchable() != null ? BoolUtil.parseBoolean(condition.getSearchable()) : null);
+		}
+		return model;
+	}
 }

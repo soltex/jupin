@@ -101,4 +101,20 @@ public interface AttributeService {
 	 */
 	AbstractAttribute refreshAttribute(int id);
 	
+	/**
+	 * 检索属性
+	 * @param key
+	 * @param offset
+	 * @param limit
+	 * @return
+	 */
+	Collection<AbstractAttribute> getAttributesByCondition(AttributeCondition condition, int offset, int limit);
+	
+	/**
+	 * 检索条件数量
+	 * @param condition
+	 * @return
+	 */
+	int getTotalAttributesByCondition(AttributeCondition condition);
+	
 }

@@ -155,6 +155,7 @@ public class BrandServiceImpl extends DefaultBusinessService implements BrandSer
 		final ServiceUtil<Brand, String> serviceUtil = new ServiceUtil<Brand, String>();
 		Brand loadBrand = serviceUtil.getObjectFromRedisByKey(redisTemplate, JupinRedisRef.Jupin_Core, Brand.class, key);
 		if (loadBrand != null) {
+			LOG.debug("Load Brand FROM Redis {}, key {}",id, key);
 			return loadBrand;
 		}
 		return ZKUtil.executeMutex(key, new InterProcessMutexCallback<Brand>() {

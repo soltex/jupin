@@ -13,8 +13,6 @@ public class PDTAttributeDefDO {
 
     private Integer multiselectable;
 
-    private Integer existProduct;
-
     private Integer requiredable;
 
     private String attributeDescription;
@@ -66,15 +64,7 @@ public class PDTAttributeDefDO {
     public void setMultiselectable(Integer multiselectable) {
         this.multiselectable = multiselectable;
     }
-
-    public Integer getExistProduct() {
-        return existProduct;
-    }
-
-    public void setExistProduct(Integer existProduct) {
-        this.existProduct = existProduct;
-    }
-
+    
     public Integer getRequiredable() {
         return requiredable;
     }

@@ -131,4 +131,9 @@ public interface DefineManager {
 	 * 刷新全部属性信息，异步
 	 */
 	void refreshAllAttributes();
+	
+	/**
+	 * 验证定义模块
+	 */
+	ValidateDefineBean validateDefineModule();
 }

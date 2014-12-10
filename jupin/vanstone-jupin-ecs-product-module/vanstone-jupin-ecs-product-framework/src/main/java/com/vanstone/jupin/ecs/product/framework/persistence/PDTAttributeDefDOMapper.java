@@ -3,6 +3,7 @@ package com.vanstone.jupin.ecs.product.framework.persistence;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 import com.vanstone.dal.mybatis.MyBatisRepository;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTAttributeDefDO;
@@ -25,4 +26,7 @@ public interface PDTAttributeDefDOMapper {
     
     List<Integer> selectIDsByCategoryIDs_Searchable(@Param("categoryIds")Integer[] categoryIds, @Param("searchable")boolean searchable);
     
+    List<Integer> selectIDsByCondition(PDTAttributeDefDO condition, RowBounds rowBounds);
+    
+    int selectCountByCondition(PDTAttributeDefDO condition);
 }

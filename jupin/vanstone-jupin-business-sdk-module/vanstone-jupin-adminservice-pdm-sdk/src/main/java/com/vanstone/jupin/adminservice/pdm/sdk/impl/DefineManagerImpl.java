@@ -32,6 +32,7 @@ import com.vanstone.jupin.business.sdk.adminservice.pdm.DefineManager;
 import com.vanstone.jupin.business.sdk.adminservice.pdm.ImportBrandFileFormatException;
 import com.vanstone.jupin.business.sdk.adminservice.pdm.ImportBrandResultBean;
 import com.vanstone.jupin.business.sdk.adminservice.pdm.SizeBean;
+import com.vanstone.jupin.business.sdk.adminservice.pdm.ValidateDefineBean;
 import com.vanstone.jupin.business.sdk.common.CommonSDKManager;
 import com.vanstone.jupin.common.ImageFormatException;
 import com.vanstone.jupin.common.WeedFSException;
@@ -236,18 +237,19 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 	@Override
 	public Brand addBrand(String brandName, String brandNameEN, FSFile logoFSFile, String content) throws ImageFormatException, ObjectDuplicateException {
 		MyAssert.hasText(brandName);
-		MyAssert.notNull(logoFSFile);
 		Brand brand = new Brand();
 		brand.setBrandName(brandName);
 		brand.setBrandNameEN(brandNameEN);
 		brand.setContent(content);
-		try {
-			ImageBean imageBean = ImageBean.create(logoFSFile.getFile());
-			brand.setLogoImage(imageBean);
-		} catch (WeedFSException e) {
-			throw new ImageFormatException(e);
-		} catch (FileNotFoundException e) {
-			throw new ImageFormatException(e);
+		if (logoFSFile != null) {
+			try {
+				ImageBean imageBean = ImageBean.create(logoFSFile.getFile());
+				brand.setLogoImage(imageBean);
+			} catch (WeedFSException e) {
+				throw new ImageFormatException(e);
+			} catch (FileNotFoundException e) {
+				throw new ImageFormatException(e);
+			}
 		}
 		return this.brandService.addBrand(brand);
 	}
@@ -365,6 +367,12 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 	public void refreshAllAttributes() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public ValidateDefineBean validateDefineModule() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
