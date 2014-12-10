@@ -70,7 +70,16 @@ mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-ecs-prod
 sdk
 mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-common-sdk -Dversion=1.0.0
 mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-adminservice-sdk -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-adminservice-pdm-sdk -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-adminservice-authority-sdk -Dversion=1.0.0
 
-
-
+messagebox
 mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-messagebox -Dversion=1.0.0
+
+
+authority
+
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-authority-module -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-authority-api -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-authority -Dversion=1.0.0
+

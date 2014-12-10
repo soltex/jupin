@@ -23,7 +23,6 @@
 		</ul>
 		
 		
-		<h2>编辑品牌信息</h2>
 		<form:form action="/pdm/update-base-brand-action" method="post" commandName="brandForm" cssClass="required-validate" enctype="multipart/form-data">
 			<form:hidden path="brandId"/>
 			<div class="form-group">

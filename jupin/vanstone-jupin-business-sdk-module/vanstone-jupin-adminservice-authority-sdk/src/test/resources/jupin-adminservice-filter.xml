@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<authority-filter-conf>
+	<loginpage>/login</loginpage>
+	<excludes>
+		<excludepage></excludepage>
+		<excludepage></excludepage>
+		<excludepage></excludepage>
+		<excludepage></excludepage>
+		<excludepage></excludepage>
+	</excludes>
+</authority-filter-conf>

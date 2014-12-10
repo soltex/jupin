@@ -3,6 +3,7 @@
  */
 package com.vanstone.jupin.business.sdk.common;
 
+import com.vanstone.jupin.authority.Admin;
 import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Color;
@@ -49,5 +50,12 @@ public interface CommonSDKManager {
 	 * @return
 	 */
 	ProductCategoryDetail getProductCategoryDetailAndValidate(int id);
+	
+	/**
+	 * 获取Admin对象并验证
+	 * @param id
+	 * @return
+	 */
+	Admin getAdminAndValidate(String id);
 	
 }

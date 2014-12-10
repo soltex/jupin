@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vanstone.jupin.admin.webapp.AdminBaseAction;
-import com.vanstone.jupin.business.sdk.adminservice.messagebox.MessageNotificationManager;
+import com.vanstone.jupin.business.sdk.common.MessageNotificationManager;
 import com.vanstone.jupin.messagebox.Message;
 
 /**

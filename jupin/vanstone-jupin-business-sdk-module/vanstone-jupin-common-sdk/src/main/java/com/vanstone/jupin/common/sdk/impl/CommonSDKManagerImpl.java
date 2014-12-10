@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vanstone.business.MyAssert4Business;
+import com.vanstone.jupin.authority.Admin;
+import com.vanstone.jupin.authority.services.AdminService;
 import com.vanstone.jupin.business.sdk.common.CommonSDKManager;
 import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
@@ -32,6 +34,8 @@ public class CommonSDKManagerImpl implements CommonSDKManager {
 	private BrandService brandService;
 	@Autowired
 	private CategoryService categoryService;
+	@Autowired
+	private AdminService adminService;
 	
 	/* (non-Javadoc)
 	 * @see com.vanstone.jupin.business.sdk.common.CommonSDKManager#getAndValidateColor(int)
@@ -71,4 +75,11 @@ public class CommonSDKManagerImpl implements CommonSDKManager {
 		return productCategoryDetail;
 	}
 
+	@Override
+	public Admin getAdminAndValidate(String id) {
+		Admin admin = this.adminService.getAdmin(id);
+		MyAssert4Business.notNull(admin);
+		return admin;
+	}
+	
 }

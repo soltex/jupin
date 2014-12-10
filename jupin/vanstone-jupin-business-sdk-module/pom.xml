@@ -16,6 +16,8 @@
 		<module>vanstone-jupin-business-sdk</module>
     <module>vanstone-jupin-common-sdk</module>
     <module>vanstone-jupin-adminservice-sdk</module>
+    <module>vanstone-jupin-adminservice-authority-sdk</module>
+    <module>vanstone-jupin-adminservice-pdm-sdk</module>
   </modules>
 
 	<distributionManagement>

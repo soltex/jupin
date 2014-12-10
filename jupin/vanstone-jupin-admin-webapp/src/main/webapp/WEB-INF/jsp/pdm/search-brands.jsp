@@ -53,7 +53,7 @@
 						<th>系统内置</th>
 						<th>涉足品类数量</th>
 						<th>商品数量</th>
-						<th style="width: 100px;">##</th>
+						<th style="width: 120px;">##</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -74,8 +74,14 @@
 						<td>${brand.productCategoryCount }</td>
 						<td>${brand.productCount }</td>
 						<td>
-						<a href="/pdm/view-base-brand/${brand.id }" data-history>编辑</a>
-						<a href="/pdm/delete-brand-action/${brand.id }"  title="确认是否删除该项 ？"  data-todo="ajaxTodo" class="">删除</a></td>
+						<p>
+							<a href="/pdm/view-base-brand/${brand.id }" data-history>编辑</a>
+							<a href="/pdm/delete-brand-action/${brand.id }"  title="确认是否删除该项 ？"  data-todo="ajaxTodo" class="">删除</a>
+						</p>
+						<p>
+							<a href="/pdm/view-brand-logo/${brand.id }" data-history>[编辑LOGO]</a>
+						</p>
+						</td>
 					</tr>
 					</c:forEach>
 				</tbody>
