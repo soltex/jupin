@@ -201,39 +201,32 @@
   <update id="updateAdminName" parameterType="com.vanstone.jupin.authority.persistence.object.AuthAdminDO" >
   	UPDATE AUTH_ADMIN 
   	SET 
-      ADMIN_NAME = #{adminName,jdbcType=VARCHAR},
+      ADMIN_NAME = #{adminName,jdbcType=VARCHAR}
       SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateAdminRole" parameterType="com.vanstone.jupin.authority.persistence.object.AuthAdminDO" >
   	UPDATE AUTH_ADMIN 
   	SET 
-      ADMIN_ROLE = #{adminRole,jdbcType=INTEGER},
+      ADMIN_ROLE = #{adminRole,jdbcType=INTEGER}
       SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateAdminState" parameterType="com.vanstone.jupin.authority.persistence.object.AuthAdminDO" >
   	UPDATE AUTH_ADMIN 
   	SET 
-      ADMIN_STATE = #{adminState,jdbcType=INTEGER},
-      SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP}
-    where ID = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateAdminState" parameterType="com.vanstone.jupin.authority.persistence.object.AuthAdminDO" >
-  	UPDATE AUTH_ADMIN 
-  	SET 
-      ADMIN_STATE = #{adminState,jdbcType=INTEGER},
+      ADMIN_STATE = #{adminState,jdbcType=INTEGER}
       SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updatePassword" parameterType="com.vanstone.jupin.authority.persistence.object.AuthAdminDO" >
   	UPDATE AUTH_ADMIN 
   	SET 
-      ADMIN_PWD = #{adminPwd,jdbcType=VARCHAR},
+      ADMIN_PWD = #{adminPwd,jdbcType=VARCHAR}
       SYS_UPDATE_TIME = #{sysUpdateTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
-  <select id="selectByKey" parameterType="map" resultMap="BaseResultMap">
+   <select id="selectByKey" parameterType="map" resultMap="BaseResultMap">
   	SELECT <include refid="Base_Column_List"/> FROM 
   	AUTH_ADMIN 
   	<include refid="SELECT_BY_KEY_SQL"/>

@@ -117,4 +117,18 @@ public interface DefineManager {
 	 */
 	ImportBrandResultBean batchImportBrands(@NotNull FSFile fsFile,boolean asyn) throws ImportBrandFileFormatException;
 	
+	/**
+	 * 刷新全部品类信息,异步
+	 */
+	void refreshAllProductCategoryDetail();
+	
+	/**
+	 * 刷新全部品牌信息，异步
+	 */
+	void refreshAllBrands();
+	
+	/**
+	 * 刷新全部属性信息，异步
+	 */
+	void refreshAllAttributes();
 }

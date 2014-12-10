@@ -52,7 +52,7 @@ import com.vanstone.jupin.messagebox.MessageLevel;
 /**
  * @author shipeng
  */
-@Service("sizeManager")
+@Service("defineManager")
 @Validated
 public class DefineManagerImpl extends DefaultBusinessService implements DefineManager , MessageSourceAware {
 	
@@ -347,6 +347,24 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public void refreshAllProductCategoryDetail() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void refreshAllBrands() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void refreshAllAttributes() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
