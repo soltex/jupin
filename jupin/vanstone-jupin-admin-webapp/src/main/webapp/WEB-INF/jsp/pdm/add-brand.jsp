@@ -4,18 +4,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
+<%@ include file="/inc/var.jsp" %>
+
 
 
 <div class="row">
-	<div class="col-md-2">
-		<div class="list-group" style="position: fixed;">
-			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>品类定义管理</a>
-			<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>商品属性定义管理</a>
-			<a href="/pdm/search-brands" class="list-group-item" data-history><span class="glyphicon glyphicon-arrow-right"></span>品牌信息管理</a>
-			<a href="/pdm/view-colors" class="list-group-item active" data-history><span class="glyphicon glyphicon-arrow-right"></span>SKU颜色表</a>
-			<a href="/pdm/view-sizetemplates" class="list-group-item" data-ajax data-history><span class="glyphicon glyphicon-arrow-right"></span>SKU尺码模板管理</a>
-		</div>
+	<div class="col-md-3">
+		<%@ include file="/inc/pdm-menu.jsp" %>
 	</div>
+	
+	
 	<div class="col-md-10">
 		<h2>增加品牌信息</h2>
 		<form:form action="/pdm/add-brand-action" method="post" commandName="brandForm" cssClass="required-validate" enctype="multipart/form-data">

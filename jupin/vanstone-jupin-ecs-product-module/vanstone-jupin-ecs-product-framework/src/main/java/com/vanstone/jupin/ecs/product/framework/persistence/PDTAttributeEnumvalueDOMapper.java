@@ -11,7 +11,9 @@ import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTAttributeE
 public interface PDTAttributeEnumvalueDOMapper {
 	
     int deleteByPrimaryKey(Integer id);
-
+    
+    int deleteByAttributeID(@Param("attributeId")Integer attributeId);
+    
     int insert(PDTAttributeEnumvalueDO record);
 
     int insertSelective(PDTAttributeEnumvalueDO record);

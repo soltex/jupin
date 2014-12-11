@@ -188,7 +188,7 @@
 			<if test="attributeType != null">
 				AND ATTRIBUTE_TYPE = #{attributeType,jdbcType=INTEGER} 
 			</if>
-			<if test="key != null and key != ''">
+			<if test="attributeName != null and attributeName != ''">
 				AND 
 				(
 				ATTRIBUTE_NAME LIKE "%"#{attributeName, jdbcType=VARCHAR}"%" 

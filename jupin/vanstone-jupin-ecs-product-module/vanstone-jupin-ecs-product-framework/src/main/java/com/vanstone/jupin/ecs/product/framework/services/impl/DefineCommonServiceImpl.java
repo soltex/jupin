@@ -131,4 +131,13 @@ public class DefineCommonServiceImpl extends DefaultBusinessService implements D
 		return true;
 	}
 
+	@Override
+	public boolean validateAllowUDOperateAttribute(int attributeID) {
+		List<PDTCategoryDO> tempModels = this.pdtCategoryDOMapper.selectByAttributeId_ExistProduct(attributeID, BoolUtil.parseBoolean(true));
+		if (tempModels != null && tempModels.size() >0) {
+			return false;
+		}
+		return true;
+	}
+	
 }

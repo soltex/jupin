@@ -15,8 +15,10 @@ import com.vanstone.common.util.web.PageInfo;
 import com.vanstone.fs.FSFile;
 import com.vanstone.jupin.common.ImageFormatException;
 import com.vanstone.jupin.ecs.product.define.Brand;
+import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
+import com.vanstone.jupin.ecs.product.define.services.AttributeCondition;
 import com.vanstone.jupin.ecs.product.define.services.ExistProductsNotAllowWriteException;
 
 /**
@@ -136,4 +138,13 @@ public interface DefineManager {
 	 * 验证定义模块
 	 */
 	ValidateDefineBean validateDefineModule();
+	
+	/**
+	 * 检索属性信息
+	 * @param condition
+	 * @param pageno
+	 * @return
+	 */
+	PageInfo<AbstractAttribute> searchAttributes(AttributeCondition condition, int pageno,int size);
+	
 }

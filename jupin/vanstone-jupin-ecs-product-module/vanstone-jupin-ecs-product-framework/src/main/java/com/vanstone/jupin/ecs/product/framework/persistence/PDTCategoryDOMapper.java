@@ -40,6 +40,8 @@ public interface PDTCategoryDOMapper {
     
     List<PDTCategoryDO> selectByBrandId_ExistProduct(@Param("brandId")Integer brandId, @Param("existProduct")Integer existProduct);
     
+    List<PDTCategoryDO> selectByAttributeId_ExistProduct(@Param("attributeId")Integer attributeId, @Param("existProduct")Integer existProduct);
+    
     List<Integer> selectLevel1Category();
     
     List<Integer> selectByKey(@Param("key")String key, RowBounds rowBounds);

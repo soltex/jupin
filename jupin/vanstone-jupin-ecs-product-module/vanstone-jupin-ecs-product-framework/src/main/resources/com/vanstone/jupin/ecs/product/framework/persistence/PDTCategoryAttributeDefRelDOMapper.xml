@@ -85,6 +85,11 @@
 		and
 		ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER}
 	</delete>
+	<delete id="deleteByAttributeID" parameterType="map">
+		DELETE FROM pdt_category_attribute_def_rel 
+		WHERE 
+		pdt_category_attribute_def_rel.ATTRIBUTE_DEF_ID = #{attributeId,jdbcType=INTEGER}
+	</delete>
 	<select id="selectByCategoryID" parameterType="map" resultMap="BaseResultMap">
 		SELECT
 		<include refid="Base_Column_List" />

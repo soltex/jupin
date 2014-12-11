@@ -54,4 +54,11 @@ public interface DefineCommonService {
 	 */
 	boolean validateAllowUDOperateBrand(int brandID);
 	
+	/**
+	 * 验证是否允许对Attribute进行更新和删除操作
+	 * @param attributeID
+	 * @return
+	 */
+	boolean validateAllowUDOperateAttribute(int attributeID);
+	
 }

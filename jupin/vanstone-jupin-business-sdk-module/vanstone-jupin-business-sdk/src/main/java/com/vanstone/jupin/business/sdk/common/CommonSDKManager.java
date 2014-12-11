@@ -6,6 +6,7 @@ package com.vanstone.jupin.business.sdk.common;
 import com.vanstone.jupin.authority.Admin;
 import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
+import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Color;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
@@ -57,5 +58,12 @@ public interface CommonSDKManager {
 	 * @return
 	 */
 	Admin getAdminAndValidate(String id);
+	
+	/**
+	 * 获取AbstractAttribute对象并验证
+	 * @param id
+	 * @return
+	 */
+	AbstractAttribute getAttributeAndValidate(int id);
 	
 }

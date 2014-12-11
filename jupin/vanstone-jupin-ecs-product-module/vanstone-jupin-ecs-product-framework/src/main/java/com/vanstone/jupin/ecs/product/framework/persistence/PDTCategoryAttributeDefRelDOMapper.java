@@ -28,4 +28,6 @@ public interface PDTCategoryAttributeDefRelDOMapper {
     
     List<PDTCategoryAttributeDefRelDO> selectByCategoryIDs(@Param("categoryIds")Integer[] productCategoryIds);
     
+    int deleteByAttributeID(@Param("attributeId")Integer attributeId);
+    
 }

@@ -54,12 +54,18 @@ public class ZKUtil {
 			LOG.error("ZK Mutex Acquire Error ,{}" , newMutexValue);
 			return null;
 		} finally {
-			try {
-				mutex.release();
-			} catch (Exception e) {
-				e.printStackTrace();
-				LOG.error("ZK Release Mutex Acquire Error, {}" , newMutexValue);
-				return  null;
+			if (mutex != null) {
+				try {
+					if (mutex.isAcquiredInThisProcess()) {
+						mutex.release();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					LOG.error("ZK Release Mutex Acquire Error, {}" , newMutexValue);
+					return  null;
+				} finally {
+					mutex = null;
+				}
 			}
 		}
 	}

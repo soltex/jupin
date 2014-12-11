@@ -44,8 +44,10 @@ import com.vanstone.jupin.ecs.product.define.attribute.AttributeType;
 import com.vanstone.jupin.ecs.product.define.services.AttributeCondition;
 import com.vanstone.jupin.ecs.product.define.services.AttributeService;
 import com.vanstone.jupin.ecs.product.define.services.DefineCommonService;
+import com.vanstone.jupin.ecs.product.define.services.ExistProductsNotAllowWriteException;
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTAttributeDefDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.PDTAttributeEnumvalueDOMapper;
+import com.vanstone.jupin.ecs.product.framework.persistence.PDTCategoryAttributeDefRelDOMapper;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTAttributeDefDO;
 import com.vanstone.jupin.ecs.product.framework.persistence.object.PDTAttributeEnumvalueDO;
 import com.vanstone.redis.RedisCallback;
@@ -72,6 +74,8 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 	private RedisTemplate redisTemplate;
 	@Autowired
 	private DefineCommonService defineCommonService;
+	@Autowired
+	private PDTCategoryAttributeDefRelDOMapper pdtCategoryAttributeDefRelDOMapper;
 	
 	@Override
 	public Attr4Text addAttr4Text(final Attr4Text attr4Text) {
@@ -88,6 +92,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 				attr4Text.setId(model.getId());
 			}
 		});
+		this.defineCommonService.clearProductDefineCache();
 		return attr4Text;
 	}
 
@@ -118,6 +123,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 				}
 			}
 		});
+		this.defineCommonService.clearProductDefineCache();
 		return (Attr4Enum)this.getAttribute(attr4Enum.getId());
 	}
 	
@@ -141,7 +147,10 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 				loadAttr4Text.setAttributeName(attr4Text.getAttributeName());
 				loadAttr4Text.setListshowable(attr4Text.isListshowable());
 				loadAttr4Text.setRequiredable(attr4Text.isRequiredable());
+				
 				PDTAttributeDefDO model = new PDTAttributeDefDO();
+				
+				model.setId(loadAttr4Text.getId());
 				model.setAttributeName(loadAttr4Text.getAttributeName());
 				model.setAttributeDescription(loadAttr4Text.getAttributeDescription());
 				model.setAttributeType(loadAttr4Text.getAttributeType().getCode());
@@ -150,6 +159,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 				pdtAttributeDefDOMapper.updateByPrimaryKeyWithBLOBs(model);
 			}
 		});
+		this.defineCommonService.clearProductDefineCache();
 		return loadAttr4Text;
 	}
 	
@@ -194,6 +204,9 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 			@Override
 			public AbstractAttribute doInAcquireMutex(CuratorFramework curatorFramework) {
 				PDTAttributeDefDO model = pdtAttributeDefDOMapper.selectByPrimaryKey(id);
+				if (model == null) {
+					return null;
+				}
 				if(model.getAttributeType().equals(AttributeType.Text.getCode())) {
 					//文本类型
 					final Attr4Text attr4Text = new Attr4Text();
@@ -280,6 +293,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 				pdtAttributeEnumvalueDOMapper.insert(model);
 			}
 		});
+		this.defineCommonService.clearProductDefineCache();
 		return (Attr4Enum)this.refreshAttribute(attr4Enum.getId());
 	}
 	
@@ -299,7 +313,8 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 				pdtAttributeEnumvalueDOMapper.updateByPrimaryKeySelective(model);
 			}
 		});
-		return null;
+		this.defineCommonService.clearProductDefineCache();
+		return (Attr4Enum)this.getAttribute(attr4EnumValue.getAttr4Enum().getId());
 	}
 	
 	@Override
@@ -369,6 +384,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 				}
 			}
 		});
+		this.defineCommonService.clearProductDefineCache();
 	}
 	
 	@Override
@@ -399,6 +415,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 				pdtAttributeDefDOMapper.updateByPrimaryKeyWithBLOBs(model);
 			}
 		});
+		this.defineCommonService.clearProductDefineCache();
 		return (Attr4Enum)this.refreshAttribute(loadAttr4Enum.getId());
 	}
 	
@@ -466,6 +483,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 	private PDTAttributeDefDO parseByAttributeCondition(AttributeCondition condition) {
 		boolean empty = condition != null ? condition.isEmpty() : true;
 		PDTAttributeDefDO model = new PDTAttributeDefDO();
+		model.setAttributeType(condition.getAttributeType().getCode());
 		if (!empty) {
 			model.setAttributeName(condition.getKey());
 			model.setListshowable(condition.getListshowable() != null ? BoolUtil.parseBoolean(condition.getListshowable()) : null);
@@ -475,4 +493,27 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 		}
 		return model;
 	}
+
+	@Override
+	public void deleteAttribute(final AbstractAttribute attribute) throws ExistProductsNotAllowWriteException {
+		boolean validate = this.defineCommonService.validateAllowUDOperateAttribute(attribute.getId());
+		if (!validate) {
+			throw new ExistProductsNotAllowWriteException();
+		}
+		this.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				
+				pdtAttributeDefDOMapper.deleteByPrimaryKey(attribute.getId());
+				pdtCategoryAttributeDefRelDOMapper.deleteByAttributeID(attribute.getId());
+				
+				if (attribute.getAttributeType().equals(AttributeType.Enum)) {
+					//枚举
+					pdtAttributeEnumvalueDOMapper.deleteByAttributeID(attribute.getId());
+				}
+			}
+		});
+		defineCommonService.clearProductDefineCache();
+	}
+	
 }

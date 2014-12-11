@@ -77,6 +77,7 @@
 					<li><a href="/admin/weixin/view-weixininfos.jhtml" data-history>微信管理</a></li>
 					<li><a href="/admin/configuration/view-configurations.jhtml" data-history>配置管理器</a></li>
 					<li><a href="/admin/auth/view-admins.jhtml" data-history>账户管理</a></li>
+					<li><a href="/pdm/index" data-history>商品品类定义管理</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 				<li><a href="/logout.jhtml">退出</a></li>

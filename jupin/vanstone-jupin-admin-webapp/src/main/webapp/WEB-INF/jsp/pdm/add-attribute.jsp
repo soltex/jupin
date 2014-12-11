@@ -5,8 +5,11 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 
+<%@ include file="/inc/var.jsp" %>
+
 <form:form action="/pdm/add-attribute-action" method="post" commandName="attributeForm"  cssClass="required-validate">
-	
+
+
 <div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 		<h4 class="modal-title">新建品类属性</h4>
@@ -50,7 +53,7 @@
 				</div>
 				<div class="form-group">
 					 <label for="enumValues">枚举值（可使用逗号，回车进行分割，填写多个）</label>
-					<form:textarea path="enumValues" cssClass="form-control" placeholder="枚举类型属性的值,可使用逗号，回车进行分割，填写多个"  rows="10"/>
+					<form:textarea path="enumValues" cssClass="form-control" placeholder="枚举类型属性的值,可使用逗号，回车进行分割，填写多个"  rows="5"/>
 				</div>
 			</div>
 	</div>

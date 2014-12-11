@@ -40,8 +40,11 @@ import com.vanstone.jupin.common.entity.ImageBean;
 import com.vanstone.jupin.common.util.ExcelUtil;
 import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
+import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
+import com.vanstone.jupin.ecs.product.define.services.AttributeCondition;
+import com.vanstone.jupin.ecs.product.define.services.AttributeService;
 import com.vanstone.jupin.ecs.product.define.services.BrandService;
 import com.vanstone.jupin.ecs.product.define.services.CategoryService;
 import com.vanstone.jupin.ecs.product.define.services.ExistProductsNotAllowWriteException;
@@ -70,6 +73,8 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 	private CommonSDKManager commonSDKManager;
 	@Autowired
 	private BrandService brandService;
+	@Autowired
+	private AttributeService attributeService;
 	
 	private MessageSource messageSource;
 	
@@ -375,4 +380,14 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 		return null;
 	}
 
+	@Override
+	public PageInfo<AbstractAttribute> searchAttributes(AttributeCondition condition, int pageno, int size) {
+		int allrows = this.attributeService.getTotalAttributesByCondition(condition);
+		PageUtil<AbstractAttribute> pageUtil = new PageUtil<AbstractAttribute>(allrows, pageno, size);
+		Collection<AbstractAttribute> attributes = this.attributeService.getAttributesByCondition(condition, pageUtil.getOffset(), pageUtil.getSize());
+		PageInfo<AbstractAttribute> pageInfo = pageUtil.getPageInfo();
+		pageInfo.addObjects(attributes);
+		return pageInfo;
+	}
+	
 }

@@ -12,9 +12,11 @@ import com.vanstone.jupin.authority.services.AdminService;
 import com.vanstone.jupin.business.sdk.common.CommonSDKManager;
 import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
+import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Color;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
+import com.vanstone.jupin.ecs.product.define.services.AttributeService;
 import com.vanstone.jupin.ecs.product.define.services.BrandService;
 import com.vanstone.jupin.ecs.product.define.services.CategoryService;
 import com.vanstone.jupin.ecs.product.define.services.ColorTableService;
@@ -36,6 +38,8 @@ public class CommonSDKManagerImpl implements CommonSDKManager {
 	private CategoryService categoryService;
 	@Autowired
 	private AdminService adminService;
+	@Autowired
+	private AttributeService attributeService;
 	
 	/* (non-Javadoc)
 	 * @see com.vanstone.jupin.business.sdk.common.CommonSDKManager#getAndValidateColor(int)
@@ -80,6 +84,13 @@ public class CommonSDKManagerImpl implements CommonSDKManager {
 		Admin admin = this.adminService.getAdmin(id);
 		MyAssert4Business.notNull(admin);
 		return admin;
+	}
+
+	@Override
+	public AbstractAttribute getAttributeAndValidate(int id) {
+		AbstractAttribute attribute = this.attributeService.getAttribute(id);
+		MyAssert4Business.objectInitialized(attribute);
+		return attribute;
 	}
 	
 }

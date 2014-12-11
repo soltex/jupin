@@ -23,14 +23,14 @@
 		<result column="FORM_TEMPLATE" property="formTemplate" jdbcType="LONGVARCHAR" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		ID, CATEGORY_NAME, DESCRIPTION, CATEGORY_BIND_PAGE, COVER_FILE_ID,
-		COVER_FILE_WIDTH,
-		COVER_FILE_HEIGHT, COVER_FILE_EXT, PARENT_ID, SORT, LEAFABLE, CATEGORY_STATE,
-		EXIST_PRODUCT,
-		SKU_COLORABLE, SKU_SIZEABLE, SIZE_TEMPLATE_ID
+		pdt_category.ID, pdt_category.CATEGORY_NAME, pdt_category.DESCRIPTION, pdt_category.CATEGORY_BIND_PAGE, pdt_category.COVER_FILE_ID,
+		pdt_category.COVER_FILE_WIDTH,pdt_category.COVER_FILE_HEIGHT, pdt_category.COVER_FILE_EXT, 
+		pdt_category.PARENT_ID, pdt_category.SORT, pdt_category.LEAFABLE, pdt_category.CATEGORY_STATE,
+		pdt_category.EXIST_PRODUCT,
+		pdt_category.SKU_COLORABLE, pdt_category.SKU_SIZEABLE, SIZE_TEMPLATE_ID
 	</sql>
 	<sql id="Blob_Column_List">
-		FORM_TEMPLATE
+		pdt_category.FORM_TEMPLATE
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
 		parameterType="java.lang.Integer">
@@ -340,6 +340,17 @@
 		pdt_category.ID = PDT_CATEGORY_BRAND_REL.CATEGORY_ID 
 		WHERE 
 		PDT_CATEGORY_BRAND_REL.BRAND_ID = #{brandId,jdbcType=INTEGER} 
+		AND 
+		pdt_category.EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER}
+	</select>
+	<select id="selectByAttributeId_ExistProduct" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/>
+		FROM 
+		pdt_category INNER JOIN PDT_CATEGORY_ATTRIBUTE_DEF_REL 
+		ON 
+		pdt_category.ID = PDT_CATEGORY_ATTRIBUTE_DEF_REL.CATEGORY_ID 
+		WHERE 
+		PDT_CATEGORY_ATTRIBUTE_DEF_REL.ATTRIBUTE_DEF_ID = #{attributeId,jdbcType=INTEGER} 
 		AND 
 		pdt_category.EXIST_PRODUCT = #{existProduct,jdbcType=INTEGER}
 	</select>

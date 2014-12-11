@@ -117,4 +117,10 @@ public interface AttributeService {
 	 */
 	int getTotalAttributesByCondition(AttributeCondition condition);
 	
+	/**
+	 * 删除属性
+	 * @param attribute
+	 * @throws ExistProductsNotAllowWriteException
+	 */
+	void deleteAttribute(@NotNull AbstractAttribute attribute) throws ExistProductsNotAllowWriteException;
 }

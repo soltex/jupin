@@ -29,6 +29,10 @@
 		delete from pdt_attribute_enumvalue
 		where ID = #{id,jdbcType=INTEGER}
 	</delete>
+	<delete id="deleteByAttributeID" parameterType="map">
+		DELETE FROM pdt_attribute_enumvalue 
+		WHERE ATTRIBUTE_DEF_ID = #{attributeId, jdbcType=INTEGER}
+	</delete>
 	<insert id="insert"
 		parameterType="com.vanstone.jupin.ecs.product.framework.persistence.object.PDTAttributeEnumvalueDO"
 		useGeneratedKeys="true" keyProperty="id">

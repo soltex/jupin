@@ -30,16 +30,16 @@ public class AttributeForm extends AdminBaseForm {
 	/**属性类型*/
 	private Integer attributeTypeCode;
 	/**是否显示在列表页上*/
-	private boolean listshowable = false;
+	private Boolean listshowable;
 	/**是否为必填项*/
-	private boolean requiredable=false;
+	private Boolean requiredable;
 	/**非多选*/
-	private boolean multiselectable = false;
+	private Boolean multiselectable;
 	/**是否用于搜索*/
-	private boolean searchable = false;
+	private Boolean searchable;
 	/**枚举值*/
 	private String enumValues;
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -72,35 +72,35 @@ public class AttributeForm extends AdminBaseForm {
 		this.attributeTypeCode = attributeTypeCode;
 	}
 
-	public boolean isListshowable() {
+	public Boolean getListshowable() {
 		return listshowable;
 	}
 
-	public void setListshowable(boolean listshowable) {
+	public void setListshowable(Boolean listshowable) {
 		this.listshowable = listshowable;
 	}
 
-	public boolean isRequiredable() {
+	public Boolean getRequiredable() {
 		return requiredable;
 	}
 
-	public void setRequiredable(boolean requiredable) {
+	public void setRequiredable(Boolean requiredable) {
 		this.requiredable = requiredable;
 	}
 
-	public boolean isMultiselectable() {
+	public Boolean getMultiselectable() {
 		return multiselectable;
 	}
 
-	public void setMultiselectable(boolean multiselectable) {
+	public void setMultiselectable(Boolean multiselectable) {
 		this.multiselectable = multiselectable;
 	}
 
-	public boolean isSearchable() {
+	public Boolean getSearchable() {
 		return searchable;
 	}
 
-	public void setSearchable(boolean searchable) {
+	public void setSearchable(Boolean searchable) {
 		this.searchable = searchable;
 	}
 
@@ -111,5 +111,7 @@ public class AttributeForm extends AdminBaseForm {
 	public void setEnumValues(String enumValues) {
 		this.enumValues = enumValues;
 	}
+
+	
 	
 }
