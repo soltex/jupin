@@ -52,7 +52,7 @@
 						<tr>
 							<th style="width: 40px">ID</th>
 							<th>值信息</th>
-							<th style="width: 30px">##</th>
+							<th style="width: 70px">##</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -60,7 +60,16 @@
 						<tr>
 							<td>${itemEntry.key }</td>
 							<td>${itemEntry.value }</td>
-							<td>#</td>
+							<td>
+								<p>
+								<a href="/pdm/delete-enumvalue-action/${itemEntry.key }" ajax-todo="ajaxTodo" title="确认删除该枚举值？">编辑</a> 
+								<a href="/pdm/delete-enumvalue-action/${itemEntry.key }" ajax-todo="ajaxTodo" title="确认删除该枚举值？">删除</a> 
+								</p>
+								<p>
+								<a href="/pdm/delete-enumvalue-action/${itemEntry.key }" ajax-todo="ajaxTodo" title="确认删除该枚举值？">上移</a> 
+								<a href="/pdm/delete-enumvalue-action/${itemEntry.key }" ajax-todo="ajaxTodo" title="确认删除该枚举值？">下移</a> 
+								</p>
+							</td>
 						</tr>
 						</c:forEach>
 					</tbody>

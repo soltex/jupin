@@ -515,5 +515,55 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 		});
 		defineCommonService.clearProductDefineCache();
 	}
+
+	@Override
+	public void topSortAttr4EnumValue(final Attr4EnumValue attr4EnumValue) {
+		final PDTAttributeEnumvalueDO maxModel = this.pdtAttributeEnumvalueDOMapper.selectMaxByAttributeDefId(attr4EnumValue.getId());
+		if (maxModel == null) {
+			throw new IllegalArgumentException();
+		}
+		final int maxSort = maxModel.getSort() + 1;
+		this.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				PDTAttributeEnumvalueDO tempModel = new PDTAttributeEnumvalueDO();
+				tempModel.setId(attr4EnumValue.getId());
+				tempModel.setSort(maxSort);
+				pdtAttributeEnumvalueDOMapper.updateByPrimaryKeySelective(tempModel);
+			}
+		});
+		this.defineCommonService.clearProductDefineCache();
+	}
+
+	@Override
+	public void bottomSortAttr4EnumValue(final Attr4EnumValue attr4EnumValue) {
+		final PDTAttributeEnumvalueDO minModel = this.pdtAttributeEnumvalueDOMapper.selectMinByAttributeDefId(attr4EnumValue.getId());
+		if (minModel == null) {
+			throw new IllegalArgumentException();
+		}
+		final int minSort = minModel.getSort() - 1;
+		this.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				PDTAttributeEnumvalueDO tempModel = new PDTAttributeEnumvalueDO();
+				tempModel.setId(attr4EnumValue.getId());
+				tempModel.setSort(minSort);
+				pdtAttributeEnumvalueDOMapper.updateByPrimaryKeySelective(tempModel);
+			}
+		});
+		this.defineCommonService.clearProductDefineCache();
+	}
+
+	@Override
+	public void upSortAttr4EnumValue(Attr4EnumValue attr4EnumValue) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void downSortAttr4EnumValue(Attr4EnumValue attr4EnumValue) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

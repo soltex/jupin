@@ -34,4 +34,8 @@ public interface PDTAttributeEnumvalueDOMapper {
     
     PDTAttributeEnumvalueDO selectByAttributeDefId_AttributeName_NotSelf(@Param("attributeDefId")Integer attributeDefId, @Param("attributeName")String attributeName, @Param("id")Integer id);
     
+    PDTAttributeEnumvalueDO selectMaxByAttributeDefId(@Param("attributeDefId")Integer attributeDefId);
+    
+    PDTAttributeEnumvalueDO selectMinByAttributeDefId(@Param("attributeDefId")Integer attributeDefId);
+    
 }

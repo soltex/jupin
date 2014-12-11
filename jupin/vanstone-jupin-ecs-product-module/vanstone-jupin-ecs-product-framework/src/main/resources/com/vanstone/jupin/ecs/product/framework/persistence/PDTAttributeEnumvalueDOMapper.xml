@@ -161,4 +161,24 @@
 		WHERE 
 		ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER} 
 	</select>
+	
+	
+	
+	<select id="selectMaxByAttributeDefId" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/> FROM 
+		pdt_attribute_enumvalue 
+		WHERE 
+		ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER} 
+		ORDER BY SORT DESC 
+		LIMIT 0,1
+	</select>
+	<select id="selectMinByAttributeDefId" parameterType="map" resultMap="ResultMapWithBLOBs">
+		SELECT <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/> FROM 
+		pdt_attribute_enumvalue 
+		WHERE 
+		ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER} 
+		ORDER BY SORT 
+		LIMIT 0,1
+	</select>
+	
 </mapper>

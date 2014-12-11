@@ -123,4 +123,28 @@ public interface AttributeService {
 	 * @throws ExistProductsNotAllowWriteException
 	 */
 	void deleteAttribute(@NotNull AbstractAttribute attribute) throws ExistProductsNotAllowWriteException;
+	
+	/**
+	 * 置顶属性值
+	 * @param attr4EnumValue
+	 */
+	void topSortAttr4EnumValue(@NotNull Attr4EnumValue attr4EnumValue);
+	
+	/**
+	 * 置底属性值
+	 * @param attr4EnumValue
+	 */
+	void bottomSortAttr4EnumValue(@NotNull Attr4EnumValue attr4EnumValue);
+	
+	/**
+	 * 上移属性值
+	 * @param attr4EnumValue
+	 */
+	void upSortAttr4EnumValue(@NotNull Attr4EnumValue attr4EnumValue);
+	
+	/**
+	 * 下移属性值
+	 * @param attr4EnumValue
+	 */
+	void downSortAttr4EnumValue(@NotNull Attr4EnumValue attr4EnumValue);
 }

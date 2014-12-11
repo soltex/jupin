@@ -87,14 +87,13 @@
 						<c:if test="${attributeType eq ATTRIBUTE_TYPE_ENUM }">
 						<th>是否可多选</th>
 						<th>是否可用于搜索</th>
-						<th>枚举值</th>
 						</c:if>
 						<th style="width: 120px;">##</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="item" items="${pageInfo.objects }">
-					<tr>
+					<tr class="danger">
 						<td>${attributeType.desc }</td>
 						<td>${item.id }</td>
 						<td>${item.attributeName }</td>
@@ -105,11 +104,6 @@
 						<c:if test="${attributeType eq ATTRIBUTE_TYPE_ENUM }">
 						<td><c:choose><c:when test="${item.multiselectable }">是</c:when><c:otherwise>否</c:otherwise></c:choose></td>
 						<td><c:choose><c:when test="${item.searchable }">是</c:when><c:otherwise>否</c:otherwise></c:choose></td>
-						<td>
-							<c:forEach items="${item.values }" var="entryItem">
-								<p><span class="badge">${entryItem.key }</span>${entryItem.value }</p>
-							</c:forEach>
-						</td>
 						</c:if>
 						<td>
 							<c:if test="${attributeType eq ATTRIBUTE_TYPE_TEXT }">
@@ -118,10 +112,18 @@
 							<c:if test="${attributeType eq ATTRIBUTE_TYPE_ENUM }">
 							<a href="/pdm/view-enum-attribute/${item.id }?pageNum=${pageInfo.pageNo}" data-toggle="modal" data-target="#modal-dialog">编辑</a>
 							</c:if>
-							
 							<a href="/pdm/delete-attribute-action/${item.id }"  title="确认是否删除该项 ？"  data-todo="ajaxTodo">删除</a>
 						</td>
 					</tr>
+					<c:if test="${attributeType eq ATTRIBUTE_TYPE_ENUM }">
+					<tr>
+						<td colspan="9">
+							<c:forEach items="${item.values }" var="entryItem">
+								<small>${entryItem.key }</small> - ${entryItem.value }
+							</c:forEach>
+						</td>
+					</tr>
+					</c:if>
 					</c:forEach>
 				</tbody>
 			</table>
