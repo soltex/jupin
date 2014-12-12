@@ -180,5 +180,28 @@
 		ORDER BY SORT 
 		LIMIT 0,1
 	</select>
-	
+	<update id="updateDescSortByAttributeDefId_ValueIDs" parameterType="map" >
+		UPDATE pdt_attribute_enumvalue 
+		SET 
+		SORT = SORT-1
+		WHERE 
+		ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER} 
+		AND 
+		ID IN 
+		<foreach collection="valueIDs" item="valueID" open="(" close=")" separator=",">
+			${valueID}
+		</foreach>
+	</update>
+	<update id="updateIncSortByAttributeDefId_ValueIDs" parameterType="map" >
+		UPDATE pdt_attribute_enumvalue 
+		SET 
+		SORT = SORT+1
+		WHERE 
+		ATTRIBUTE_DEF_ID = #{attributeDefId,jdbcType=INTEGER} 
+		AND 
+		ID IN 
+		<foreach collection="valueIDs" item="valueID" open="(" close=")" separator=",">
+			${valueID}
+		</foreach>
+	</update>
 </mapper>

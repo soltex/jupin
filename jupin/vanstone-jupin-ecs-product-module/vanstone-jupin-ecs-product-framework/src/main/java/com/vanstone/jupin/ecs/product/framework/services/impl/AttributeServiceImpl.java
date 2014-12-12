@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -294,7 +295,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 			}
 		});
 		this.defineCommonService.clearProductDefineCache();
-		return (Attr4Enum)this.refreshAttribute(attr4Enum.getId());
+		return (Attr4Enum)this.getAttribute(attr4Enum.getId());
 	}
 	
 	@Override
@@ -347,7 +348,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 				if (valueModel == null) {
 					return null;
 				}
-				Attr4Enum attr4Enum = (Attr4Enum)getAttribute(enumValueID);
+				Attr4Enum attr4Enum = (Attr4Enum)getAttribute(valueModel.getAttributeDefId());
 				Attr4EnumValue attr4EnumValue = new Attr4EnumValue();
 				attr4EnumValue.setAttr4Enum(attr4Enum);
 				attr4EnumValue.setId(valueModel.getId());
@@ -370,15 +371,11 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 	}
 	
 	@Override
-	public void deleteAttr4EnumValue(final int enumValueId) {
-		final Attr4EnumValue attr4EnumValue = this.getAttr4EnumValue(enumValueId);
-		if (attr4EnumValue == null) {
-			throw new IllegalArgumentException();
-		}
+	public void deleteAttr4EnumValue(final Attr4EnumValue attr4EnumValue) {
 		this.execute(new TransactionCallbackWithoutResult() {
 			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
-				pdtAttributeEnumvalueDOMapper.deleteByPrimaryKey(enumValueId);
+				pdtAttributeEnumvalueDOMapper.deleteByPrimaryKey(attr4EnumValue.getId());
 				if (attr4EnumValue.getAttr4Enum().getValues().size() == 1) {
 					pdtAttributeDefDOMapper.deleteByPrimaryKey(attr4EnumValue.getAttr4Enum().getId());
 				}
@@ -416,7 +413,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 			}
 		});
 		this.defineCommonService.clearProductDefineCache();
-		return (Attr4Enum)this.refreshAttribute(loadAttr4Enum.getId());
+		return (Attr4Enum)getAttribute(attr4Enum.getId());
 	}
 	
 	@Override
@@ -518,7 +515,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 
 	@Override
 	public void topSortAttr4EnumValue(final Attr4EnumValue attr4EnumValue) {
-		final PDTAttributeEnumvalueDO maxModel = this.pdtAttributeEnumvalueDOMapper.selectMaxByAttributeDefId(attr4EnumValue.getId());
+		final PDTAttributeEnumvalueDO maxModel = this.pdtAttributeEnumvalueDOMapper.selectMaxByAttributeDefId(attr4EnumValue.getAttr4Enum().getId());
 		if (maxModel == null) {
 			throw new IllegalArgumentException();
 		}
@@ -537,7 +534,7 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 
 	@Override
 	public void bottomSortAttr4EnumValue(final Attr4EnumValue attr4EnumValue) {
-		final PDTAttributeEnumvalueDO minModel = this.pdtAttributeEnumvalueDOMapper.selectMinByAttributeDefId(attr4EnumValue.getId());
+		final PDTAttributeEnumvalueDO minModel = this.pdtAttributeEnumvalueDOMapper.selectMinByAttributeDefId(attr4EnumValue.getAttr4Enum().getId());
 		if (minModel == null) {
 			throw new IllegalArgumentException();
 		}
@@ -555,15 +552,86 @@ public class AttributeServiceImpl extends DefaultBusinessService implements Attr
 	}
 
 	@Override
-	public void upSortAttr4EnumValue(Attr4EnumValue attr4EnumValue) {
-		// TODO Auto-generated method stub
-		
+	public void upSortAttr4EnumValue(final Attr4EnumValue attr4EnumValue) {
+		final int targetid = attr4EnumValue.getId();
+		Map<Integer, String> valueMap = attr4EnumValue.getAttr4Enum().getValues();
+		Integer[] sourceids =valueMap.keySet().toArray(new Integer[valueMap.size()]);
+		if (sourceids == null || sourceids.length <=0) {
+			throw new IllegalArgumentException();
+		}
+		if (sourceids[0].equals(targetid)) {
+			LOG.debug("The target enum attribute value {} has been top of enum", targetid);
+			return;
+		}
+		int index = ArrayUtils.indexOf(sourceids, targetid);
+		final int id0 = sourceids[index-1];
+		PDTAttributeEnumvalueDO id0Model = this.pdtAttributeEnumvalueDOMapper.selectByPrimaryKey(id0);
+		if (id0Model == null) {
+			throw new IllegalArgumentException();
+		}
+		final int targetSort = id0Model.getSort();
+		final Collection<Integer> descids = new ArrayList<Integer>();
+		descids.add(id0);
+		for (int i=index+1;i<sourceids.length;i++) {
+			descids.add(sourceids[i]);
+		}
+		this.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				PDTAttributeEnumvalueDO targetModel = new PDTAttributeEnumvalueDO();
+				targetModel.setId(targetid);
+				targetModel.setSort(targetSort);
+				pdtAttributeEnumvalueDOMapper.updateByPrimaryKeySelective(targetModel);
+				pdtAttributeEnumvalueDOMapper.updateDescSortByAttributeDefId_ValueIDs(attr4EnumValue.getAttr4Enum().getId(), descids);
+			}
+		});
+		this.defineCommonService.clearProductDefineCache();
 	}
-
+	
 	@Override
-	public void downSortAttr4EnumValue(Attr4EnumValue attr4EnumValue) {
-		// TODO Auto-generated method stub
-		
+	public void downSortAttr4EnumValue(final Attr4EnumValue attr4EnumValue) {
+		final int targetid = attr4EnumValue.getId();
+		Map<Integer, String> valueMap = attr4EnumValue.getAttr4Enum().getValues();
+		Integer[] sourceids =valueMap.keySet().toArray(new Integer[valueMap.size()]);
+		if (sourceids == null || sourceids.length <=0) {
+			throw new IllegalArgumentException();
+		}
+		if (sourceids[sourceids.length-1].equals(targetid)) {
+			LOG.debug("The target enum attribute value {} has been bottom of enum", targetid);
+			return;
+		}
+		int index = ArrayUtils.indexOf(sourceids, targetid);
+		final int id0 = sourceids[index+1];
+		PDTAttributeEnumvalueDO id0Model = this.pdtAttributeEnumvalueDOMapper.selectByPrimaryKey(id0);
+		if (id0Model == null) {
+			throw new IllegalArgumentException();
+		}
+		final int targetSort = id0Model.getSort();
+		final Collection<Integer> incids = new ArrayList<Integer>();
+		incids.add(id0);
+		for (int i=0;i<index;i++) {
+			incids.add(sourceids[i]);
+		}
+		this.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+				PDTAttributeEnumvalueDO targetModel = new PDTAttributeEnumvalueDO();
+				targetModel.setId(targetid);
+				targetModel.setSort(targetSort);
+				pdtAttributeEnumvalueDOMapper.updateByPrimaryKeySelective(targetModel);
+				pdtAttributeEnumvalueDOMapper.updateIncSortByAttributeDefId_ValueIDs(attr4EnumValue.getAttr4Enum().getId(), incids);
+			}
+		});
+		this.defineCommonService.clearProductDefineCache();
+	}
+	
+	@Override
+	public int getMaxSortOfAttrEnum(Attr4Enum attr4Enum) {
+		Integer maxValue = this.pdtAttributeEnumvalueDOMapper.selectMaxSortValueByAttributeDefId(attr4Enum.getId());
+		if (maxValue != null) {
+			return maxValue;
+		}
+		return Constants.SYS_DEFAULT_SORT;
 	}
 	
 }

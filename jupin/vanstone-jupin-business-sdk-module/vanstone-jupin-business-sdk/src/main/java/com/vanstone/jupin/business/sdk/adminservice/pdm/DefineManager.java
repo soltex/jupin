@@ -8,6 +8,7 @@ import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.vanstone.business.ObjectDuplicateException;
@@ -16,6 +17,7 @@ import com.vanstone.fs.FSFile;
 import com.vanstone.jupin.common.ImageFormatException;
 import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
+import com.vanstone.jupin.ecs.product.define.attribute.Attr4Enum;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
 import com.vanstone.jupin.ecs.product.define.services.AttributeCondition;
@@ -147,4 +149,33 @@ public interface DefineManager {
 	 */
 	PageInfo<AbstractAttribute> searchAttributes(AttributeCondition condition, int pageno,int size);
 	
+	/**
+	 * 更新枚举属性基本信息
+	 * @param attribtueID
+	 * @param attributeName
+	 * @param attributeDescrption
+	 * @param listshowable
+	 * @param requiredable
+	 * @param multiselectable
+	 * @param searchable
+	 * @return
+	 */
+	Attr4Enum updateBaseEnumAttr(int attribtueID, @NotBlank String attributeName, String attributeDescrption, boolean listshowable, boolean requiredable, boolean multiselectable, boolean searchable);
+	
+	/**
+	 * 更新枚举值
+	 * @param valueID
+	 * @param objectText
+	 * @return
+	 */
+	Attr4Enum updateBaseAttr4EnumValue(int valueID, String objectText) throws ObjectDuplicateException ;
+	
+	/**
+	 * 追加属性值
+	 * @param attributeID
+	 * @param objectText
+	 * @return
+	 * @throws ObjectDuplicateException
+	 */
+	Attr4Enum appendAttr4EnumValue(int attributeID, String objectText) throws ObjectDuplicateException;
 }

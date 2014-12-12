@@ -41,6 +41,8 @@ import com.vanstone.jupin.common.util.ExcelUtil;
 import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
+import com.vanstone.jupin.ecs.product.define.attribute.Attr4Enum;
+import com.vanstone.jupin.ecs.product.define.attribute.Attr4EnumValue;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
 import com.vanstone.jupin.ecs.product.define.services.AttributeCondition;
@@ -388,6 +390,33 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 		PageInfo<AbstractAttribute> pageInfo = pageUtil.getPageInfo();
 		pageInfo.addObjects(attributes);
 		return pageInfo;
+	}
+
+	@Override
+	public Attr4Enum updateBaseEnumAttr(int attributeID, String attributeName, String attributeDescrption,
+			boolean listshowable, boolean requiredable, boolean multiselectable, boolean searchable) {
+		Attr4Enum attr4Enum = this.commonSDKManager.getAttr4EnumAndValidate(attributeID);
+		attr4Enum.setAttributeName(attributeName);
+		attr4Enum.setAttributeDescription(attributeDescrption);
+		attr4Enum.setListshowable(listshowable);
+		attr4Enum.setRequiredable(requiredable);
+		attr4Enum.setMultiselectable(multiselectable);
+		attr4Enum.setSearchable(searchable);
+		return this.attributeService.updateBaseAttr4Enum(attr4Enum);
+	}
+
+	@Override
+	public Attr4Enum updateBaseAttr4EnumValue(int valueID, String objectText) throws ObjectDuplicateException {
+		Attr4EnumValue attr4EnumValue = this.commonSDKManager.getAttr4EnumValueAndValidate(valueID);
+		attr4EnumValue.setObjectText(objectText);
+		return this.attributeService.updateAttr4EnumValue(attr4EnumValue);
+	}
+
+	@Override
+	public Attr4Enum appendAttr4EnumValue(final int attributeID, final String objectText) throws ObjectDuplicateException {
+		final Attr4Enum attr4Enum = this.commonSDKManager.getAttr4EnumAndValidate(attributeID);
+		final int max = this.attributeService.getMaxSortOfAttrEnum(attr4Enum);
+		return attributeService.appendAttr4EnumValue(attr4Enum, objectText, max+1);
 	}
 	
 }

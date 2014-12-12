@@ -13,6 +13,10 @@ import com.vanstone.jupin.business.sdk.common.CommonSDKManager;
 import com.vanstone.jupin.ecs.product.define.Brand;
 import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
+import com.vanstone.jupin.ecs.product.define.attribute.Attr4Enum;
+import com.vanstone.jupin.ecs.product.define.attribute.Attr4EnumValue;
+import com.vanstone.jupin.ecs.product.define.attribute.Attr4Text;
+import com.vanstone.jupin.ecs.product.define.attribute.AttributeType;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Color;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
@@ -91,6 +95,33 @@ public class CommonSDKManagerImpl implements CommonSDKManager {
 		AbstractAttribute attribute = this.attributeService.getAttribute(id);
 		MyAssert4Business.objectInitialized(attribute);
 		return attribute;
+	}
+
+	@Override
+	public Attr4Text getAttr4TextAndValidate(int id) {
+		AbstractAttribute attribute = this.getAttributeAndValidate(id);
+		if (!attribute.getAttributeType().equals(AttributeType.Text)) {
+			throw new IllegalArgumentException();
+		}
+		return (Attr4Text)attribute;
+	}
+	
+	@Override
+	public Attr4Enum getAttr4EnumAndValidate(int id) {
+		AbstractAttribute attribute = this.getAttributeAndValidate(id);
+		if (!attribute.getAttributeType().equals(AttributeType.Enum)) {
+			throw new IllegalArgumentException();
+		}
+		return (Attr4Enum)attribute;
+	}
+
+	@Override
+	public Attr4EnumValue getAttr4EnumValueAndValidate(int id) {
+		Attr4EnumValue attr4EnumValue = this.attributeService.getAttr4EnumValue(id);
+		if (attr4EnumValue == null) {
+			throw new IllegalArgumentException();
+		}
+		return attr4EnumValue;
 	}
 	
 }

@@ -112,6 +112,24 @@ public class AttributeForm extends AdminBaseForm {
 		this.enumValues = enumValues;
 	}
 
+	//=========================enum value form fields==========================//
+	private Integer valueId;
+	private String objectText;
 	
-	
+	public Integer getValueId() {
+		return valueId;
+	}
+
+	public void setValueId(Integer valueId) {
+		this.valueId = valueId;
+	}
+
+	public String getObjectText() {
+		return objectText;
+	}
+
+	public void setObjectText(String objectText) {
+		this.objectText = objectText;
+	}
+
 }

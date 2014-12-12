@@ -57,7 +57,7 @@ public interface AttributeService {
 	 * @param enumValueId
 	 * @return
 	 */
-	void deleteAttr4EnumValue(int enumValueId);
+	void deleteAttr4EnumValue(Attr4EnumValue attr4EnumValue);
 	
 	/**
 	 * 获取枚举值
@@ -147,4 +147,12 @@ public interface AttributeService {
 	 * @param attr4EnumValue
 	 */
 	void downSortAttr4EnumValue(@NotNull Attr4EnumValue attr4EnumValue);
+	
+	/**
+	 * 获取排序值（Attr4Enum）
+	 * @param attr4Enum
+	 * @return
+	 */
+	int getMaxSortOfAttrEnum(@NotNull Attr4Enum attr4Enum);
+	
 }

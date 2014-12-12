@@ -7,13 +7,15 @@
 
 <%@ include file="/inc/var.jsp" %>
 
-<form:form action="/pdm/update-enum-attribute-action" method="post" commandName="attributeForm"  cssClass="required-validate">
-
-<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-		<h4 class="modal-title">修改文本品类属性</h4>
-		</div>
-		<div class="modal-body">
+<div class="row">
+	<div class="col-md-2">
+	
+		<%@ include file="/inc/pdm-menu.jsp" %>
+		
+	</div>
+	<div class="col-md-12">
+		<h2>编辑枚举属性信息</h2>
+		<form:form action="/pdm/update-enum-attribute-action" method="post" commandName="attributeForm"  cssClass="required-validate">
 			<div class="form-group">
 				<label for="attributeName">属性显示名称</label>
 				<form:hidden path="id"/>
@@ -43,43 +45,42 @@
 					<form:checkbox path="searchable"/> 是否作为搜索条件
 			    </label>
 			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">枚举属性值信息</h3>
-				</div>
-				<table class="table table-hover" >
-					<thead>
-						<tr>
-							<th style="width: 40px">ID</th>
-							<th>值信息</th>
-							<th style="width: 70px">##</th>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach var="itemEntry" items="${attribute.values }">
-						<tr>
-							<td>${itemEntry.key }</td>
-							<td>${itemEntry.value }</td>
-							<td>
-								<p>
-								<a href="/pdm/delete-enumvalue-action/${itemEntry.key }" ajax-todo="ajaxTodo" title="确认删除该枚举值？">编辑</a> 
-								<a href="/pdm/delete-enumvalue-action/${itemEntry.key }" ajax-todo="ajaxTodo" title="确认删除该枚举值？">删除</a> 
-								</p>
-								<p>
-								<a href="/pdm/delete-enumvalue-action/${itemEntry.key }" ajax-todo="ajaxTodo" title="确认删除该枚举值？">上移</a> 
-								<a href="/pdm/delete-enumvalue-action/${itemEntry.key }" ajax-todo="ajaxTodo" title="确认删除该枚举值？">下移</a> 
-								</p>
-							</td>
-						</tr>
-						</c:forEach>
-					</tbody>
-				</table>
-				
+			<button type="submit" class="btn btn-default" >保存属性基本信息</button> 
+			<a href="/pdm/search-attributes/${ATTRIBUTE_TYPE_ENUM.code }?pageNum=${attributeForm.pageNum}" data-history class="btn btn-default">返回</a>
+		</form:form>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+					枚举属性值信息区域编辑
+					<a href="/pdm/add-enum-value/${attributeForm.id }" class="btn btn-default" data-toggle="modal" data-target="#modal-dialog">添加属性值</a>
 			</div>
+			<table class="table table-hover" >
+				<thead>
+					<tr>
+						<th style="width: 40px">ID</th>
+						<th>值信息</th>
+						<th style="width: 300px">##</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="itemEntry" items="${attribute.values }">
+					<tr>
+						<td>${itemEntry.key }</td>
+						<td>${itemEntry.value }</td>
+						<td>
+							<p>
+								<a href="/pdm/view-enum-value/${itemEntry.key }" data-toggle="modal" data-target="#modal-dialog">编辑</a> 
+								<a href="/pdm/delete-enum-value-action/${itemEntry.key }" title="确认是否删除该项 ？"  data-todo="ajaxTodo">删除</a> 
+								<a href="/pdm/top-enumvalue-action/${itemEntry.key }"   data-todo="ajaxTodo" title="确认置顶该枚举值？">置顶</a> 
+								<a href="/pdm/up-enumvalue-action/${itemEntry.key }"   data-todo="ajaxTodo" title="确认上移该枚举值？">上移</a> 
+								<a href="/pdm/down-enumvalue-action/${itemEntry.key }"   data-todo="ajaxTodo" title="确认下移该枚举值？">下移</a> 
+								<a href="/pdm/bottom-enumvalue-action/${itemEntry.key }"   data-todo="ajaxTodo" title="确认置底该枚举值？">置底</a> 
+							</p>
+						</td>
+					</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
 	</div>
-	<div class="modal-footer">
-		<button type="submit" class="btn btn-default" >保存属性信息</button>
-	</div>
-	
-</form:form>
+</div>
 

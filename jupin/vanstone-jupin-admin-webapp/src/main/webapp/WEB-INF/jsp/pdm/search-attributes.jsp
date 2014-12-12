@@ -82,18 +82,18 @@
 						<th style="width:60px;">ID</th>
 						<th style="width: 100px">属性名称</th>
 						<th>属性描述</th>
-						<th>是否显示在列表页上</th>
-						<th>是否为必填项</th>
+						<th style="width:60px;">列表页</th>
+						<th style="width:60px;">必填项</th>
 						<c:if test="${attributeType eq ATTRIBUTE_TYPE_ENUM }">
-						<th>是否可多选</th>
-						<th>是否可用于搜索</th>
+						<th style="width:60px;">多选</th>
+						<th style="width:60px;">搜索</th>
 						</c:if>
 						<th style="width: 120px;">##</th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach var="item" items="${pageInfo.objects }">
-					<tr class="danger">
+					<tr class="">
 						<td>${attributeType.desc }</td>
 						<td>${item.id }</td>
 						<td>${item.attributeName }</td>
@@ -110,7 +110,7 @@
 							<a href="/pdm/view-text-attribute/${item.id }"  data-toggle="modal" data-target="#modal-dialog">编辑</a>
 							</c:if>
 							<c:if test="${attributeType eq ATTRIBUTE_TYPE_ENUM }">
-							<a href="/pdm/view-enum-attribute/${item.id }?pageNum=${pageInfo.pageNo}" data-toggle="modal" data-target="#modal-dialog">编辑</a>
+							<a href="/pdm/view-enum-attribute/${item.id }?pageNum=${pageInfo.pageNo}" data-history>编辑</a>
 							</c:if>
 							<a href="/pdm/delete-attribute-action/${item.id }"  title="确认是否删除该项 ？"  data-todo="ajaxTodo">删除</a>
 						</td>
