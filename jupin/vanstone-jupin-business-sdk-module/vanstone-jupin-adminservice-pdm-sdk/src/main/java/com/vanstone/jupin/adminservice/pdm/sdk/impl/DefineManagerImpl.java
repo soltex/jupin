@@ -13,6 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import com.vanstone.jupin.business.sdk.adminservice.pdm.ImportBrandResultBean;
 import com.vanstone.jupin.business.sdk.adminservice.pdm.SizeBean;
 import com.vanstone.jupin.business.sdk.adminservice.pdm.ValidateDefineBean;
 import com.vanstone.jupin.business.sdk.common.CommonSDKManager;
+import com.vanstone.jupin.common.Constants;
 import com.vanstone.jupin.common.ImageFormatException;
 import com.vanstone.jupin.common.WeedFSException;
 import com.vanstone.jupin.common.entity.ImageBean;
@@ -48,7 +50,7 @@ import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
 import com.vanstone.jupin.ecs.product.define.services.AttributeCondition;
 import com.vanstone.jupin.ecs.product.define.services.AttributeService;
 import com.vanstone.jupin.ecs.product.define.services.BrandService;
-import com.vanstone.jupin.ecs.product.define.services.CategoryService;
+import com.vanstone.jupin.ecs.product.define.services.ProductCategoryService;
 import com.vanstone.jupin.ecs.product.define.services.ExistProductsNotAllowWriteException;
 import com.vanstone.jupin.ecs.product.define.services.SizeService;
 import com.vanstone.jupin.messagebox.Message;
@@ -70,7 +72,7 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 	@Autowired
 	private SizeService sizeService;
 	@Autowired
-	private CategoryService categoryService;
+	private ProductCategoryService categoryService;
 	@Autowired
 	private CommonSDKManager commonSDKManager;
 	@Autowired
@@ -417,6 +419,50 @@ public class DefineManagerImpl extends DefaultBusinessService implements DefineM
 		final Attr4Enum attr4Enum = this.commonSDKManager.getAttr4EnumAndValidate(attributeID);
 		final int max = this.attributeService.getMaxSortOfAttrEnum(attr4Enum);
 		return attributeService.appendAttr4EnumValue(attr4Enum, objectText, max+1);
+	}
+
+	@Override
+	public ProductCategoryDetail addProductCategoryDetail(Integer parentID, @NotBlank String categoryName, String description, FSFile coverFSFile, Integer sort, boolean skuColor,
+			Integer sizeTemplateID, Collection<Integer> attributeIDs) throws ImageFormatException, ExistProductsNotAllowWriteException {
+		ProductCategoryDetail parentProductCategoryDetail = null;
+		if (parentID != null) {
+			parentProductCategoryDetail = this.commonSDKManager.getProductCategoryDetailAndValidate(parentID);
+		}
+		ImageBean imageBean = null;
+		if (coverFSFile != null) {
+			try {
+				imageBean = ImageBean.create(coverFSFile.getFile());
+			} catch (WeedFSException e) {
+				throw new ImageFormatException(e);
+			} catch (FileNotFoundException e) {
+				throw new ImageFormatException(e);
+			}
+		}
+		Collection<AbstractAttribute> attributes = null;
+		if (attributeIDs != null && attributeIDs.size() >0) {
+			attributes = new ArrayList<AbstractAttribute>();
+			for (Integer attributeID : attributeIDs) {
+				if (attributeID != null) {
+					AbstractAttribute attribute = this.commonSDKManager.getAttributeAndValidate(attributeID);
+					attributes.add(attribute);
+				}
+			}
+		}
+		if (sort == null) {
+			sort = Constants.SYS_DEFAULT_SORT;
+		}
+		ProductCategoryDetail detail = new ProductCategoryDetail();
+		detail.setParentProductCategory(parentProductCategoryDetail);
+		detail.setCategoryName(categoryName);
+		detail.setDescription(description);
+		detail.setCoverImage(imageBean);
+		detail.setSkuColor(skuColor);
+		SizeTemplate sizeTemplate = null;
+		if (sizeTemplateID != null) {
+			sizeTemplate = commonSDKManager.getSizeTemplateAndValidate(sizeTemplateID);
+			detail.setSizeTemplate(sizeTemplate);
+		}
+		return this.categoryService.addProductCategory(detail, attributes);
 	}
 	
 }

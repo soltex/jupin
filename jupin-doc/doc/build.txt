@@ -83,3 +83,7 @@ mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-authorit
 mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-authority-api -Dversion=1.0.0
 mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-authority -Dversion=1.0.0
 
+store
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-ecs-store-module -Dversion=1.0.0
+mvn archetype:create -DgroupId=com.vanstone -DartifactId=vanstone-jupin-ecs-store-api -Dversion=1.0.0
+

@@ -1,24 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>jupin</artifactId>
+		<artifactId>vanstone-jupin-ecs-store-module</artifactId>
 		<groupId>com.vanstone</groupId>
 		<version>1.0.0</version>
 	</parent>
-	<artifactId>vanstone-jupin-business-sdk-module</artifactId>
-	<packaging>pom</packaging>
-	
-	<name>vanstone-jupin-business-sdk-module</name>
+	<artifactId>vanstone-jupin-ecs-store-api</artifactId>
+	<name>vanstone-jupin-ecs-store-api</name>
 	<url>http://maven.apache.org</url>
-	
-	<modules>
-		<module>vanstone-jupin-business-sdk</module>
-	    <module>vanstone-jupin-common-sdk</module>
-	    <module>vanstone-jupin-adminservice-authority-sdk</module>
-	    <module>vanstone-jupin-adminservice-pdm-sdk</module>
-  </modules>
-	
 	<distributionManagement>
 		<repository>
 			<id>sagacityidea-release</id>
@@ -27,12 +19,20 @@
 		</repository>
 	</distributionManagement>
 	<properties>
-		<centralserver.version>1.0.13</centralserver.version>
-		<vanstone.commons.version>1.2.10</vanstone.commons.version>
-		<jupin.version>1.0.0</jupin.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
-		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.6</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.vanstone</groupId>
+			<artifactId>vanstone-jupin-common</artifactId>
+			<version>${jupin.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>

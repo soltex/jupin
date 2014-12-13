@@ -19,7 +19,7 @@ import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
  * 品类以及品类属性业务方法
  * @author shipeng
  */
-public interface CategoryService {
+public interface ProductCategoryService {
 	
 	/**SERVICE*/
 	public static final String SERVICE = "productCategoryService";

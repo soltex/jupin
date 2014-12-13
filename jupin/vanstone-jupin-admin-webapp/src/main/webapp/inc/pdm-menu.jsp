@@ -11,7 +11,7 @@
 
 
 <div class="list-group">
-	<a href="#" class="list-group-item"><span class="glyphicon glyphicon-arrow-right"></span>品类定义管理</a>
+	<a href="/pdm/add-productcategory" class="list-group-item" data-history><span class="glyphicon glyphicon-arrow-right"></span>品类定义管理</a>
 	<a href="/pdm/search-attributes/${ATTRIBUTE_TYPE_TEXT.code }" class="list-group-item" data-history><span class="glyphicon glyphicon-arrow-right"></span>商品属性定义管理</a>
 	<a href="/pdm/search-brands" class="list-group-item" data-history><span class="glyphicon glyphicon-arrow-right"></span>品牌信息管理</a>
 	<a href="/pdm/view-colors" class="list-group-item" data-history><span class="glyphicon glyphicon-arrow-right"></span>SKU颜色表</a>

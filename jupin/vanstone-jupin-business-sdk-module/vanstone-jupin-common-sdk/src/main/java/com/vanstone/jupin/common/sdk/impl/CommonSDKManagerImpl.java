@@ -22,7 +22,7 @@ import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
 import com.vanstone.jupin.ecs.product.define.services.AttributeService;
 import com.vanstone.jupin.ecs.product.define.services.BrandService;
-import com.vanstone.jupin.ecs.product.define.services.CategoryService;
+import com.vanstone.jupin.ecs.product.define.services.ProductCategoryService;
 import com.vanstone.jupin.ecs.product.define.services.ColorTableService;
 import com.vanstone.jupin.ecs.product.define.services.SizeService;
 
@@ -39,7 +39,7 @@ public class CommonSDKManagerImpl implements CommonSDKManager {
 	@Autowired
 	private BrandService brandService;
 	@Autowired
-	private CategoryService categoryService;
+	private ProductCategoryService categoryService;
 	@Autowired
 	private AdminService adminService;
 	@Autowired

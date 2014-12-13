@@ -25,8 +25,6 @@ public class BasicProductCategory extends AbstractBusinessObject {
 	private ProductCategoryDetail parentProductCategory;
 	/** 品类名称 */
 	private String categoryName;
-	/** 封面图片 */
-	private ImageBean converImage;
 	/** 品类描述 */
 	private String description;
 	/** 栏目绑定的URL */
@@ -89,18 +87,10 @@ public class BasicProductCategory extends AbstractBusinessObject {
 		this.categoryName = categoryName;
 	}
 
-	public ImageBean getConverImage() {
-		return converImage;
-	}
-
-	public void setConverImage(ImageBean converImage) {
-		this.converImage = converImage;
-	}
-
 	public String getDescription() {
 		return description;
 	}
-
+	
 	public void setDescription(String description) {
 		this.description = description;
 	}

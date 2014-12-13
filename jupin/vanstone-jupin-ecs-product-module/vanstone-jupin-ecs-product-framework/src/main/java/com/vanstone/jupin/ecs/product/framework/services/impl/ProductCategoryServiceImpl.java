@@ -47,7 +47,7 @@ import com.vanstone.jupin.ecs.product.define.attribute.sku.SizeTemplate;
 import com.vanstone.jupin.ecs.product.define.services.AttributeService;
 import com.vanstone.jupin.ecs.product.define.services.CategoryHasChildCategoriesException;
 import com.vanstone.jupin.ecs.product.define.services.CategoryMustLeafNodeException;
-import com.vanstone.jupin.ecs.product.define.services.CategoryService;
+import com.vanstone.jupin.ecs.product.define.services.ProductCategoryService;
 import com.vanstone.jupin.ecs.product.define.services.DefineCommonService;
 import com.vanstone.jupin.ecs.product.define.services.ExistProductsNotAllowWriteException;
 import com.vanstone.jupin.ecs.product.define.services.SizeService;
@@ -69,9 +69,9 @@ import com.vanstone.redis.RedisTemplate;
 /**
  * @author shipeng
  */
-@Service("categoryService")
+@Service("productCategoryService")
 @Validated
-public class CategoryServiceImpl extends DefaultBusinessService implements CategoryService {
+public class ProductCategoryServiceImpl extends DefaultBusinessService implements ProductCategoryService {
 	
 	/***/
 	private static final long serialVersionUID = -390257932925884113L;
@@ -143,6 +143,7 @@ public class CategoryServiceImpl extends DefaultBusinessService implements Categ
 			throw new ExistProductsNotAllowWriteException();
 		}
 		// 写入品类信息并更新父品类信息
+		productCategory.setLeafable(true);
 		this.execute(new TransactionCallbackWithoutResult() {
 			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus arg0) {

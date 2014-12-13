@@ -16,6 +16,7 @@ import com.vanstone.common.util.web.PageInfo;
 import com.vanstone.fs.FSFile;
 import com.vanstone.jupin.common.ImageFormatException;
 import com.vanstone.jupin.ecs.product.define.Brand;
+import com.vanstone.jupin.ecs.product.define.ProductCategoryDetail;
 import com.vanstone.jupin.ecs.product.define.attribute.AbstractAttribute;
 import com.vanstone.jupin.ecs.product.define.attribute.Attr4Enum;
 import com.vanstone.jupin.ecs.product.define.attribute.sku.Size;
@@ -178,4 +179,19 @@ public interface DefineManager {
 	 * @throws ObjectDuplicateException
 	 */
 	Attr4Enum appendAttr4EnumValue(int attributeID, String objectText) throws ObjectDuplicateException;
+	
+	/**
+	 * 新建品类
+	 * @param parentProductCategoryDetail
+	 * @param categoryName
+	 * @param description
+	 * @param coverFSFile
+	 * @param sort
+	 * @param skuColor
+	 * @param sizeTemplateID
+	 * @param attributeIDs
+	 * @return
+	 */
+	ProductCategoryDetail addProductCategoryDetail(Integer parentID, @NotBlank String categoryName, String description, FSFile coverFSFile, Integer sort, boolean skuColor, Integer sizeTemplateID, Collection<Integer> attributeIDs) throws ImageFormatException, ExistProductsNotAllowWriteException;
+	
 }

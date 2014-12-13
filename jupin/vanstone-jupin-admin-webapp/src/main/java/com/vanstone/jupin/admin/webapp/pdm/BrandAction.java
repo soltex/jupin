@@ -174,7 +174,6 @@ public class BrandAction extends AdminBaseAction {
 			try {
 				logoFsFile = FSManagerExt.getInstance().uploadBySpring(brandForm.getLogoMultipartFile(), FSType.Temporary);
 			} catch (FSException e) {
-				e.printStackTrace();
 				ViewCommandObject viewCommandObject = ViewCommandHelper.createErrorObject("图片文件格式错误，请联系管理员！");
 				return viewCommandObject;
 			}

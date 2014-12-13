@@ -32,7 +32,7 @@ import com.vanstone.jupin.ecs.product.define.attribute.AttributeBuilder;
 import com.vanstone.jupin.ecs.product.define.attribute.AttributeType;
 import com.vanstone.jupin.ecs.product.define.services.AttributeCondition;
 import com.vanstone.jupin.ecs.product.define.services.AttributeService;
-import com.vanstone.jupin.ecs.product.define.services.CategoryService;
+import com.vanstone.jupin.ecs.product.define.services.ProductCategoryService;
 import com.vanstone.jupin.ecs.product.define.services.ExistProductsNotAllowWriteException;
 import com.vanstone.webframework.dwz.DialogViewCommandObject;
 import com.vanstone.webframework.dwz.ViewCommandHelper;
@@ -52,7 +52,7 @@ public class AttributeAction extends AdminBaseAction {
 	@Autowired
 	private DefineManager defineManager;
 	@Autowired
-	private CategoryService categoryService;
+	private ProductCategoryService categoryService;
 	
 	@RequestMapping("/add-attribute")
 	public String addAttribute(ModelMap modelMap, @ModelAttribute("attributeForm")AttributeForm attributeForm) {
