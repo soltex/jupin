@@ -9,14 +9,6 @@
 <%@ include file="/inc/var.jsp" %>
 
 
-
-<div class="row">
-	<div class="col-md-3">
-		<%@ include file="/inc/pdm-menu.jsp" %>
-	</div>
-	<div class="col-md-9">
-		&nbsp;
-	</div>
-</div>
+<%@ include file="/inc/pdm-menu.jsp" %>
 
 <%@ include file="/inc/footer.jsp"%>

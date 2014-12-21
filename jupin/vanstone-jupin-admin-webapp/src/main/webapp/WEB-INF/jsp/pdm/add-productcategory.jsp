@@ -8,11 +8,11 @@
 
 
 
+<%@ include file="/inc/pdm-menu.jsp" %>
+
+
+
 <div class="row">
-	<div class="col-md-3">
-		<%@ include file="/inc/pdm-menu.jsp" %>
-	</div>
-	
 	
 	<div class="col-md-12">
 		<h2>商品品类管理<small>添加商品品类</small></h2>
@@ -88,11 +88,11 @@
 	$(document).ready(function() {
 		
 		//绑定尺码模板点击事件
-		$("#existSizeTemplate").click() {
+		$("#existSizeTemplate").click(function() {
 			if ($(this).attr("checked") == true) {
-				$("#sizeTemplateId").
+				//$("#sizeTemplateId").
 			}
-		}
+		});
 		
 		
 	});

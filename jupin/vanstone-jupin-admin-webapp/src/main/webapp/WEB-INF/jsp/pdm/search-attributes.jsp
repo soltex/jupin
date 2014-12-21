@@ -7,12 +7,8 @@
 
 <%@ include file="/inc/var.jsp" %>
 
+<%@ include file="/inc/pdm-menu.jsp" %>
 <div class="row">
-	<div class="col-md-2">
-	
-		<%@ include file="/inc/pdm-menu.jsp" %>
-		
-	</div>
 	<div class="col-md-12">
 		<h2>品类属性定义</h2>
 		<a href="/pdm/add-attribute" class="btn btn-default" data-toggle="modal" data-target="#modal-dialog">新建品类属性信息</a>

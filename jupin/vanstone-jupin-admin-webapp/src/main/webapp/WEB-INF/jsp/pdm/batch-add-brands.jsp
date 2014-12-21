@@ -8,12 +8,9 @@
 <%@ include file="/inc/var.jsp" %>
 
 
-
+<%@ include file="/inc/pdm-menu.jsp" %>
 <div class="row">
-	<div class="col-md-3">
-		<%@ include file="/inc/pdm-menu.jsp" %>
-	</div>
-	<div class="col-md-10">
+	<div class="col-md-12">
 		<h2>批量导入品牌信息</h2>
 		<form:form action="/pdm/batch-add-brands-action" method="post" commandName="brandForm" cssClass="required-validate" enctype="multipart/form-data">
 			<div class="form-group">

@@ -8,10 +8,8 @@
 
 
 
+<%@ include file="/inc/pdm-menu.jsp" %>
 <div class="row">
-	<div class="col-md-3">
-		<%@ include file="/inc/pdm-menu.jsp" %>
-	</div>
 	
 	
 	<div class="col-md-10">

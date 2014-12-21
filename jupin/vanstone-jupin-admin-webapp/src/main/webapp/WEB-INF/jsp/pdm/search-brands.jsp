@@ -10,11 +10,8 @@
 <%@ include file="/inc/var.jsp" %>
 
 
-
+<%@ include file="/inc/pdm-menu.jsp" %>
 <div class="row">
-	<div class="col-md-3">
-		<%@ include file="/inc/pdm-menu.jsp" %>
-	</div>
 	<div class="col-md-12">
 		<h2>品牌检索</h2>
 		<a href="/pdm/add-brand" class="btn btn-default" data-history>新建品牌</a>

@@ -7,12 +7,9 @@
 
 <%@ include file="/inc/var.jsp" %>
 
+<%@ include file="/inc/pdm-menu.jsp" %>
+
 <div class="row">
-	<div class="col-md-2">
-	
-		<%@ include file="/inc/pdm-menu.jsp" %>
-		
-	</div>
 	<div class="col-md-12">
 		<h2>编辑枚举属性信息</h2>
 		<form:form action="/pdm/update-enum-attribute-action" method="post" commandName="attributeForm"  cssClass="required-validate">

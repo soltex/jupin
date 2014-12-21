@@ -9,12 +9,9 @@
 <%@ include file="/inc/var.jsp" %>
 
 
-
+<%@ include file="/inc/pdm-menu.jsp" %>
 <div class="row">
-	<div class="col-md-3">
-		<%@ include file="/inc/pdm-menu.jsp" %>
-	</div>
-	<div class="col-md-10">
+	<div class="col-md-12">
 		<h2>SKU颜色库定义</h2>
 		<form:form action="/pdm/add-color-action" method="post" commandName="colorForm" cssClass="required-validate">
 			<div class="form-group">

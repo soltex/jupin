@@ -8,12 +8,9 @@
 <%@ include file="/inc/var.jsp" %>
 
 
-
+<%@ include file="/inc/pdm-menu.jsp" %>
 <div class="row">
-	<div class="col-md-3">
-		<%@ include file="/inc/pdm-menu.jsp" %>
-	</div>
-	<div class="col-md-10">
+	<div class="col-md-12">
 		<h2>SKU尺码模板定义</h2>
 		<a href="/pdm/add-sizetemplate" class="btn btn-default" data-toggle="modal" data-target="#modal-dialog">新建尺码模板</a>
 		<p></p>

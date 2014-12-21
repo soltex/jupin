@@ -9,12 +9,9 @@
 <%@ include file="/inc/var.jsp" %>
 
 
-
+<%@ include file="/inc/pdm-menu.jsp" %>
 <div class="row">
-	<div class="col-md-3">
-		<%@ include file="/inc/pdm-menu.jsp" %>
-	</div>
-	<div class="col-md-10">
+	<div class="col-md-12">
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" ><a href="/pdm/view-base-brand/${brandForm.brandId }" data-history>编辑品牌【${brand.brandName }】基本信息</a></li>
 			<li role="presentation" class="active"><a href="/pdm/view-brand-logo/${brandForm.brandId}" data-history>编辑品牌【${brand.brandName }】logo信息</a></li>
